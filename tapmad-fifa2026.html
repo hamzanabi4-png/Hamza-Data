@@ -1,0 +1,1606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tapmad × FIFA 2026 — Social Media Plan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;900&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+
+        /* =============================================
+           CSS CUSTOM PROPERTIES — TAPMAD BRAND THEME
+           Change :root values to retheme the whole deck
+           ============================================= */
+        :root {
+            --green:          #3DC763;
+            --green-dim:      rgba(61, 199, 99, 0.18);
+            --green-border:   rgba(61, 199, 99, 0.28);
+            --green-glow:     rgba(61, 199, 99, 0.08);
+            --black:          #080808;
+            --card-bg:        rgba(255,255,255,0.04);
+            --card-border:    rgba(255,255,255,0.08);
+            --text-primary:   #FFFFFF;
+            --text-secondary: #8C8C8C;
+            --text-muted:     #484848;
+            --stage-bg:       #080808;
+            --slide-bg:       #080808;
+            --ease-apple:     cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --ease-expo:      cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* =============================================
+           RESET
+           ============================================= */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        /* =============================================
+           FIXED 16:9 STAGE — MANDATORY BASE (viewport-base.css)
+           ============================================= */
+        html, body {
+            width: 100%; height: 100%;
+            margin: 0; overflow: hidden;
+            background: var(--stage-bg, #000);
+        }
+        .deck-viewport {
+            position: fixed; inset: 0;
+            overflow: hidden;
+            background: var(--stage-bg, #000);
+        }
+        .deck-stage {
+            position: absolute; left: 0; top: 0;
+            width: 1920px; height: 1080px;
+            overflow: hidden; transform-origin: 0 0;
+            background: var(--slide-bg, #fff);
+        }
+        .slide {
+            position: absolute; inset: 0;
+            width: 1920px; height: 1080px;
+            overflow: hidden; display: block;
+            visibility: hidden; opacity: 0;
+            pointer-events: none;
+            background: var(--slide-bg);
+        }
+        .slide.active, .slide.visible {
+            visibility: visible; opacity: 1;
+            pointer-events: auto; z-index: 1;
+        }
+        img, video, canvas, svg { max-width: 100%; max-height: 100%; }
+        .deck-controls {
+            position: fixed; left: 50%; bottom: 22px;
+            transform: translateX(-50%); z-index: 1000;
+        }
+        @media print {
+            html, body { width: 1920px; height: auto; overflow: visible; }
+            .deck-viewport { position: static; overflow: visible; }
+            .deck-stage { position: static; width: auto; height: auto; transform: none !important; }
+            .slide { position: relative; display: block !important; visibility: visible !important; opacity: 1 !important;
+                     pointer-events: auto !important; width: 1920px; height: 1080px; break-after: page; }
+            .slide:last-child { break-after: auto; }
+            .deck-controls, .deck-progress, .edit-hotzone, .edit-toggle { display: none !important; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+        }
+
+        /* =============================================
+           SLIDE TRANSITION — Apple-style scale + fade
+           ============================================= */
+        .slide {
+            transition: opacity 0.65s var(--ease-apple),
+                        transform 0.65s var(--ease-apple);
+            transform: scale(1.025) translateY(6px);
+        }
+        .slide.active, .slide.visible {
+            transform: scale(1) translateY(0);
+        }
+
+        /* =============================================
+           REVEAL ANIMATIONS
+           ============================================= */
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.7s var(--ease-expo),
+                        transform 0.7s var(--ease-expo);
+        }
+        .slide.visible .reveal { opacity: 1; transform: translateY(0); }
+
+        .reveal-scale {
+            opacity: 0; transform: scale(0.93) translateY(12px);
+            transition: opacity 0.7s var(--ease-expo),
+                        transform 0.7s var(--ease-expo);
+        }
+        .slide.visible .reveal-scale { opacity: 1; transform: scale(1) translateY(0); }
+
+        .reveal-left {
+            opacity: 0; transform: translateX(-36px);
+            transition: opacity 0.7s var(--ease-expo),
+                        transform 0.7s var(--ease-expo);
+        }
+        .slide.visible .reveal-left { opacity: 1; transform: translateX(0); }
+
+        /* Stagger helpers */
+        .d1 { transition-delay: 0.05s; }
+        .d2 { transition-delay: 0.15s; }
+        .d3 { transition-delay: 0.25s; }
+        .d4 { transition-delay: 0.35s; }
+        .d5 { transition-delay: 0.45s; }
+        .d6 { transition-delay: 0.55s; }
+        .d7 { transition-delay: 0.65s; }
+        .d8 { transition-delay: 0.75s; }
+
+        /* =============================================
+           SHARED LAYOUT PRIMITIVES
+           ============================================= */
+        .slide-inner {
+            width: 1920px; height: 1080px;
+            display: flex; flex-direction: column;
+            padding: 56px 110px 64px;
+            position: relative;
+        }
+        .slide-header {
+            display: flex; align-items: center;
+            justify-content: space-between;
+            margin-bottom: 40px; flex-shrink: 0;
+        }
+        .brand-mark {
+            display: flex; align-items: center; gap: 13px;
+        }
+        .brand-name {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 16px; font-weight: 700;
+            color: rgba(255,255,255,0.75);
+            letter-spacing: 0.06em;
+        }
+        .brand-name span { color: var(--green); }
+        .slide-tag {
+            font-family: 'Manrope', sans-serif;
+            font-size: 13px; font-weight: 600;
+            color: var(--text-muted);
+            letter-spacing: 0.14em; text-transform: uppercase;
+        }
+        .section-label {
+            font-family: 'Manrope', sans-serif;
+            font-size: 12px; font-weight: 700;
+            color: var(--green);
+            letter-spacing: 0.22em; text-transform: uppercase;
+            margin-bottom: 14px; flex-shrink: 0;
+        }
+        .slide-title {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 62px; font-weight: 700;
+            color: var(--text-primary); line-height: 1.1;
+            flex-shrink: 0;
+        }
+        .slide-title .accent { color: var(--green); }
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+        }
+        .green-line {
+            width: 48px; height: 4px;
+            background: var(--green); border-radius: 2px;
+            margin-bottom: 20px;
+        }
+        .pill {
+            display: inline-flex; align-items: center; gap: 7px;
+            padding: 7px 18px;
+            background: var(--green-dim);
+            border: 1px solid var(--green-border);
+            border-radius: 100px;
+            font-family: 'Manrope', sans-serif;
+            font-size: 14px; font-weight: 700;
+            color: var(--green);
+        }
+
+        /* =============================================
+           TAPMAD LOGO SVG (inline, reused)
+           ============================================= */
+        .tapmad-logo { flex-shrink: 0; }
+
+        /* =============================================
+           SLIDE 1 — COVER
+           ============================================= */
+        .slide-cover { background: #060606; }
+
+        /* Layered atmospheric background */
+        .cover-bg {
+            position: absolute; inset: 0; pointer-events: none;
+            background:
+                radial-gradient(ellipse 1100px 800px at 50% 115%, rgba(61,199,99,0.11) 0%, transparent 65%),
+                radial-gradient(ellipse 500px 360px at 80% 18%,  rgba(61,199,99,0.07) 0%, transparent 60%),
+                radial-gradient(ellipse 400px 300px at 15% 85%,  rgba(61,199,99,0.05) 0%, transparent 60%);
+        }
+
+        /* Faint football-pitch grid lines */
+        .cover-grid {
+            position: absolute; inset: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+            background-size: 96px 96px;
+            pointer-events: none;
+        }
+        /* Radial fade mask over the grid */
+        .cover-grid::after {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse 80% 80% at 50% 50%, transparent 0%, #060606 80%);
+        }
+
+        /* Animated top accent line */
+        .cover-accent-line {
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 3px;
+            background: linear-gradient(90deg, transparent 0%, var(--green) 40%, var(--green) 60%, transparent 100%);
+            animation: accentPulse 3s ease-in-out infinite alternate;
+        }
+        @keyframes accentPulse {
+            from { opacity: 0.4; }
+            to   { opacity: 1; }
+        }
+
+        .cover-top-brand {
+            position: absolute; top: 48px; left: 80px;
+            display: flex; align-items: center; gap: 14px;
+            z-index: 2;
+        }
+        .cover-top-brand-name {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 15px; font-weight: 700;
+            color: rgba(255,255,255,0.55);
+            letter-spacing: 0.1em;
+        }
+
+        .cover-center {
+            position: absolute; inset: 0; z-index: 1;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            text-align: center; gap: 0;
+        }
+        .cover-eyebrow {
+            font-family: 'Manrope', sans-serif;
+            font-size: 14px; font-weight: 700;
+            color: var(--green);
+            letter-spacing: 0.32em; text-transform: uppercase;
+            margin-bottom: 28px;
+        }
+        .cover-headline {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 156px; font-weight: 900;
+            color: var(--text-primary);
+            line-height: 0.88;
+            margin-bottom: 4px;
+        }
+        .cover-headline .year {
+            color: var(--green);
+            display: block;
+        }
+        .cover-subtitle {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 23px; font-weight: 400;
+            color: rgba(255,255,255,0.38);
+            letter-spacing: 0.14em; text-transform: uppercase;
+            margin-top: 32px;
+            margin-bottom: 56px;
+        }
+        .cover-rule {
+            width: 1px; height: 56px;
+            background: rgba(255,255,255,0.12);
+            margin-bottom: 40px;
+        }
+        .cover-meta {
+            display: flex; align-items: center; gap: 32px;
+        }
+        .cover-meta-item {
+            font-family: 'Manrope', sans-serif;
+            font-size: 15px; font-weight: 500;
+            color: rgba(255,255,255,0.35);
+            letter-spacing: 0.04em;
+        }
+        .cover-meta-sep {
+            width: 3px; height: 3px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+        }
+
+        /* Large faint 2026 watermark */
+        .cover-watermark {
+            position: absolute; bottom: -40px; right: -20px;
+            font-family: 'Unbounded', sans-serif;
+            font-size: 420px; font-weight: 900;
+            color: rgba(61,199,99,0.035);
+            line-height: 1;
+            pointer-events: none; user-select: none;
+            z-index: 0;
+        }
+
+        /* =============================================
+           SLIDE 2 — MISSION
+           ============================================= */
+        .mission-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px;
+            margin-top: 32px; flex: 1;
+        }
+        .mission-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 48px 52px;
+            display: flex; flex-direction: column; gap: 18px;
+            position: relative; overflow: hidden;
+        }
+        .mission-card::before {
+            content: '';
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 3px;
+            background: linear-gradient(90deg, var(--green) 0%, transparent 70%);
+        }
+        .mission-ghost-num {
+            position: absolute; right: 40px; top: 28px;
+            font-family: 'Unbounded', sans-serif;
+            font-size: 88px; font-weight: 900;
+            color: rgba(61,199,99,0.06);
+            line-height: 1; pointer-events: none;
+        }
+        .mission-icon-wrap {
+            width: 54px; height: 54px;
+            background: var(--green-dim);
+            border: 1px solid var(--green-border);
+            border-radius: 16px;
+            display: flex; align-items: center;
+            justify-content: center; font-size: 26px;
+            flex-shrink: 0;
+        }
+        .mission-card-title {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 26px; font-weight: 700;
+            color: var(--text-primary); line-height: 1.3;
+            max-width: 540px;
+        }
+        .mission-card-body {
+            font-family: 'Manrope', sans-serif;
+            font-size: 18px; font-weight: 400;
+            color: var(--text-secondary); line-height: 1.65;
+        }
+        .pillars-row {
+            display: flex; align-items: center; gap: 14px;
+            margin-top: 28px; flex-shrink: 0; flex-wrap: wrap;
+        }
+        .pillars-row-label {
+            font-family: 'Manrope', sans-serif;
+            font-size: 12px; font-weight: 700;
+            color: var(--text-muted);
+            letter-spacing: 0.16em; text-transform: uppercase;
+            margin-right: 4px;
+        }
+        .pillar-chip {
+            display: flex; align-items: center; gap: 8px;
+            padding: 10px 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 100px;
+            font-family: 'Manrope', sans-serif;
+            font-size: 15px; font-weight: 600;
+            color: rgba(255,255,255,0.75);
+            white-space: nowrap;
+        }
+        .pillar-chip .cdot {
+            width: 6px; height: 6px;
+            background: var(--green); border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* =============================================
+           SLIDE 3 — CONTENT PILLARS (5-up grid)
+           ============================================= */
+        .five-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 22px;
+            margin-top: 32px; flex: 1;
+        }
+        .pillar-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 22px;
+            padding: 40px 32px;
+            display: flex; flex-direction: column; gap: 16px;
+            transition: border-color 0.3s, background 0.3s;
+        }
+        .pillar-card:hover {
+            border-color: var(--green-border);
+            background: rgba(61,199,99,0.04);
+        }
+        .pillar-emoji { font-size: 44px; line-height: 1; }
+        .pillar-card-title {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 20px; font-weight: 700;
+            color: var(--text-primary);
+        }
+        .pillar-card-body {
+            font-family: 'Manrope', sans-serif;
+            font-size: 15px; color: var(--text-secondary);
+            line-height: 1.7; flex: 1;
+        }
+        .tag {
+            display: inline-flex;
+            padding: 5px 13px;
+            background: var(--green-dim);
+            border-radius: 100px;
+            font-family: 'Manrope', sans-serif;
+            font-size: 12px; font-weight: 700;
+            color: var(--green); width: fit-content;
+            text-transform: uppercase; letter-spacing: 0.08em;
+        }
+
+        /* =============================================
+           SLIDE 4 — TRIVIA
+           ============================================= */
+        .trivia-layout {
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            gap: 64px;
+            margin-top: 28px; flex: 1;
+            align-items: start;
+        }
+        .trivia-left {}
+        .trivia-intro {
+            font-family: 'Manrope', sans-serif;
+            font-size: 19px; color: var(--text-secondary);
+            line-height: 1.7; margin-bottom: 32px;
+        }
+        .topics-label {
+            font-family: 'Manrope', sans-serif;
+            font-size: 12px; font-weight: 700;
+            color: var(--text-muted);
+            letter-spacing: 0.15em; text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+        .topic-list { display: flex; flex-direction: column; gap: 11px; }
+        .topic-item {
+            display: flex; align-items: center; gap: 14px;
+            font-family: 'Manrope', sans-serif;
+            font-size: 18px; font-weight: 500;
+            color: var(--text-secondary);
+        }
+        .tdot {
+            width: 5px; height: 5px;
+            background: var(--green); border-radius: 50%; flex-shrink: 0;
+        }
+        .trivia-right {}
+        .trivia-q-label {
+            font-family: 'Manrope', sans-serif;
+            font-size: 12px; font-weight: 700;
+            color: var(--text-muted);
+            letter-spacing: 0.15em; text-transform: uppercase;
+            margin-bottom: 18px;
+        }
+        .trivia-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 18px;
+            padding: 32px 40px;
+            margin-bottom: 20px;
+        }
+        .trivia-q {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 18px; font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 22px; line-height: 1.5;
+        }
+        .trivia-opts {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .trivia-opt {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.025);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 10px;
+            font-family: 'Manrope', sans-serif;
+            font-size: 15px; color: var(--text-secondary);
+        }
+        .trivia-letter {
+            width: 26px; height: 26px; flex-shrink: 0;
+            background: rgba(255,255,255,0.05);
+            border-radius: 7px;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Unbounded', sans-serif;
+            font-size: 11px; font-weight: 700; color: var(--text-muted);
+        }
+        .trivia-opt.correct {
+            border-color: var(--green-border);
+            background: var(--green-dim);
+        }
+        .trivia-opt.correct .trivia-letter {
+            background: var(--green); color: #000;
+        }
+        .trivia-opt.correct span { color: var(--text-primary); font-weight: 600; }
+
+        /* =============================================
+           SLIDE 5 — MEME STRATEGY
+           ============================================= */
+        .meme-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 52px;
+            margin-top: 28px; flex: 1;
+            align-items: start;
+        }
+        .meme-left { display: flex; flex-direction: column; gap: 24px; }
+        .meme-goal {
+            font-family: 'Manrope', sans-serif;
+            font-size: 21px; font-weight: 400;
+            color: var(--text-secondary); line-height: 1.7;
+        }
+        .meme-goal strong { color: var(--text-primary); font-weight: 700; }
+        .meme-point {
+            display: flex; align-items: flex-start; gap: 18px;
+            padding: 24px 28px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+        }
+        .meme-point-icon { font-size: 28px; flex-shrink: 0; margin-top: 2px; }
+        .meme-point-text {
+            font-family: 'Manrope', sans-serif;
+            font-size: 17px; color: var(--text-secondary); line-height: 1.6;
+        }
+        .meme-point-text strong { color: var(--green); }
+        .meme-right { display: flex; flex-direction: column; gap: 18px; }
+        .meme-ex-label {
+            font-family: 'Manrope', sans-serif;
+            font-size: 12px; font-weight: 700;
+            color: var(--text-muted);
+            letter-spacing: 0.15em; text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        .meme-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 18px;
+            padding: 28px 36px 28px 44px;
+            position: relative; overflow: hidden;
+        }
+        .meme-card::before {
+            content: '';
+            position: absolute; top: 0; left: 0;
+            width: 4px; height: 100%;
+            background: var(--green);
+        }
+        .meme-pov {
+            font-family: 'Manrope', sans-serif;
+            font-size: 11px; font-weight: 800;
+            color: var(--green); letter-spacing: 0.18em;
+            text-transform: uppercase; margin-bottom: 8px;
+        }
+        .meme-text {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 17px; font-weight: 600;
+            color: var(--text-primary); line-height: 1.45;
+        }
+
+        /* =============================================
+           SLIDE 6 — VIDEO CONTENT
+           ============================================= */
+        .video-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 36px;
+            margin-top: 28px; flex: 1;
+        }
+        .video-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 22px;
+            padding: 44px 48px;
+            display: flex; flex-direction: column; gap: 20px;
+            position: relative; overflow: hidden;
+        }
+        .video-card::after {
+            content: '';
+            position: absolute; bottom: 0; left: 0;
+            width: 100%; height: 3px;
+            background: linear-gradient(90deg, var(--green) 0%, transparent 65%);
+        }
+        .video-eyebrow {
+            font-family: 'Manrope', sans-serif;
+            font-size: 11px; font-weight: 800;
+            color: var(--green); letter-spacing: 0.22em; text-transform: uppercase;
+        }
+        .video-card-title {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 24px; font-weight: 700;
+            color: var(--text-primary); line-height: 1.3;
+        }
+        .sec-label {
+            font-family: 'Manrope', sans-serif;
+            font-size: 11px; font-weight: 700;
+            color: var(--text-muted); letter-spacing: 0.14em; text-transform: uppercase;
+        }
+        .video-desc {
+            font-family: 'Manrope', sans-serif;
+            font-size: 16px; color: var(--text-secondary); line-height: 1.65;
+        }
+        .arrow-list { display: flex; flex-direction: column; gap: 9px; }
+        .arrow-item {
+            display: flex; align-items: flex-start; gap: 10px;
+            font-family: 'Manrope', sans-serif;
+            font-size: 15px; color: var(--text-secondary); line-height: 1.5;
+        }
+        .arrow-item::before {
+            content: '→'; color: var(--green);
+            font-weight: 700; flex-shrink: 0;
+        }
+
+        /* =============================================
+           SLIDE 7 — INFOGRAPHICS
+           ============================================= */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 24px;
+            margin-top: 28px; flex: 1;
+        }
+        .info-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 36px 40px;
+            display: flex; flex-direction: column; gap: 12px;
+            position: relative; overflow: hidden;
+        }
+        .info-ghost {
+            position: absolute; right: 28px; top: 20px;
+            font-family: 'Unbounded', sans-serif;
+            font-size: 64px; font-weight: 900;
+            color: rgba(61,199,99,0.07);
+            line-height: 1; pointer-events: none;
+        }
+        .info-emoji { font-size: 34px; line-height: 1; }
+        .info-card-title {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 21px; font-weight: 700;
+            color: var(--text-primary);
+        }
+        .info-card-body {
+            font-family: 'Manrope', sans-serif;
+            font-size: 15px; color: var(--text-secondary); line-height: 1.65; flex: 1;
+        }
+        .freq-tag {
+            display: inline-flex;
+            padding: 5px 13px;
+            background: var(--green-dim);
+            border-radius: 100px;
+            font-family: 'Manrope', sans-serif;
+            font-size: 12px; font-weight: 700;
+            color: var(--green); width: fit-content;
+            text-transform: uppercase; letter-spacing: 0.08em;
+        }
+
+        /* =============================================
+           SLIDE 8 — LIVE COVERAGE
+           ============================================= */
+        .coverage-intro {
+            font-family: 'Manrope', sans-serif;
+            font-size: 20px; font-weight: 400;
+            color: var(--text-secondary); line-height: 1.7;
+            max-width: 860px; margin-top: 10px; margin-bottom: 36px; flex-shrink: 0;
+        }
+        .coverage-intro strong { color: var(--text-primary); font-weight: 600; }
+        .coverage-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px; flex: 1;
+        }
+        .coverage-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 22px;
+            padding: 44px 40px;
+            display: flex; flex-direction: column; gap: 18px;
+        }
+        .cov-icon {
+            width: 66px; height: 66px;
+            background: var(--green-dim);
+            border: 1px solid var(--green-border);
+            border-radius: 18px;
+            display: flex; align-items: center;
+            justify-content: center; font-size: 32px;
+            flex-shrink: 0;
+        }
+        .coverage-card-title {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 22px; font-weight: 700;
+            color: var(--text-primary);
+        }
+        .coverage-card-body {
+            font-family: 'Manrope', sans-serif;
+            font-size: 17px; color: var(--text-secondary); line-height: 1.65; flex: 1;
+        }
+        .tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; }
+        .small-tag {
+            padding: 5px 12px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 100px;
+            font-family: 'Manrope', sans-serif;
+            font-size: 12px; color: var(--text-muted);
+        }
+
+        /* =============================================
+           SLIDE 9 — YOUTUBE
+           ============================================= */
+        .yt-layout {
+            display: grid;
+            grid-template-columns: 1.15fr 1fr 1fr;
+            gap: 28px;
+            margin-top: 28px; flex: 1;
+        }
+        .yt-main {
+            background: linear-gradient(140deg, rgba(61,199,99,0.13) 0%, rgba(61,199,99,0.04) 100%);
+            border: 1px solid var(--green-border);
+            border-radius: 22px;
+            padding: 52px 48px;
+            display: flex; flex-direction: column; gap: 22px;
+        }
+        .yt-play-btn {
+            width: 66px; height: 66px;
+            background: #FF0000;
+            border-radius: 15px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .yt-main-title {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 28px; font-weight: 700;
+            color: var(--text-primary); line-height: 1.3;
+        }
+        .yt-main-body {
+            font-family: 'Manrope', sans-serif;
+            font-size: 17px; color: var(--text-secondary); line-height: 1.7; flex: 1;
+        }
+        .yt-feat {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 22px;
+            padding: 44px 40px;
+            display: flex; flex-direction: column; gap: 16px;
+        }
+        .yt-big-num {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 56px; font-weight: 900;
+            color: var(--green); line-height: 1;
+        }
+        .yt-feat-title {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 20px; font-weight: 700;
+            color: var(--text-primary); line-height: 1.35;
+        }
+        .yt-feat-body {
+            font-family: 'Manrope', sans-serif;
+            font-size: 15px; color: var(--text-secondary); line-height: 1.65; flex: 1;
+        }
+
+        /* =============================================
+           SLIDE 10 — BUDGET
+           ============================================= */
+        .budget-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            margin-top: 32px;
+        }
+        .budget-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 52px 48px;
+            display: flex; flex-direction: column; gap: 18px;
+            position: relative; overflow: hidden;
+        }
+        .budget-card::before {
+            content: '';
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 4px; border-radius: 0;
+        }
+        .budget-card:nth-child(1)::before { background: var(--green); }
+        .budget-card:nth-child(2)::before { background: #F5C842; }
+        .budget-card:nth-child(3)::before { background: #FF4545; }
+        .budget-icon {
+            width: 58px; height: 58px;
+            border-radius: 16px;
+            display: flex; align-items: center;
+            justify-content: center; font-size: 28px;
+        }
+        .bi-green  { background: var(--green-dim); }
+        .bi-yellow { background: rgba(245,200,66,0.14); }
+        .bi-red    { background: rgba(255,69,69,0.14); }
+        .budget-cat {
+            font-family: 'Manrope', sans-serif;
+            font-size: 13px; font-weight: 700;
+            color: var(--text-muted); letter-spacing: 0.12em; text-transform: uppercase;
+        }
+        .budget-amount {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 48px; font-weight: 900;
+            color: var(--text-primary); line-height: 1;
+        }
+        .budget-cur {
+            font-size: 19px; font-weight: 400;
+            color: var(--text-secondary);
+        }
+        .budget-desc {
+            font-family: 'Manrope', sans-serif;
+            font-size: 16px; color: var(--text-secondary); line-height: 1.6;
+        }
+        .budget-total {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, rgba(61,199,99,0.1) 0%, rgba(61,199,99,0.03) 100%);
+            border: 1px solid var(--green-border);
+            border-radius: 18px;
+            padding: 30px 52px;
+            display: flex; align-items: center; justify-content: space-between;
+            margin-top: 4px;
+        }
+        .budget-total-label {
+            font-family: 'Manrope', sans-serif;
+            font-size: 16px; font-weight: 700;
+            color: var(--text-secondary); letter-spacing: 0.1em; text-transform: uppercase;
+        }
+        .budget-total-amt {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 40px; font-weight: 900;
+            color: var(--green);
+        }
+
+        /* =============================================
+           PROGRESS DOTS  (outside the stage)
+           ============================================= */
+        .deck-progress {
+            position: fixed; bottom: 24px; left: 50%;
+            transform: translateX(-50%);
+            display: flex; align-items: center; gap: 7px;
+            z-index: 1000;
+        }
+        .pdot {
+            width: 6px; height: 6px;
+            background: rgba(255,255,255,0.18);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.35s var(--ease-apple);
+        }
+        .pdot.active {
+            width: 22px; border-radius: 3px;
+            background: var(--green);
+        }
+
+        /* =============================================
+           INLINE EDITOR
+           ============================================= */
+        .edit-hotzone {
+            position: fixed; top: 0; left: 0;
+            width: 80px; height: 80px;
+            z-index: 10000; cursor: pointer;
+        }
+        .edit-toggle {
+            position: fixed; top: 18px; left: 18px;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 10001;
+            background: rgba(20,20,20,0.92);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white; padding: 7px 15px;
+            border-radius: 8px; font-size: 13px;
+            cursor: pointer; font-family: 'Manrope', sans-serif;
+            font-weight: 600;
+        }
+        .edit-toggle.show, .edit-toggle.active {
+            opacity: 1; pointer-events: auto;
+        }
+        body.edit-mode [contenteditable="true"] {
+            outline: 1px dashed rgba(61,199,99,0.45);
+            border-radius: 3px; cursor: text;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="deck-viewport">
+    <main class="deck-stage" id="deckStage">
+
+        <!-- =========================================
+             SLIDE 1 — COVER
+             ========================================= -->
+        <section class="slide slide-cover active" data-slide="1">
+            <div class="cover-bg"></div>
+            <div class="cover-grid"></div>
+            <div class="cover-accent-line"></div>
+            <div class="cover-watermark">2026</div>
+
+            <div class="cover-top-brand reveal d1">
+                <!-- Tapmad chevron logo -->
+                <svg class="tapmad-logo" width="36" height="36" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 8 L18 20 L5 32 L10 20 Z" fill="#3DC763"/>
+                    <path d="M16 8 L29 20 L16 32 L21 20 Z" fill="#3DC763" opacity="0.65"/>
+                    <path d="M7 8 L11.5 20 L7 32 Z" fill="#1a1a1a"/>
+                </svg>
+                <span class="cover-top-brand-name">TAPMAD</span>
+            </div>
+
+            <div class="cover-center">
+                <div class="cover-eyebrow reveal d1">Social Media Team</div>
+                <div class="cover-headline reveal d2">
+                    FIFA
+                    <span class="year">2026</span>
+                </div>
+                <div class="cover-subtitle reveal d3">Social Media Marketing Plan</div>
+                <div class="cover-rule reveal d4"></div>
+                <div class="cover-meta reveal d5">
+                    <span class="cover-meta-item">Tapmad Social Team</span>
+                    <span class="cover-meta-sep"></span>
+                    <span class="cover-meta-item">FIFA World Cup 2026</span>
+                    <span class="cover-meta-sep"></span>
+                    <span class="cover-meta-item">USA · Canada · Mexico</span>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- =========================================
+             SLIDE 2 — THE MISSION
+             ========================================= -->
+        <section class="slide" data-slide="2">
+            <div class="slide-inner">
+                <div class="slide-header">
+                    <div class="brand-mark reveal d1">
+                        <svg class="tapmad-logo" width="30" height="30" viewBox="0 0 40 40" fill="none">
+                            <path d="M5 8 L18 20 L5 32 L10 20 Z" fill="#3DC763"/>
+                            <path d="M16 8 L29 20 L16 32 L21 20 Z" fill="#3DC763" opacity="0.65"/>
+                            <path d="M7 8 L11.5 20 L7 32 Z" fill="#1a1a1a"/>
+                        </svg>
+                        <span class="brand-name">TAP<span>MAD</span></span>
+                    </div>
+                    <span class="slide-tag reveal d1">FIFA 2026 · Promotional Plan</span>
+                </div>
+
+                <div class="section-label reveal d1">01 — Objectives</div>
+                <div class="slide-title reveal d2">The <span class="accent">Mission</span></div>
+
+                <div class="mission-cards">
+                    <div class="mission-card reveal-scale d3">
+                        <div class="mission-ghost-num">01</div>
+                        <div class="mission-icon-wrap">🚀</div>
+                        <div class="mission-card-title">Build Excitement Before FIFA 2026</div>
+                        <div class="mission-card-body">Generate anticipation and buzz across all social platforms leading up to the biggest football event on the planet.</div>
+                    </div>
+                    <div class="mission-card reveal-scale d4">
+                        <div class="mission-ghost-num">02</div>
+                        <div class="mission-icon-wrap">🌍</div>
+                        <div class="mission-card-title">Increase Fan Engagement & Community Interaction</div>
+                        <div class="mission-card-body">Build a thriving community through interactive content, polls, and real-time tournament coverage that keeps fans coming back.</div>
+                    </div>
+                </div>
+
+                <div class="pillars-row">
+                    <span class="pillars-row-label reveal d5">Content Pillars —</span>
+                    <div class="pillar-chip reveal d5"><span class="cdot"></span>Trivia</div>
+                    <div class="pillar-chip reveal d5"><span class="cdot"></span>Meme Content</div>
+                    <div class="pillar-chip reveal d6"><span class="cdot"></span>Original Video</div>
+                    <div class="pillar-chip reveal d6"><span class="cdot"></span>Infographics</div>
+                    <div class="pillar-chip reveal d7"><span class="cdot"></span>Live Coverage</div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- =========================================
+             SLIDE 3 — 5 CONTENT PILLARS
+             ========================================= -->
+        <section class="slide" data-slide="3">
+            <div class="slide-inner">
+                <div class="slide-header">
+                    <div class="brand-mark reveal d1">
+                        <svg class="tapmad-logo" width="30" height="30" viewBox="0 0 40 40" fill="none">
+                            <path d="M5 8 L18 20 L5 32 L10 20 Z" fill="#3DC763"/>
+                            <path d="M16 8 L29 20 L16 32 L21 20 Z" fill="#3DC763" opacity="0.65"/>
+                            <path d="M7 8 L11.5 20 L7 32 Z" fill="#1a1a1a"/>
+                        </svg>
+                        <span class="brand-name">TAP<span>MAD</span></span>
+                    </div>
+                    <span class="slide-tag reveal d1">FIFA 2026 · Content Strategy</span>
+                </div>
+
+                <div class="section-label reveal d1">02 — Content Pillars</div>
+                <div class="slide-title reveal d2">5 Content <span class="accent">Pillars</span></div>
+
+                <div class="five-grid">
+                    <div class="pillar-card reveal-scale d3">
+                        <div class="pillar-emoji">🎯</div>
+                        <div class="pillar-card-title">Trivia</div>
+                        <div class="pillar-card-body">Multiple-choice questions on FIFA history, player records, milestones, and tournament standings.</div>
+                        <div class="tag">Interactive</div>
+                    </div>
+                    <div class="pillar-card reveal-scale d4">
+                        <div class="pillar-emoji">😂</div>
+                        <div class="pillar-card-title">Meme Content</div>
+                        <div class="pillar-card-body">Relatable football content bridging global narratives with fans through trending formats and POV storytelling.</div>
+                        <div class="tag">Viral</div>
+                    </div>
+                    <div class="pillar-card reveal-scale d5">
+                        <div class="pillar-emoji">🎬</div>
+                        <div class="pillar-card-title">Video Content</div>
+                        <div class="pillar-card-body">Original office-led series: "Every Office Has..." FIFA edition and "Can You Name This Player?" challenges.</div>
+                        <div class="tag">Original Series</div>
+                    </div>
+                    <div class="pillar-card reveal-scale d6">
+                        <div class="pillar-emoji">📊</div>
+                        <div class="pillar-card-title">Infographics</div>
+                        <div class="pillar-card-body">Points tables, match results, top scorers, and head-to-head comparisons as shareable visual content.</div>
+                        <div class="tag">Data-Driven</div>
+                    </div>
+                    <div class="pillar-card reveal-scale d7">
+                        <div class="pillar-emoji">⚡</div>
+                        <div class="pillar-card-title">Live Coverage</div>
+                        <div class="pillar-card-body">Pre-match, in-match, and post-match content keeping fans locked in across every tournament touchpoint.</div>
+                        <div class="tag">Real-Time</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- =========================================
+             SLIDE 4 — TRIVIA STRATEGY
+             ========================================= -->
+        <section class="slide" data-slide="4">
+            <div class="slide-inner">
+                <div class="slide-header">
+                    <div class="brand-mark reveal d1">
+                        <svg class="tapmad-logo" width="30" height="30" viewBox="0 0 40 40" fill="none">
+                            <path d="M5 8 L18 20 L5 32 L10 20 Z" fill="#3DC763"/>
+                            <path d="M16 8 L29 20 L16 32 L21 20 Z" fill="#3DC763" opacity="0.65"/>
+                            <path d="M7 8 L11.5 20 L7 32 Z" fill="#1a1a1a"/>
+                        </svg>
+                        <span class="brand-name">TAP<span>MAD</span></span>
+                    </div>
+                    <span class="slide-tag reveal d1">FIFA 2026 · Content Pillar 01</span>
+                </div>
+
+                <div class="section-label reveal d1">03 — Trivia Strategy</div>
+                <div class="slide-title reveal d2"><span class="accent">Trivia</span> Strategy</div>
+
+                <div class="trivia-layout">
+                    <div class="trivia-left">
+                        <div class="green-line reveal d3"></div>
+                        <p class="trivia-intro reveal d3">Multiple-choice trivia questions that keep fans informed, entertained, and coming back throughout the tournament.</p>
+                        <div class="topics-label reveal d4">Topics</div>
+                        <div class="topic-list">
+                            <div class="topic-item reveal d4"><span class="tdot"></span>FIFA History & Milestones</div>
+                            <div class="topic-item reveal d5"><span class="tdot"></span>Player Records & Stats</div>
+                            <div class="topic-item reveal d5"><span class="tdot"></span>Tournament Points Table</div>
+                            <div class="topic-item reveal d6"><span class="tdot"></span>World Cup Host Nations</div>
+                        </div>
+                    </div>
+
+                    <div class="trivia-right">
+                        <div class="trivia-q-label reveal d3">Example Questions</div>
+
+                        <div class="trivia-card reveal-scale d4">
+                            <div class="trivia-q">Which countries are hosting the FIFA World Cup 2026?</div>
+                            <div class="trivia-opts">
+                                <div class="trivia-opt correct"><div class="trivia-letter">A</div><span>USA, Canada, and Mexico</span></div>
+                                <div class="trivia-opt"><div class="trivia-letter">B</div><span>USA and Mexico</span></div>
+                                <div class="trivia-opt"><div class="trivia-letter">C</div><span>Canada and Brazil</span></div>
+                                <div class="trivia-opt"><div class="trivia-letter">D</div><span>Mexico and Argentina</span></div>
+                            </div>
+                        </div>
+
+                        <div class="trivia-card reveal-scale d5">
+                            <div class="trivia-q">Which team won the FIFA World Cup 2022?</div>
+                            <div class="trivia-opts">
+                                <div class="trivia-opt"><div class="trivia-letter">A</div><span>France</span></div>
+                                <div class="trivia-opt correct"><div class="trivia-letter">B</div><span>Argentina</span></div>
+                                <div class="trivia-opt"><div class="trivia-letter">C</div><span>Brazil</span></div>
+                                <div class="trivia-opt"><div class="trivia-letter">D</div><span>Croatia</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- =========================================
+             SLIDE 5 — MEME STRATEGY
+             ========================================= -->
+        <section class="slide" data-slide="5">
+            <div class="slide-inner">
+                <div class="slide-header">
+                    <div class="brand-mark reveal d1">
+                        <svg class="tapmad-logo" width="30" height="30" viewBox="0 0 40 40" fill="none">
+                            <path d="M5 8 L18 20 L5 32 L10 20 Z" fill="#3DC763"/>
+                            <path d="M16 8 L29 20 L16 32 L21 20 Z" fill="#3DC763" opacity="0.65"/>
+                            <path d="M7 8 L11.5 20 L7 32 Z" fill="#1a1a1a"/>
+                        </svg>
+                        <span class="brand-name">TAP<span>MAD</span></span>
+                    </div>
+                    <span class="slide-tag reveal d1">FIFA 2026 · Content Pillar 02</span>
+                </div>
+
+                <div class="section-label reveal d1">04 — Meme Strategy</div>
+                <div class="slide-title reveal d2"><span class="accent">Meme</span> Strategy</div>
+
+                <div class="meme-layout">
+                    <div class="meme-left">
+                        <p class="meme-goal reveal d3">Drive <strong>maximum relatability</strong> by bridging global football narratives with fans through <strong>trending formats.</strong></p>
+                        <div class="meme-point reveal d4">
+                            <div class="meme-point-icon">🎯</div>
+                            <div class="meme-point-text">Tap into viral football moments with <strong>locally-resonant humor</strong> — making fans feel seen whether they're Messi loyalists or Ronaldo defenders.</div>
+                        </div>
+                        <div class="meme-point reveal d5">
+                            <div class="meme-point-icon">📈</div>
+                            <div class="meme-point-text">Leverage <strong>trending meme formats</strong> to amplify organic reach and drive shares across all platforms.</div>
+                        </div>
+                    </div>
+
+                    <div class="meme-right">
+                        <div class="meme-ex-label reveal d3">Content Examples — POV Format</div>
+                        <div class="meme-card reveal d4">
+                            <div class="meme-pov">POV</div>
+                            <div class="meme-text">You said "football is overrated" in a room full of Messi fans</div>
+                        </div>
+                        <div class="meme-card reveal d5">
+                            <div class="meme-pov">POV</div>
+                            <div class="meme-text">Your entire bloodline watching penalties together</div>
+                        </div>
+                        <div class="meme-card reveal d6">
+                            <div class="meme-pov">POV</div>
+                            <div class="meme-text">The Argentina obsessive in every office during World Cup season</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- =========================================
+             SLIDE 6 — VIDEO CONTENT SERIES
+             ========================================= -->
+        <section class="slide" data-slide="6">
+            <div class="slide-inner">
+                <div class="slide-header">
+                    <div class="brand-mark reveal d1">
+                        <svg class="tapmad-logo" width="30" height="30" viewBox="0 0 40 40" fill="none">
+                            <path d="M5 8 L18 20 L5 32 L10 20 Z" fill="#3DC763"/>
+                            <path d="M16 8 L29 20 L16 32 L21 20 Z" fill="#3DC763" opacity="0.65"/>
+                            <path d="M7 8 L11.5 20 L7 32 Z" fill="#1a1a1a"/>
+                        </svg>
+                        <span class="brand-name">TAP<span>MAD</span></span>
+                    </div>
+                    <span class="slide-tag reveal d1">FIFA 2026 · Content Pillar 03</span>
+                </div>
+
+                <div class="section-label reveal d1">05 — Video Content</div>
+                <div class="slide-title reveal d2">Original Video <span class="accent">Series</span></div>
+
+                <div class="video-layout">
+                    <div class="video-card reveal-scale d3">
+                        <div class="video-eyebrow">Series 01</div>
+                        <div class="video-card-title">"Every Office Has…" FIFA Edition</div>
+                        <div class="sec-label">Format</div>
+                        <div class="video-desc">Quick cuts introducing relatable employee stereotypes during World Cup season — every workplace becomes a football battleground.</div>
+                        <div class="sec-label">Characters</div>
+                        <div class="arrow-list">
+                            <div class="arrow-item">The fake football expert</div>
+                            <div class="arrow-item">The Argentina obsessive</div>
+                            <div class="arrow-item">The Ronaldo vs Messi debater</div>
+                            <div class="arrow-item">The guy who supports Brazil every 4 years</div>
+                            <div class="arrow-item">The employee who suddenly knows offsides</div>
+                            <div class="arrow-item">HR trying to stop the screaming</div>
+                        </div>
+                    </div>
+
+                    <div class="video-card reveal-scale d4">
+                        <div class="video-eyebrow">Series 02</div>
+                        <div class="video-card-title">"Can You Name This Player?"</div>
+                        <div class="sec-label">Format</div>
+                        <div class="video-desc">Fast-paced office challenge content testing football knowledge with a progressive clue reveal sequence.</div>
+                        <div class="sec-label">Clue Sequence</div>
+                        <div class="arrow-list">
+                            <div class="arrow-item">Blur reveal — silhouette first</div>
+                            <div class="arrow-item">Childhood photo</div>
+                            <div class="arrow-item">AI voice clue</div>
+                            <div class="arrow-item">Emoji clues</div>
+                            <div class="arrow-item">Jersey number challenge</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- =========================================
+             SLIDE 7 — INFOGRAPHICS
+             ========================================= -->
+        <section class="slide" data-slide="7">
+            <div class="slide-inner">
+                <div class="slide-header">
+                    <div class="brand-mark reveal d1">
+                        <svg class="tapmad-logo" width="30" height="30" viewBox="0 0 40 40" fill="none">
+                            <path d="M5 8 L18 20 L5 32 L10 20 Z" fill="#3DC763"/>
+                            <path d="M16 8 L29 20 L16 32 L21 20 Z" fill="#3DC763" opacity="0.65"/>
+                            <path d="M7 8 L11.5 20 L7 32 Z" fill="#1a1a1a"/>
+                        </svg>
+                        <span class="brand-name">TAP<span>MAD</span></span>
+                    </div>
+                    <span class="slide-tag reveal d1">FIFA 2026 · Content Pillar 04</span>
+                </div>
+
+                <div class="section-label reveal d1">06 — Data Content</div>
+                <div class="slide-title reveal d2"><span class="accent">Infographics</span> Strategy</div>
+
+                <div class="info-grid">
+                    <div class="info-card reveal-scale d3">
+                        <div class="info-ghost">01</div>
+                        <div class="info-emoji">📋</div>
+                        <div class="info-card-title">Points Table</div>
+                        <div class="info-card-body">Updated weekly to keep fans informed on team standings, points, and tournament progress throughout the group stages.</div>
+                        <div class="freq-tag">Weekly Update</div>
+                    </div>
+                    <div class="info-card reveal-scale d4">
+                        <div class="info-ghost">02</div>
+                        <div class="info-emoji">⚽</div>
+                        <div class="info-card-title">Match Results</div>
+                        <div class="info-card-body">Daily recap graphics covering all match outcomes — scores, goal scorers, and standout moments from the day.</div>
+                        <div class="freq-tag">Daily Recap</div>
+                    </div>
+                    <div class="info-card reveal-scale d5">
+                        <div class="info-ghost">03</div>
+                        <div class="info-emoji">🏆</div>
+                        <div class="info-card-title">Most Goal Scorer</div>
+                        <div class="info-card-body">Weekly leaderboard showcasing the tournament's top scorers and standout attacking performances.</div>
+                        <div class="freq-tag">Weekly Leaderboard</div>
+                    </div>
+                    <div class="info-card reveal-scale d6">
+                        <div class="info-ghost">04</div>
+                        <div class="info-emoji">⚔️</div>
+                        <div class="info-card-title">Teams Head to Head</div>
+                        <div class="info-card-body">Pre-match comparison graphics for major fixtures — building excitement and fan engagement before key games.</div>
+                        <div class="freq-tag">Pre-Match</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- =========================================
+             SLIDE 8 — LIVE COVERAGE
+             ========================================= -->
+        <section class="slide" data-slide="8">
+            <div class="slide-inner">
+                <div class="slide-header">
+                    <div class="brand-mark reveal d1">
+                        <svg class="tapmad-logo" width="30" height="30" viewBox="0 0 40 40" fill="none">
+                            <path d="M5 8 L18 20 L5 32 L10 20 Z" fill="#3DC763"/>
+                            <path d="M16 8 L29 20 L16 32 L21 20 Z" fill="#3DC763" opacity="0.65"/>
+                            <path d="M7 8 L11.5 20 L7 32 Z" fill="#1a1a1a"/>
+                        </svg>
+                        <span class="brand-name">TAP<span>MAD</span></span>
+                    </div>
+                    <span class="slide-tag reveal d1">FIFA 2026 · Content Pillar 05</span>
+                </div>
+
+                <div class="section-label reveal d1">07 — Match Coverage</div>
+                <div class="slide-title reveal d2">Live <span class="accent">Coverage</span></div>
+                <p class="coverage-intro reveal d3">Keeping our audience <strong>fully locked into the tournament</strong> by delivering pre-match, crucial lineup updates, relevant news, and post-match data visualization.</p>
+
+                <div class="coverage-grid">
+                    <div class="coverage-card reveal-scale d4">
+                        <div class="cov-icon">📰</div>
+                        <div class="coverage-card-title">Breaking News</div>
+                        <div class="coverage-card-body">Real-time coverage of player news, injuries, lineup announcements, and any thrilling match moment as it happens.</div>
+                        <div class="tag-row">
+                            <span class="small-tag">Real-time</span>
+                            <span class="small-tag">Players</span>
+                            <span class="small-tag">Lineups</span>
+                        </div>
+                    </div>
+                    <div class="coverage-card reveal-scale d5">
+                        <div class="cov-icon">📊</div>
+                        <div class="coverage-card-title">Q&amp;A and Polls</div>
+                        <div class="coverage-card-body">Interactive Stories keeping fans engaged during matches — predict winners, vote on best goals, and debate controversial calls.</div>
+                        <div class="tag-row">
+                            <span class="small-tag">Stories</span>
+                            <span class="small-tag">Interactive</span>
+                            <span class="small-tag">Polls</span>
+                        </div>
+                    </div>
+                    <div class="coverage-card reveal-scale d6">
+                        <div class="cov-icon">📢</div>
+                        <div class="coverage-card-title">Pre &amp; Post Match</div>
+                        <div class="coverage-card-body">Build anticipation before kick-off and deliver comprehensive post-match data visualization, highlights, and analysis.</div>
+                        <div class="tag-row">
+                            <span class="small-tag">Announcements</span>
+                            <span class="small-tag">Data Viz</span>
+                            <span class="small-tag">Recaps</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- =========================================
+             SLIDE 9 — YOUTUBE HIGHLIGHTS
+             ========================================= -->
+        <section class="slide" data-slide="9">
+            <div class="slide-inner">
+                <div class="slide-header">
+                    <div class="brand-mark reveal d1">
+                        <svg class="tapmad-logo" width="30" height="30" viewBox="0 0 40 40" fill="none">
+                            <path d="M5 8 L18 20 L5 32 L10 20 Z" fill="#3DC763"/>
+                            <path d="M16 8 L29 20 L16 32 L21 20 Z" fill="#3DC763" opacity="0.65"/>
+                            <path d="M7 8 L11.5 20 L7 32 Z" fill="#1a1a1a"/>
+                        </svg>
+                        <span class="brand-name">TAP<span>MAD</span></span>
+                    </div>
+                    <span class="slide-tag reveal d1">FIFA 2026 · YouTube Strategy</span>
+                </div>
+
+                <div class="section-label reveal d1">08 — YouTube</div>
+                <div class="slide-title reveal d2">YouTube <span class="accent">Highlights</span></div>
+
+                <div class="yt-layout">
+                    <div class="yt-main reveal-scale d3">
+                        <div class="yt-play-btn">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+                        </div>
+                        <div class="yt-main-title">Exclusive FIFA 2026 Content on YouTube</div>
+                        <div class="yt-main-body">Long-form match highlights and exclusive content crafted specifically for our YouTube audience — quick, crisp, and packed with key moments and goals.</div>
+                        <div class="pill" style="width:fit-content;margin-top:auto;">Exclusive on Tapmad</div>
+                    </div>
+
+                    <div class="yt-feat reveal-scale d4">
+                        <div class="yt-big-num">30</div>
+                        <div class="yt-feat-title">Minutes Max Per Match</div>
+                        <div class="yt-feat-body">Comprehensive yet digestible coverage — up to 30 minutes of clips and highlights per match, covering every key moment.</div>
+                        <div class="tag">Per Game</div>
+                    </div>
+
+                    <div class="yt-feat reveal-scale d5">
+                        <div class="yt-big-num" style="font-size:44px;letter-spacing:-2px;">🎬</div>
+                        <div class="yt-feat-title">Match Clips &amp; Highlights</div>
+                        <div class="yt-feat-body">Quick, crisp highlights of key moments and goals — curated for maximum impact and audience retention on YouTube.</div>
+                        <div class="tag">Daily Upload</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- =========================================
+             SLIDE 10 — BUDGET
+             ========================================= -->
+        <section class="slide" data-slide="10">
+            <div class="slide-inner">
+                <div class="slide-header">
+                    <div class="brand-mark reveal d1">
+                        <svg class="tapmad-logo" width="30" height="30" viewBox="0 0 40 40" fill="none">
+                            <path d="M5 8 L18 20 L5 32 L10 20 Z" fill="#3DC763"/>
+                            <path d="M16 8 L29 20 L16 32 L21 20 Z" fill="#3DC763" opacity="0.65"/>
+                            <path d="M7 8 L11.5 20 L7 32 Z" fill="#1a1a1a"/>
+                        </svg>
+                        <span class="brand-name">TAP<span>MAD</span></span>
+                    </div>
+                    <span class="slide-tag reveal d1">FIFA 2026 · Investment</span>
+                </div>
+
+                <div class="section-label reveal d1">09 — Budget</div>
+                <div class="slide-title reveal d2">Budget <span class="accent">Allocation</span></div>
+
+                <div class="budget-grid">
+                    <div class="budget-card reveal-scale d3">
+                        <div class="budget-icon bi-green">💬</div>
+                        <div class="budget-cat">Social Media</div>
+                        <div class="budget-amount">
+                            <span class="budget-cur">PKR </span><span class="count-up" data-target="1500000">1,500,000</span>
+                        </div>
+                        <div class="budget-desc">Content creation, creative production, and paid social distribution across all platforms.</div>
+                    </div>
+
+                    <div class="budget-card reveal-scale d4">
+                        <div class="budget-icon bi-yellow">🎁</div>
+                        <div class="budget-cat">Giveaway Campaigns</div>
+                        <div class="budget-amount">
+                            <span class="budget-cur">PKR </span><span class="count-up" data-target="100000">100,000</span>
+                        </div>
+                        <div class="budget-desc">Fan engagement giveaways, prizes, and interactive campaign rewards to drive participation.</div>
+                    </div>
+
+                    <div class="budget-card reveal-scale d5">
+                        <div class="budget-icon bi-red">▶️</div>
+                        <div class="budget-cat">YouTube</div>
+                        <div class="budget-amount">
+                            <span class="budget-cur">PKR </span><span class="count-up" data-target="300000">300,000</span>
+                        </div>
+                        <div class="budget-desc">Video production, editing, and YouTube channel growth for match highlights and exclusive content.</div>
+                    </div>
+
+                    <div class="budget-total reveal d6">
+                        <div class="budget-total-label">Total Campaign Investment</div>
+                        <div class="budget-total-amt">PKR 1,900,000</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<!-- Progress dots — outside the fixed stage -->
+<div class="deck-progress" id="deckProgress"></div>
+
+<!-- Inline edit hotzone (top-left corner) -->
+<div class="edit-hotzone" id="editHotzone"></div>
+<button class="edit-toggle" id="editToggle">✏️ Edit</button>
+
+
+<script>
+    /* =============================================
+       SLIDE PRESENTATION CONTROLLER
+       ============================================= */
+    class SlidePresentation {
+        constructor() {
+            this.slides   = Array.from(document.querySelectorAll('.slide'));
+            this.current  = 0;
+            this.stage    = document.getElementById('deckStage');
+            this.progress = document.getElementById('deckProgress');
+            this._init();
+        }
+
+        _init() {
+            this._scaleStage();
+            window.addEventListener('resize', () => this._scaleStage());
+            this._buildDots();
+            this._keyboard();
+            this._touch();
+            this._wheel();
+            this.goTo(0);
+        }
+
+        _scaleStage() {
+            const f = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+            const x = (window.innerWidth  - 1920 * f) / 2;
+            const y = (window.innerHeight - 1080 * f) / 2;
+            this.stage.style.transform = `translate(${x}px,${y}px) scale(${f})`;
+        }
+
+        _buildDots() {
+            this.progress.innerHTML = '';
+            this.slides.forEach((_, i) => {
+                const d = document.createElement('div');
+                d.className = 'pdot';
+                d.addEventListener('click', () => this.goTo(i));
+                this.progress.appendChild(d);
+            });
+        }
+
+        goTo(idx) {
+            if (idx < 0 || idx >= this.slides.length) return;
+            this.slides[this.current].classList.remove('active', 'visible');
+            this.current = idx;
+            const s = this.slides[this.current];
+            s.classList.add('active');
+            /* Two rAF frames so CSS transition fires after paint */
+            requestAnimationFrame(() => requestAnimationFrame(() => {
+                s.classList.add('visible');
+                this._runCountUps(s);
+            }));
+            this.progress.querySelectorAll('.pdot')
+                .forEach((d, i) => d.classList.toggle('active', i === this.current));
+        }
+
+        next() { this.goTo(this.current + 1); }
+        prev() { this.goTo(this.current - 1); }
+
+        _keyboard() {
+            document.addEventListener('keydown', e => {
+                if (e.target.getAttribute('contenteditable')) return;
+                if (['ArrowRight','ArrowDown',' ','PageDown'].includes(e.key)) { e.preventDefault(); this.next(); }
+                if (['ArrowLeft','ArrowUp','PageUp'].includes(e.key))          { e.preventDefault(); this.prev(); }
+            });
+        }
+
+        _touch() {
+            let sx, sy;
+            document.addEventListener('touchstart', e => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, {passive:true});
+            document.addEventListener('touchend', e => {
+                const dx = e.changedTouches[0].clientX - sx;
+                const dy = e.changedTouches[0].clientY - sy;
+                if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 44) dx < 0 ? this.next() : this.prev();
+            }, {passive:true});
+        }
+
+        _wheel() {
+            let last = 0;
+            document.addEventListener('wheel', e => {
+                const now = Date.now();
+                if (now - last < 700) return;
+                last = now;
+                e.deltaY > 0 ? this.next() : this.prev();
+            }, {passive: true});
+        }
+
+        _runCountUps(slide) {
+            slide.querySelectorAll('.count-up:not(.done)').forEach(el => {
+                el.classList.add('done');
+                const target = parseInt(el.dataset.target, 10);
+                const dur = 1600;
+                const t0  = performance.now();
+                const step = now => {
+                    const p = Math.min((now - t0) / dur, 1);
+                    const e = 1 - Math.pow(1 - p, 3);   /* ease-out-cubic */
+                    el.textContent = Math.round(e * target).toLocaleString();
+                    if (p < 1) requestAnimationFrame(step);
+                };
+                requestAnimationFrame(step);
+            });
+        }
+    }
+
+    /* =============================================
+       INLINE EDITOR
+       ============================================= */
+    class InlineEditor {
+        constructor() {
+            this.active  = false;
+            this.toggle  = document.getElementById('editToggle');
+            this.hotzone = document.getElementById('editHotzone');
+            this._hover();
+            this.toggle.addEventListener('click',  () => this._flip());
+            this.hotzone.addEventListener('click',  () => this._flip());
+            document.addEventListener('keydown', e => {
+                if ((e.key === 'e' || e.key === 'E') && !e.target.getAttribute('contenteditable'))
+                    this._flip();
+            });
+        }
+
+        _hover() {
+            let t = null;
+            const show = () => { clearTimeout(t); this.toggle.classList.add('show'); };
+            const hide = () => { t = setTimeout(() => { if (!this.active) this.toggle.classList.remove('show'); }, 400); };
+            this.hotzone.addEventListener('mouseenter', show);
+            this.hotzone.addEventListener('mouseleave', hide);
+            this.toggle.addEventListener('mouseenter', show);
+            this.toggle.addEventListener('mouseleave', hide);
+        }
+
+        _flip() {
+            this.active = !this.active;
+            document.body.classList.toggle('edit-mode', this.active);
+            this.toggle.textContent = this.active ? '💾 Done' : '✏️ Edit';
+            this.toggle.classList.toggle('active', this.active);
+            const sel = '.slide-title, .mission-card-title, .mission-card-body, .pillar-card-title, .pillar-card-body, .coverage-card-title, .coverage-card-body, .budget-desc, .video-card-title, .video-desc, .meme-text, .yt-main-title, .yt-main-body, .yt-feat-title, .yt-feat-body, .info-card-title, .info-card-body, .trivia-q, .cover-headline, .cover-subtitle, .cover-eyebrow';
+            document.querySelectorAll(sel).forEach(el => {
+                el.contentEditable = this.active ? 'true' : 'false';
+            });
+        }
+    }
+
+    /* Boot */
+    const deck   = new SlidePresentation();
+    const editor = new InlineEditor();
+</script>
+
+</body>
+</html>
