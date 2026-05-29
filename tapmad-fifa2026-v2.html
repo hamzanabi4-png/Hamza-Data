@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>tapmad × FIFA 2026 — Social Media Plan</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+
+/* === THEME === */
+:root {
+  --g:     #3DC763;
+  --gd:    rgba(61,199,99,0.14);
+  --gb:    rgba(61,199,99,0.24);
+  --dark:  #0f0f0f;
+  --cb:    rgba(255,255,255,0.05);
+  --cbr:   rgba(255,255,255,0.09);
+  --ts:    #8A8A8A;
+  --tm:    #4A4A4A;
+  --fd:    'Bricolage Grotesque', sans-serif;
+  --fb:    'DM Sans', sans-serif;
+  --ea:    cubic-bezier(0.25,0.46,0.45,0.94);
+  --ee:    cubic-bezier(0.16,1,0.3,1);
+}
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+/* === VIEWPORT BASE === */
+html,body{width:100%;height:100%;overflow:hidden;background:#0f0f0f}
+.deck-viewport{position:fixed;inset:0;overflow:hidden;background:#0f0f0f}
+.deck-stage{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:hidden;transform-origin:0 0}
+.slide{position:absolute;inset:0;width:1920px;height:1080px;overflow:hidden;display:block;
+  visibility:hidden;opacity:0;pointer-events:none;background:#0f0f0f;
+  transition:opacity .65s var(--ea),transform .65s var(--ea);
+  transform:scale(1.022) translateY(7px)}
+.slide.active,.slide.visible{visibility:visible;opacity:1;pointer-events:auto;z-index:1;transform:scale(1) translateY(0)}
+img,video,canvas,svg{max-width:100%;max-height:100%}
+@media print{
+  html,body{width:1920px;height:auto;overflow:visible}
+  .deck-viewport{position:static}
+  .deck-stage{position:static;width:auto;height:auto;transform:none!important}
+  .slide{position:relative;display:block!important;visibility:visible!important;opacity:1!important;
+    pointer-events:auto!important;width:1920px;height:1080px;break-after:page}
+  .slide:last-child{break-after:auto}
+  .deck-progress,.edit-hotzone,.edit-toggle{display:none!important}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.2s!important}}
+
+/* === REVEALS === */
+.rev{opacity:0;transform:translateY(22px);transition:opacity .75s var(--ee),transform .75s var(--ee)}
+.slide.visible .rev{opacity:1;transform:translateY(0)}
+.revs{opacity:0;transform:scale(.93) translateY(10px);transition:opacity .7s var(--ee),transform .7s var(--ee)}
+.slide.visible .revs{opacity:1;transform:scale(1) translateY(0)}
+.revl{opacity:0;transform:translateX(-30px);transition:opacity .7s var(--ee),transform .7s var(--ee)}
+.slide.visible .revl{opacity:1;transform:translateX(0)}
+.revr{opacity:0;transform:translateX(40px);transition:opacity .7s var(--ee),transform .7s var(--ee)}
+.slide.visible .revr{opacity:1;transform:translateX(0)}
+.d1{transition-delay:.05s}.d2{transition-delay:.15s}.d3{transition-delay:.25s}
+.d4{transition-delay:.35s}.d5{transition-delay:.45s}.d6{transition-delay:.55s}
+.d7{transition-delay:.65s}.d8{transition-delay:.75s}
+
+/* === LAYOUT SHELL === */
+.si{width:1920px;height:1080px;display:flex;flex-direction:column;padding:52px 108px 58px;position:relative}
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:36px;flex-shrink:0}
+.bm{display:flex;align-items:center;gap:10px;font-family:var(--fb);font-size:15px;font-weight:500;
+  color:rgba(255,255,255,.5);letter-spacing:.04em}
+.bm .g{color:var(--g);font-weight:700}.bm .x{color:rgba(255,255,255,.22)}
+.bm-w{display:flex;align-items:center;gap:10px;font-family:var(--fb);font-size:15px;font-weight:500;
+  color:rgba(0,0,0,.4);letter-spacing:.04em}
+.bm-w .g{color:var(--g);font-weight:700}
+.stag{font-family:var(--fb);font-size:12px;font-weight:500;color:var(--tm);letter-spacing:.16em;text-transform:uppercase}
+.stag-w{font-family:var(--fb);font-size:12px;font-weight:500;color:rgba(0,0,0,.3);letter-spacing:.16em;text-transform:uppercase}
+.slbl{font-family:var(--fb);font-size:12px;font-weight:700;color:var(--g);
+  letter-spacing:.22em;text-transform:uppercase;margin-bottom:10px;flex-shrink:0}
+/* Mixed-weight title */
+.mt{font-family:var(--fd);font-size:70px;line-height:1.08;flex-shrink:0}
+.tl{font-weight:400;color:#fff}.tb{font-weight:800;color:#fff}.tg{color:var(--g)}
+.tl-d{font-weight:400;color:#0f0f0f}.tb-d{font-weight:800;color:#0f0f0f}
+/* Cards */
+.card{background:var(--cb);border:1px solid var(--cbr);border-radius:20px}
+/* Pill */
+.pill{display:inline-flex;align-items:center;gap:6px;padding:6px 15px;
+  background:var(--gd);border:1px solid var(--gb);border-radius:100px;
+  font-family:var(--fb);font-size:12px;font-weight:700;color:var(--g);
+  text-transform:uppercase;letter-spacing:.08em}
+/* Green bar */
+.gbar{width:44px;height:4px;background:var(--g);border-radius:2px;margin-bottom:16px}
+/* Orb */
+.orb{position:absolute;border-radius:50%;filter:blur(88px);pointer-events:none}
+
+/* ===================================================
+   SLIDE 1 — COVER  (green aurora)
+   =================================================== */
+.s1{background:#050d07}
+@keyframes op{0%,100%{transform:scale(1);opacity:.85}50%{transform:scale(1.08);opacity:1}}
+.o1{width:720px;height:720px;bottom:-160px;left:-100px;
+  background:radial-gradient(circle,rgba(35,145,65,.7) 0%,transparent 65%);animation:op 7s ease-in-out infinite}
+.o2{width:520px;height:520px;top:-100px;right:240px;
+  background:radial-gradient(circle,rgba(18,105,45,.55) 0%,transparent 65%);animation:op 9s ease-in-out 1s infinite}
+.o3{width:280px;height:280px;top:220px;left:260px;
+  background:radial-gradient(circle,rgba(61,199,99,.28) 0%,transparent 70%);animation:op 5s ease-in-out 2s infinite}
+.cgrid{position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px);
+  background-size:80px 80px}
+.cgrid::after{content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 78% 78% at 50% 50%,transparent 0%,rgba(5,13,7,.88) 78%)}
+.cwm{position:absolute;right:-20px;bottom:-70px;
+  font-family:var(--fd);font-size:500px;font-weight:900;
+  color:rgba(61,199,99,.03);line-height:1;pointer-events:none;z-index:0;user-select:none}
+.ctop{position:absolute;top:50px;left:100px;display:flex;align-items:center;gap:11px;z-index:2}
+.ctlbl{font-family:var(--fb);font-size:14px;font-weight:500;
+  color:rgba(255,255,255,.42);letter-spacing:.05em}
+.ctlbl .g{color:var(--g);font-weight:700}
+.ctagr{position:absolute;top:56px;right:100px;
+  font-family:var(--fb);font-size:12px;color:rgba(255,255,255,.22);
+  letter-spacing:.15em;text-transform:uppercase;z-index:2}
+.cen{position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;
+  align-items:flex-start;justify-content:center;padding:0 108px}
+.cey{font-family:var(--fb);font-size:13px;font-weight:700;color:var(--g);
+  letter-spacing:.28em;text-transform:uppercase;margin-bottom:22px}
+.ch{font-family:var(--fd);line-height:.9;margin-bottom:32px}
+.ch .l1{display:block;font-size:186px;font-weight:400;color:rgba(255,255,255,.88)}
+.ch .l2{display:block;font-size:186px;font-weight:800;color:var(--g)}
+.csub{font-family:var(--fd);font-size:26px;font-weight:400;
+  color:rgba(255,255,255,.38);letter-spacing:.1em;text-transform:uppercase;margin-bottom:48px}
+.crul{width:72px;height:1px;background:rgba(255,255,255,.14);margin-bottom:28px}
+.cmeta{display:flex;align-items:center;gap:24px}
+.cmi{font-family:var(--fb);font-size:13px;color:rgba(255,255,255,.28)}
+.cmsep{width:3px;height:3px;background:rgba(255,255,255,.18);border-radius:50%}
+/* Right deco: ribbon + football + trophy */
+.cdeco{position:absolute;right:80px;top:50%;transform:translateY(-50%);z-index:1}
+/* Stadium silhouette */
+.cstad{position:absolute;bottom:0;left:0;width:100%;pointer-events:none;opacity:.07}
+
+/* ===================================================
+   SLIDE 2 — MISSION (dark)
+   =================================================== */
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:26px;flex:1}
+.mc{background:var(--cb);border:1px solid var(--cbr);border-radius:22px;
+  padding:44px 48px;display:flex;flex-direction:column;gap:16px;position:relative;overflow:hidden}
+.mc::before{content:'';position:absolute;top:0;left:0;width:100%;height:3px;
+  background:linear-gradient(90deg,var(--g) 0%,transparent 65%)}
+.mc-gn{position:absolute;right:34px;top:22px;font-family:var(--fd);font-size:100px;
+  font-weight:800;color:rgba(61,199,99,.06);line-height:1;pointer-events:none}
+.mc-ico{width:50px;height:50px;background:var(--gd);border:1px solid var(--gb);
+  border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.mc-ttl{font-family:var(--fd);font-size:26px;line-height:1.3;max-width:520px}
+.mc-bod{font-family:var(--fb);font-size:17px;color:var(--ts);line-height:1.65}
+.prow{display:flex;align-items:center;gap:11px;margin-top:22px;flex-shrink:0;flex-wrap:wrap}
+.plbl{font-family:var(--fb);font-size:11px;font-weight:700;color:var(--tm);
+  letter-spacing:.16em;text-transform:uppercase;margin-right:4px}
+.pch{display:flex;align-items:center;gap:7px;padding:8px 17px;
+  background:var(--cb);border:1px solid var(--cbr);border-radius:100px;
+  font-family:var(--fb);font-size:13px;font-weight:500;color:rgba(255,255,255,.68)}
+.pch .cd{width:5px;height:5px;background:var(--g);border-radius:50%}
+
+/* ===================================================
+   SLIDE 3 — PILLARS (dark + ribbon)
+   =================================================== */
+.fg{display:grid;grid-template-columns:repeat(5,1fr);gap:18px;margin-top:24px;flex:1}
+.pc{background:var(--cb);border:1px solid var(--cbr);border-radius:18px;
+  padding:34px 28px;display:flex;flex-direction:column;gap:13px;
+  transition:border-color .3s,background .3s;position:relative;overflow:hidden}
+.pc:hover{border-color:var(--gb);background:rgba(61,199,99,.04)}
+.pc::after{content:'';position:absolute;bottom:0;left:0;width:100%;height:2px;
+  background:linear-gradient(90deg,var(--g),transparent);opacity:0;transition:opacity .3s}
+.pc:hover::after{opacity:1}
+.pn{font-family:var(--fd);font-size:13px;font-weight:800;color:var(--g);letter-spacing:.1em}
+.pe{font-size:38px;line-height:1}
+.pt{font-family:var(--fd);font-size:19px;font-weight:700;color:#fff}
+.pb{font-family:var(--fb);font-size:13px;color:var(--ts);line-height:1.7;flex:1}
+.ptag{display:inline-flex;padding:4px 11px;background:var(--gd);border-radius:100px;
+  font-family:var(--fb);font-size:11px;font-weight:700;color:var(--g);width:fit-content;
+  text-transform:uppercase;letter-spacing:.07em}
+
+/* ===================================================
+   SLIDE 4 — TRIVIA (dark)
+   =================================================== */
+.tlyt{display:grid;grid-template-columns:350px 1fr;gap:60px;margin-top:22px;flex:1;align-items:start}
+.ti{font-family:var(--fb);font-size:18px;color:var(--ts);line-height:1.7;margin-bottom:24px}
+.tplbl{font-family:var(--fb);font-size:11px;font-weight:700;color:var(--tm);
+  letter-spacing:.15em;text-transform:uppercase;margin-bottom:12px}
+.tpl{display:flex;flex-direction:column;gap:9px}
+.tpitem{display:flex;align-items:center;gap:12px;
+  font-family:var(--fb);font-size:16px;color:var(--ts)}
+.tdot{width:5px;height:5px;background:var(--g);border-radius:50%;flex-shrink:0}
+.tqlbl{font-family:var(--fb);font-size:11px;font-weight:700;color:var(--tm);
+  letter-spacing:.15em;text-transform:uppercase;margin-bottom:14px}
+.tqc{background:var(--cb);border:1px solid var(--cbr);border-radius:15px;
+  padding:26px 34px;margin-bottom:14px}
+.tqt{font-family:var(--fd);font-size:18px;font-weight:600;color:#fff;
+  margin-bottom:18px;line-height:1.45}
+.tqo{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.opt{display:flex;align-items:center;gap:10px;padding:10px 14px;
+  background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06);
+  border-radius:9px;font-family:var(--fb);font-size:14px;color:var(--ts)}
+.olet{width:24px;height:24px;flex-shrink:0;background:rgba(255,255,255,.05);
+  border-radius:6px;display:flex;align-items:center;justify-content:center;
+  font-family:var(--fd);font-size:11px;font-weight:800;color:var(--tm)}
+.opt.ok{border-color:var(--gb);background:var(--gd)}
+.opt.ok .olet{background:var(--g);color:#000}
+.opt.ok span{color:#fff;font-weight:500}
+
+/* ===================================================
+   SLIDE 5 — MEME (dark + orb)
+   =================================================== */
+.mlyt{display:grid;grid-template-columns:1fr 1fr;gap:52px;margin-top:22px;flex:1;align-items:start}
+.mlft{display:flex;flex-direction:column;gap:20px}
+.mint{font-family:var(--fb);font-size:20px;color:var(--ts);line-height:1.7}
+.mint strong{color:#fff;font-weight:600}
+.mpt{display:flex;align-items:flex-start;gap:14px;padding:20px 24px;
+  background:var(--cb);border:1px solid var(--cbr);border-radius:13px}
+.mpi{font-size:24px;flex-shrink:0;margin-top:2px}
+.mptx{font-family:var(--fb);font-size:15px;color:var(--ts);line-height:1.6}
+.mptx strong{color:var(--g)}
+.mrgt{display:flex;flex-direction:column;gap:14px}
+.mexl{font-family:var(--fb);font-size:11px;font-weight:700;color:var(--tm);
+  letter-spacing:.15em;text-transform:uppercase;margin-bottom:4px}
+.mcard{background:var(--cb);border:1px solid var(--cbr);border-radius:15px;
+  padding:24px 30px 24px 38px;position:relative;overflow:hidden}
+.mcard::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--g)}
+.mpov{font-family:var(--fb);font-size:10px;font-weight:700;color:var(--g);
+  letter-spacing:.2em;text-transform:uppercase;margin-bottom:6px}
+.mtxt{font-family:var(--fd);font-size:17px;font-weight:700;color:#fff;line-height:1.4}
+
+/* ===================================================
+   SLIDE 6 — VIDEO (white)
+   =================================================== */
+.s6{background:#F6F6F6!important}
+.vlyt{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:22px;flex:1}
+.vc{background:#fff;border:1px solid rgba(0,0,0,.07);border-radius:18px;
+  padding:38px 42px;display:flex;flex-direction:column;gap:16px;
+  position:relative;overflow:hidden;box-shadow:0 2px 18px rgba(0,0,0,.06)}
+.vc::after{content:'';position:absolute;bottom:0;left:0;width:100%;height:3px;
+  background:linear-gradient(90deg,var(--g) 0%,transparent 65%)}
+.vsn{font-family:var(--fb);font-size:11px;font-weight:700;color:var(--g);
+  letter-spacing:.2em;text-transform:uppercase}
+.vttl{font-family:var(--fd);font-size:23px;line-height:1.3}
+.vsl{font-family:var(--fb);font-size:10px;font-weight:700;color:rgba(0,0,0,.28);
+  letter-spacing:.14em;text-transform:uppercase}
+.vdesc{font-family:var(--fb);font-size:15px;color:rgba(0,0,0,.52);line-height:1.65}
+.vlist{display:flex;flex-direction:column;gap:7px}
+.vitem{display:flex;align-items:flex-start;gap:8px;
+  font-family:var(--fb);font-size:13px;color:rgba(0,0,0,.55);line-height:1.5}
+.vitem::before{content:'→';color:var(--g);font-weight:700;flex-shrink:0}
+
+/* ===================================================
+   SLIDE 7 — INFOGRAPHICS (dark)
+   =================================================== */
+.igrid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;
+  gap:20px;margin-top:22px;flex:1}
+.icard{background:var(--cb);border:1px solid var(--cbr);border-radius:17px;
+  padding:30px 34px;display:flex;flex-direction:column;gap:9px;position:relative;overflow:hidden}
+.ign{position:absolute;right:22px;top:14px;font-family:var(--fd);font-size:76px;
+  font-weight:800;color:rgba(61,199,99,.07);line-height:1;pointer-events:none}
+.iem{font-size:30px;line-height:1}
+.ittl{font-family:var(--fd);font-size:20px;font-weight:700;color:#fff}
+.ibod{font-family:var(--fb);font-size:14px;color:var(--ts);line-height:1.65;flex:1}
+.ftag{display:inline-flex;padding:4px 11px;background:var(--gd);border-radius:100px;
+  font-family:var(--fb);font-size:11px;font-weight:700;color:var(--g);width:fit-content;
+  text-transform:uppercase;letter-spacing:.07em}
+
+/* ===================================================
+   SLIDE 8 — COVERAGE (dark)
+   =================================================== */
+.cvin{font-family:var(--fb);font-size:18px;color:var(--ts);line-height:1.7;
+  max-width:780px;margin-top:6px;margin-bottom:28px;flex-shrink:0}
+.cvin strong{color:#fff}
+.cvgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;flex:1}
+.cvcard{background:var(--cb);border:1px solid var(--cbr);border-radius:18px;
+  padding:38px 34px;display:flex;flex-direction:column;gap:14px}
+.cvico{width:60px;height:60px;background:var(--gd);border:1px solid var(--gb);
+  border-radius:15px;display:flex;align-items:center;justify-content:center;
+  font-size:28px;flex-shrink:0}
+.cvttl{font-family:var(--fd);font-size:21px;font-weight:700;color:#fff}
+.cvbod{font-family:var(--fb);font-size:15px;color:var(--ts);line-height:1.65;flex:1}
+.trow{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto}
+.stag2{padding:4px 10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);
+  border-radius:100px;font-family:var(--fb);font-size:11px;color:var(--tm)}
+
+/* ===================================================
+   SLIDE 9 — YOUTUBE (dark + ribbon left)
+   =================================================== */
+.ytlyt{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:22px;margin-top:22px;flex:1}
+.ytm{background:linear-gradient(140deg,rgba(61,199,99,.11) 0%,rgba(61,199,99,.03) 100%);
+  border:1px solid var(--gb);border-radius:18px;padding:42px 42px;
+  display:flex;flex-direction:column;gap:18px}
+.ytplay{width:60px;height:60px;background:#FF0000;border-radius:13px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ytmttl{font-family:var(--fd);font-size:26px;line-height:1.3}
+.ytmbod{font-family:var(--fb);font-size:15px;color:var(--ts);line-height:1.65;flex:1}
+.ytf{background:var(--cb);border:1px solid var(--cbr);border-radius:18px;
+  padding:38px 34px;display:flex;flex-direction:column;gap:13px}
+.ytnum{font-family:var(--fd);font-size:58px;font-weight:800;color:var(--g);line-height:1}
+.ytfttl{font-family:var(--fd);font-size:19px;font-weight:700;color:#fff;line-height:1.3}
+.ytfbod{font-family:var(--fb);font-size:14px;color:var(--ts);line-height:1.65;flex:1}
+
+/* ===================================================
+   SLIDE 10 — BUDGET (green aurora)
+   =================================================== */
+.s10{background:#050d07}
+.bgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin-top:24px}
+.bc{background:rgba(0,0,0,.28);backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,.1);border-radius:20px;
+  padding:42px 42px;display:flex;flex-direction:column;gap:15px;
+  position:relative;overflow:hidden}
+.bc::before{content:'';position:absolute;top:0;left:0;width:100%;height:3px}
+.bc1::before{background:var(--g)}
+.bc2::before{background:#F5C842}
+.bc3::before{background:#FF6B6B}
+.bico{width:52px;height:52px;border-radius:13px;
+  display:flex;align-items:center;justify-content:center;font-size:26px}
+.big{background:rgba(61,199,99,.18)}
+.biy{background:rgba(245,200,66,.18)}
+.bir{background:rgba(255,107,107,.18)}
+.bcat{font-family:var(--fb);font-size:12px;font-weight:700;
+  color:rgba(255,255,255,.38);letter-spacing:.12em;text-transform:uppercase}
+.bamt{font-family:var(--fd);font-size:50px;font-weight:800;color:#fff;line-height:1}
+.bcur{font-size:19px;font-weight:400;color:rgba(255,255,255,.4)}
+.bdsc{font-family:var(--fb);font-size:14px;color:rgba(255,255,255,.38);line-height:1.6}
+.btot{grid-column:1/-1;background:rgba(0,0,0,.32);backdrop-filter:blur(12px);
+  border:1px solid var(--gb);border-radius:15px;padding:24px 42px;
+  display:flex;align-items:center;justify-content:space-between;margin-top:2px}
+.btlbl{font-family:var(--fb);font-size:13px;font-weight:700;
+  color:rgba(255,255,255,.35);letter-spacing:.1em;text-transform:uppercase}
+.btamt{font-family:var(--fd);font-size:42px;font-weight:800;color:var(--g)}
+
+/* === RIBBON SVG HELPER === */
+.rib{position:absolute;pointer-events:none}
+
+/* === PROGRESS DOTS === */
+.deck-progress{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  display:flex;align-items:center;gap:6px;z-index:1000}
+.pd{width:6px;height:6px;background:rgba(255,255,255,.18);border-radius:50%;
+  cursor:pointer;transition:all .32s var(--ea)}
+.pd.on{width:22px;border-radius:3px;background:var(--g)}
+
+/* === INLINE EDITOR === */
+.edit-hotzone{position:fixed;top:0;left:0;width:80px;height:80px;z-index:10000;cursor:pointer}
+.edit-toggle{position:fixed;top:17px;left:17px;opacity:0;pointer-events:none;
+  transition:opacity .3s;z-index:10001;background:rgba(10,10,10,.92);
+  border:1px solid rgba(255,255,255,.1);color:#fff;padding:6px 13px;border-radius:7px;
+  font-size:13px;cursor:pointer;font-family:var(--fb);font-weight:600}
+.edit-toggle.show,.edit-toggle.on{opacity:1;pointer-events:auto}
+body.em [contenteditable="true"]{outline:1px dashed rgba(61,199,99,.4);border-radius:3px;cursor:text}
+
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+<main class="deck-stage" id="stage">
+
+
+<!-- =====================================================
+     SLIDE 1  COVER — green aurora
+     ===================================================== -->
+<section class="slide s1 active" data-s="1">
+  <div class="orb o1"></div>
+  <div class="orb o2"></div>
+  <div class="orb o3"></div>
+  <div class="cgrid"></div>
+  <div class="cwm">2026</div>
+
+  <!-- brand top-left -->
+  <div class="ctop rev d1">
+    <svg width="30" height="30" viewBox="0 0 40 40" fill="none">
+      <path d="M5 8L18 20L5 32L10 20Z" fill="#3DC763"/>
+      <path d="M16 8L29 20L16 32L21 20Z" fill="#3DC763" opacity=".62"/>
+      <path d="M7 8L11.5 20L7 32Z" fill="#050d07"/>
+    </svg>
+    <span class="ctlbl"><span class="g">tapmad</span> <span style="color:rgba(255,255,255,.22)">×</span> FIFA 2026</span>
+  </div>
+  <div class="ctagr rev d1">Social Media Team</div>
+
+  <!-- headline -->
+  <div class="cen">
+    <div class="cey rev d2">Social Media Marketing Plan</div>
+    <div class="ch">
+      <span class="l1 rev d3">FIFA</span>
+      <span class="l2 rev d4">2026</span>
+    </div>
+    <div class="csub rev d5">tapmad × World Cup</div>
+    <div class="crul rev d6"></div>
+    <div class="cmeta rev d7">
+      <span class="cmi">USA</span><span class="cmsep"></span>
+      <span class="cmi">Canada</span><span class="cmsep"></span>
+      <span class="cmi">Mexico</span><span class="cmsep"></span>
+      <span class="cmi">Summer 2026</span>
+    </div>
+  </div>
+
+  <!-- right: ribbon + football + trophy -->
+  <div class="cdeco revr d3">
+    <svg width="255" height="490" viewBox="0 0 255 490" fill="none">
+      <defs>
+        <linearGradient id="rb1b" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#083519"/><stop offset="100%" stop-color="#165830"/>
+        </linearGradient>
+        <linearGradient id="rb1f" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#165a28" stop-opacity=".9"/>
+          <stop offset="45%" stop-color="#3DC763"/>
+          <stop offset="100%" stop-color="#1d8a3a"/>
+        </linearGradient>
+        <linearGradient id="rb1h" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="rgba(110,240,150,.35)"/>
+          <stop offset="100%" stop-color="rgba(110,240,150,0)"/>
+        </linearGradient>
+      </defs>
+      <path d="M105 475C112 390 140 310 155 228C170 146 163 72 205 32"
+            stroke="url(#rb1b)" stroke-width="74" stroke-linecap="round" fill="none" opacity=".65"/>
+      <path d="M96 476C104 390 133 309 148 227C163 145 156 71 198 30"
+            stroke="url(#rb1f)" stroke-width="56" stroke-linecap="round" fill="none"/>
+      <path d="M98 472C106 386 135 305 150 223C165 141 158 67 200 26"
+            stroke="url(#rb1h)" stroke-width="16" stroke-linecap="round" fill="none"/>
+    </svg>
+    <!-- football wireframe -->
+    <svg width="132" height="132" viewBox="0 0 132 132" style="position:absolute;bottom:-12px;right:-8px">
+      <circle cx="66" cy="66" r="62" stroke="rgba(61,199,99,.35)" stroke-width="1.5" fill="none"/>
+      <circle cx="66" cy="66" r="43" stroke="rgba(61,199,99,.2)" stroke-width="1" fill="none"/>
+      <circle cx="66" cy="66" r="22" stroke="rgba(61,199,99,.14)" stroke-width="1" fill="none"/>
+      <line x1="66" y1="4" x2="66" y2="128" stroke="rgba(61,199,99,.18)" stroke-width="1"/>
+      <line x1="4" y1="66" x2="128" y2="66" stroke="rgba(61,199,99,.18)" stroke-width="1"/>
+      <ellipse cx="66" cy="66" rx="62" ry="30" stroke="rgba(61,199,99,.13)" stroke-width="1" fill="none"/>
+      <ellipse cx="66" cy="66" rx="30" ry="62" stroke="rgba(61,199,99,.13)" stroke-width="1" fill="none"/>
+    </svg>
+    <!-- trophy outline -->
+    <svg width="88" height="108" viewBox="0 0 88 108" style="position:absolute;top:22px;right:-6px" opacity=".38">
+      <path d="M18 96L18 80L8 80C8 80 0 74 0 60C0 50 8 44 8 44L5 26L83 26L80 44C80 44 88 50 88 60C88 74 80 80 70 80L70 96Z"
+            stroke="#3DC763" stroke-width="2" fill="none"/>
+      <rect x="18" y="96" width="52" height="7" rx="2.5" stroke="#3DC763" stroke-width="1.5" fill="none"/>
+      <rect x="11" y="103" width="66" height="5" rx="2.5" stroke="#3DC763" stroke-width="1.5" fill="none"/>
+      <path d="M44 26L44 76" stroke="#3DC763" stroke-width="1" opacity=".45"/>
+      <path d="M18 26L70 26" stroke="#3DC763" stroke-width="1.5"/>
+    </svg>
+  </div>
+
+  <!-- stadium silhouette -->
+  <svg class="cstad" viewBox="0 0 1920 180" preserveAspectRatio="none" width="1920" height="180">
+    <path d="M0 180L0 130Q240 90 480 112Q720 134 840 105Q960 76 1080 105Q1200 134 1440 112Q1680 90 1920 130L1920 180Z"
+          fill="rgba(61,199,99,.05)"/>
+    <path d="M0 180L0 150Q240 122 480 138Q720 154 840 132Q960 110 1080 132Q1200 154 1440 138Q1680 122 1920 150L1920 180Z"
+          fill="rgba(61,199,99,.04)"/>
+  </svg>
+</section>
+
+
+<!-- =====================================================
+     SLIDE 2  MISSION — dark
+     ===================================================== -->
+<section class="slide" data-s="2">
+  <div class="orb" style="width:420px;height:420px;right:-60px;bottom:80px;background:radial-gradient(circle,rgba(61,199,99,.07) 0%,transparent 68%)"></div>
+  <div class="si">
+    <div class="sh">
+      <div class="bm rev d1">
+        <svg width="26" height="26" viewBox="0 0 40 40" fill="none"><path d="M5 8L18 20L5 32L10 20Z" fill="#3DC763"/><path d="M16 8L29 20L16 32L21 20Z" fill="#3DC763" opacity=".62"/></svg>
+        <span><span class="g">tapmad</span> <span class="x">×</span> FIFA 2026</span>
+      </div>
+      <span class="stag rev d1">Promotional Plan</span>
+    </div>
+    <div class="slbl rev d1">01 — Objectives</div>
+    <h2 class="mt rev d2"><span class="tl">The </span><span class="tb tg">Mission</span></h2>
+    <div class="mgrid">
+      <div class="mc revs d3">
+        <div class="mc-gn">01</div>
+        <div class="mc-ico">🚀</div>
+        <div class="mc-ttl"><span class="tl">Build </span><span class="tb tg">Excitement</span><span class="tl"> Before FIFA 2026</span></div>
+        <div class="mc-bod">Generate anticipation and buzz across all social platforms leading up to the biggest football event on the planet.</div>
+      </div>
+      <div class="mc revs d4">
+        <div class="mc-gn">02</div>
+        <div class="mc-ico">🌍</div>
+        <div class="mc-ttl"><span class="tl">Increase </span><span class="tb tg">Fan Engagement</span><span class="tl"> &amp; Community</span></div>
+        <div class="mc-bod">Build a thriving community through interactive content, polls, and real-time tournament coverage that keeps fans coming back.</div>
+      </div>
+    </div>
+    <div class="prow">
+      <span class="plbl rev d5">Content Pillars —</span>
+      <div class="pch rev d5"><span class="cd"></span>Trivia</div>
+      <div class="pch rev d5"><span class="cd"></span>Meme Content</div>
+      <div class="pch rev d6"><span class="cd"></span>Original Video</div>
+      <div class="pch rev d6"><span class="cd"></span>Infographics</div>
+      <div class="pch rev d7"><span class="cd"></span>Live Coverage</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =====================================================
+     SLIDE 3  PILLARS — dark + ribbon
+     ===================================================== -->
+<section class="slide" data-s="3">
+  <!-- ribbon top-right -->
+  <div class="rib" style="top:-50px;right:64px">
+    <svg width="210" height="420" viewBox="0 0 210 420" fill="none">
+      <defs>
+        <linearGradient id="rb3b" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#073317"/><stop offset="100%" stop-color="#144e26"/></linearGradient>
+        <linearGradient id="rb3f" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#155224" stop-opacity=".9"/><stop offset="50%" stop-color="#3DC763"/><stop offset="100%" stop-color="#1a8030"/></linearGradient>
+      </defs>
+      <path d="M85 404C98 322 126 248 135 176C144 104 138 52 178 18" stroke="url(#rb3b)" stroke-width="68" stroke-linecap="round" fill="none" opacity=".62"/>
+      <path d="M78 404C91 320 120 246 129 174C138 102 132 50 172 16" stroke="url(#rb3f)" stroke-width="52" stroke-linecap="round" fill="none"/>
+      <path d="M80 400C93 316 122 242 131 170C140 98 134 46 174 12" stroke="rgba(100,230,145,.22)" stroke-width="14" stroke-linecap="round" fill="none"/>
+    </svg>
+  </div>
+  <div class="orb" style="width:480px;height:480px;right:-80px;bottom:-80px;background:radial-gradient(circle,rgba(61,199,99,.07) 0%,transparent 68%)"></div>
+  <div class="si">
+    <div class="sh">
+      <div class="bm rev d1">
+        <svg width="26" height="26" viewBox="0 0 40 40" fill="none"><path d="M5 8L18 20L5 32L10 20Z" fill="#3DC763"/><path d="M16 8L29 20L16 32L21 20Z" fill="#3DC763" opacity=".62"/></svg>
+        <span><span class="g">tapmad</span> <span class="x">×</span> FIFA 2026</span>
+      </div>
+      <span class="stag rev d1">Content Strategy</span>
+    </div>
+    <div class="slbl rev d1">02 — Content Strategy</div>
+    <h2 class="mt rev d2"><span class="tl">5 Content </span><span class="tb tg">Pillars</span></h2>
+    <div class="fg">
+      <div class="pc revs d3"><div class="pn">01</div><div class="pe">🎯</div><div class="pt">Trivia</div><div class="pb">Multiple-choice questions on FIFA history, player records, milestones, and standings to keep fans sharp.</div><div class="ptag">Interactive</div></div>
+      <div class="pc revs d4"><div class="pn">02</div><div class="pe">😂</div><div class="pt">Meme Content</div><div class="pb">Relatable football content bridging global narratives through trending formats and POV storytelling.</div><div class="ptag">Viral</div></div>
+      <div class="pc revs d5"><div class="pn">03</div><div class="pe">🎬</div><div class="pt">Video Content</div><div class="pb">Original office-led series and "Can You Name This Player?" challenges for maximum engagement.</div><div class="ptag">Original Series</div></div>
+      <div class="pc revs d6"><div class="pn">04</div><div class="pe">📊</div><div class="pt">Infographics</div><div class="pb">Points tables, match results, top scorers, and head-to-head comparisons as shareable visuals.</div><div class="ptag">Data-Driven</div></div>
+      <div class="pc revs d7"><div class="pn">05</div><div class="pe">⚡</div><div class="pt">Live Coverage</div><div class="pb">Pre-match, in-match, and post-match content keeping fans locked in across every touchpoint.</div><div class="ptag">Real-Time</div></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =====================================================
+     SLIDE 4  TRIVIA — dark
+     ===================================================== -->
+<section class="slide" data-s="4">
+  <div class="orb" style="width:380px;height:380px;right:80px;top:-40px;background:radial-gradient(circle,rgba(61,199,99,.07) 0%,transparent 68%)"></div>
+  <div class="si">
+    <div class="sh">
+      <div class="bm rev d1"><svg width="26" height="26" viewBox="0 0 40 40" fill="none"><path d="M5 8L18 20L5 32L10 20Z" fill="#3DC763"/><path d="M16 8L29 20L16 32L21 20Z" fill="#3DC763" opacity=".62"/></svg><span><span class="g">tapmad</span> <span class="x">×</span> FIFA 2026</span></div>
+      <span class="stag rev d1">Content Pillar 01</span>
+    </div>
+    <div class="slbl rev d1">03 — Trivia Strategy</div>
+    <h2 class="mt rev d2"><span class="tb tg">Trivia</span><span class="tl"> Strategy</span></h2>
+    <div class="tlyt">
+      <div>
+        <div class="gbar rev d3"></div>
+        <p class="ti rev d3">Multiple-choice trivia to keep fans informed, entertained, and coming back throughout the tournament.</p>
+        <div class="tplbl rev d4">Topics</div>
+        <div class="tpl">
+          <div class="tpitem rev d4"><span class="tdot"></span>FIFA History &amp; Milestones</div>
+          <div class="tpitem rev d5"><span class="tdot"></span>Player Records &amp; Stats</div>
+          <div class="tpitem rev d5"><span class="tdot"></span>Tournament Points Table</div>
+          <div class="tpitem rev d6"><span class="tdot"></span>World Cup Host Nations</div>
+        </div>
+      </div>
+      <div>
+        <div class="tqlbl rev d3">Example Questions</div>
+        <div class="tqc revs d4">
+          <div class="tqt">Which countries are hosting the FIFA World Cup 2026?</div>
+          <div class="tqo">
+            <div class="opt ok"><div class="olet">A</div><span>USA, Canada &amp; Mexico</span></div>
+            <div class="opt"><div class="olet">B</div><span>USA and Mexico</span></div>
+            <div class="opt"><div class="olet">C</div><span>Canada and Brazil</span></div>
+            <div class="opt"><div class="olet">D</div><span>Mexico and Argentina</span></div>
+          </div>
+        </div>
+        <div class="tqc revs d5">
+          <div class="tqt">Which team won the FIFA World Cup 2022?</div>
+          <div class="tqo">
+            <div class="opt"><div class="olet">A</div><span>France</span></div>
+            <div class="opt ok"><div class="olet">B</div><span>Argentina</span></div>
+            <div class="opt"><div class="olet">C</div><span>Brazil</span></div>
+            <div class="opt"><div class="olet">D</div><span>Croatia</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =====================================================
+     SLIDE 5  MEME — dark + orb
+     ===================================================== -->
+<section class="slide" data-s="5">
+  <div class="orb" style="width:580px;height:580px;left:-110px;bottom:-100px;background:radial-gradient(circle,rgba(61,199,99,.09) 0%,transparent 68%)"></div>
+  <div class="si">
+    <div class="sh">
+      <div class="bm rev d1"><svg width="26" height="26" viewBox="0 0 40 40" fill="none"><path d="M5 8L18 20L5 32L10 20Z" fill="#3DC763"/><path d="M16 8L29 20L16 32L21 20Z" fill="#3DC763" opacity=".62"/></svg><span><span class="g">tapmad</span> <span class="x">×</span> FIFA 2026</span></div>
+      <span class="stag rev d1">Content Pillar 02</span>
+    </div>
+    <div class="slbl rev d1">04 — Meme Strategy</div>
+    <h2 class="mt rev d2"><span class="tb tg">Meme</span><span class="tl"> Strategy</span></h2>
+    <div class="mlyt">
+      <div class="mlft">
+        <p class="mint rev d3">Drive <strong>maximum relatability</strong> by bridging global football narratives with fans through <strong>trending formats.</strong></p>
+        <div class="mpt rev d4"><div class="mpi">🎯</div><div class="mptx">Tap into viral moments with <strong>locally-resonant humor</strong> — making fans feel seen on both sides of every rivalry.</div></div>
+        <div class="mpt rev d5"><div class="mpi">📈</div><div class="mptx">Leverage <strong>trending meme formats</strong> to amplify organic reach and drive shares across all platforms.</div></div>
+      </div>
+      <div class="mrgt">
+        <div class="mexl rev d3">Content Examples — POV Format</div>
+        <div class="mcard rev d4"><div class="mpov">POV</div><div class="mtxt">You said "football is overrated" in a room full of Messi fans</div></div>
+        <div class="mcard rev d5"><div class="mpov">POV</div><div class="mtxt">Your entire bloodline watching penalties together</div></div>
+        <div class="mcard rev d6"><div class="mpov">POV</div><div class="mtxt">The Argentina obsessive in every office during World Cup season</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =====================================================
+     SLIDE 6  VIDEO — white
+     ===================================================== -->
+<section class="slide s6" data-s="6">
+  <div class="si">
+    <div class="sh">
+      <div class="bm-w rev d1"><svg width="26" height="26" viewBox="0 0 40 40" fill="none"><path d="M5 8L18 20L5 32L10 20Z" fill="#3DC763"/><path d="M16 8L29 20L16 32L21 20Z" fill="#3DC763" opacity=".62"/></svg><span><span class="g">tapmad</span> <span style="color:rgba(0,0,0,.28)">×</span> FIFA 2026</span></div>
+      <span class="stag-w rev d1">Content Pillar 03</span>
+    </div>
+    <div class="slbl rev d1">05 — Video Content</div>
+    <h2 class="mt rev d2"><span class="tl-d">Original Video </span><span class="tb-d" style="color:var(--g)">Series</span></h2>
+    <div class="vlyt">
+      <div class="vc revs d3">
+        <div class="vsn">Series 01</div>
+        <div class="vttl"><span style="font-weight:400;color:#0f0f0f">"Every Office </span><span style="font-weight:800;color:#0f0f0f">Has…"</span><span style="font-weight:400;color:#0f0f0f"> FIFA Edition</span></div>
+        <div class="vsl">Format</div>
+        <div class="vdesc">Quick cuts introducing relatable employee stereotypes during World Cup season — every workplace becomes a football battleground.</div>
+        <div class="vsl">Characters</div>
+        <div class="vlist">
+          <div class="vitem">The fake football expert</div>
+          <div class="vitem">The Argentina obsessive</div>
+          <div class="vitem">The Ronaldo vs Messi debater</div>
+          <div class="vitem">The guy who supports Brazil every 4 years</div>
+          <div class="vitem">The employee who suddenly knows offsides</div>
+          <div class="vitem">HR trying to stop the screaming</div>
+        </div>
+      </div>
+      <div class="vc revs d4">
+        <div class="vsn">Series 02</div>
+        <div class="vttl"><span style="font-weight:400;color:#0f0f0f">"Can You </span><span style="font-weight:800;color:#0f0f0f">Name This</span><span style="font-weight:400;color:#0f0f0f"> Player?"</span></div>
+        <div class="vsl">Format</div>
+        <div class="vdesc">Fast-paced office challenge content testing football knowledge with a progressive reveal clue sequence.</div>
+        <div class="vsl">Clue Sequence</div>
+        <div class="vlist">
+          <div class="vitem">Blur reveal — silhouette first</div>
+          <div class="vitem">Childhood photo</div>
+          <div class="vitem">AI voice clue</div>
+          <div class="vitem">Emoji clues</div>
+          <div class="vitem">Jersey number challenge</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =====================================================
+     SLIDE 7  INFOGRAPHICS — dark
+     ===================================================== -->
+<section class="slide" data-s="7">
+  <div class="orb" style="width:420px;height:420px;right:-40px;top:80px;background:radial-gradient(circle,rgba(61,199,99,.07) 0%,transparent 68%)"></div>
+  <div class="si">
+    <div class="sh">
+      <div class="bm rev d1"><svg width="26" height="26" viewBox="0 0 40 40" fill="none"><path d="M5 8L18 20L5 32L10 20Z" fill="#3DC763"/><path d="M16 8L29 20L16 32L21 20Z" fill="#3DC763" opacity=".62"/></svg><span><span class="g">tapmad</span> <span class="x">×</span> FIFA 2026</span></div>
+      <span class="stag rev d1">Content Pillar 04</span>
+    </div>
+    <div class="slbl rev d1">06 — Data Content</div>
+    <h2 class="mt rev d2"><span class="tb tg">Infographics</span><span class="tl"> Strategy</span></h2>
+    <div class="igrid">
+      <div class="icard revs d3"><div class="ign">01</div><div class="iem">📋</div><div class="ittl">Points Table</div><div class="ibod">Updated weekly to keep fans informed on team standings, points, and tournament progress throughout the group stages.</div><div class="ftag">Weekly Update</div></div>
+      <div class="icard revs d4"><div class="ign">02</div><div class="iem">⚽</div><div class="ittl">Match Results</div><div class="ibod">Daily recap graphics covering all match outcomes — scores, goal scorers, and standout moments from the day.</div><div class="ftag">Daily Recap</div></div>
+      <div class="icard revs d5"><div class="ign">03</div><div class="iem">🏆</div><div class="ittl">Most Goal Scorer</div><div class="ibod">Weekly leaderboard showcasing the tournament's top scorers and standout attacking performances.</div><div class="ftag">Weekly Leaderboard</div></div>
+      <div class="icard revs d6"><div class="ign">04</div><div class="iem">⚔️</div><div class="ittl">Teams Head to Head</div><div class="ibod">Pre-match comparison graphics for major fixtures — building excitement and fan engagement before key games.</div><div class="ftag">Pre-Match</div></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =====================================================
+     SLIDE 8  LIVE COVERAGE — dark
+     ===================================================== -->
+<section class="slide" data-s="8">
+  <div class="orb" style="width:500px;height:500px;left:40px;bottom:-60px;background:radial-gradient(circle,rgba(61,199,99,.08) 0%,transparent 68%)"></div>
+  <div class="si">
+    <div class="sh">
+      <div class="bm rev d1"><svg width="26" height="26" viewBox="0 0 40 40" fill="none"><path d="M5 8L18 20L5 32L10 20Z" fill="#3DC763"/><path d="M16 8L29 20L16 32L21 20Z" fill="#3DC763" opacity=".62"/></svg><span><span class="g">tapmad</span> <span class="x">×</span> FIFA 2026</span></div>
+      <span class="stag rev d1">Content Pillar 05</span>
+    </div>
+    <div class="slbl rev d1">07 — Match Coverage</div>
+    <h2 class="mt rev d2"><span class="tl">Live </span><span class="tb tg">Coverage</span></h2>
+    <p class="cvin rev d3">Keeping our audience <strong>fully locked into the tournament</strong> by delivering pre-match, crucial lineup updates, relevant news, and post-match data visualization.</p>
+    <div class="cvgrid">
+      <div class="cvcard revs d4"><div class="cvico">📰</div><div class="cvttl">Breaking News</div><div class="cvbod">Real-time coverage of player news, injuries, lineup announcements, and thrilling match moments as they happen.</div><div class="trow"><span class="stag2">Real-time</span><span class="stag2">Players</span><span class="stag2">Lineups</span></div></div>
+      <div class="cvcard revs d5"><div class="cvico">📊</div><div class="cvttl">Q&amp;A and Polls</div><div class="cvbod">Interactive Stories keeping fans engaged during matches — predict winners, vote on best goals, and debate controversial calls.</div><div class="trow"><span class="stag2">Stories</span><span class="stag2">Interactive</span><span class="stag2">Polls</span></div></div>
+      <div class="cvcard revs d6"><div class="cvico">📢</div><div class="cvttl">Pre &amp; Post Match</div><div class="cvbod">Build anticipation before kick-off and deliver comprehensive post-match data visualization, highlights, and analysis.</div><div class="trow"><span class="stag2">Announcements</span><span class="stag2">Data Viz</span><span class="stag2">Recaps</span></div></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =====================================================
+     SLIDE 9  YOUTUBE — dark + ribbon left
+     ===================================================== -->
+<section class="slide" data-s="9">
+  <!-- ribbon bottom-left -->
+  <div class="rib" style="bottom:-60px;left:44px">
+    <svg width="195" height="390" viewBox="0 0 195 390" fill="none">
+      <defs>
+        <linearGradient id="rb9f" x1="0%" y1="100%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#0d4420"/><stop offset="50%" stop-color="#3DC763"/><stop offset="100%" stop-color="#186e2e"/>
+        </linearGradient>
+      </defs>
+      <path d="M112 372C102 292 82 222 72 154C62 86 82 36 50 8" stroke="#073317" stroke-width="60" stroke-linecap="round" fill="none" opacity=".58"/>
+      <path d="M106 372C97 290 77 220 67 152C57 84 77 34 45 6" stroke="url(#rb9f)" stroke-width="46" stroke-linecap="round" fill="none"/>
+    </svg>
+  </div>
+  <div class="orb" style="width:400px;height:400px;right:-40px;top:60px;background:radial-gradient(circle,rgba(61,199,99,.07) 0%,transparent 68%)"></div>
+  <div class="si">
+    <div class="sh">
+      <div class="bm rev d1"><svg width="26" height="26" viewBox="0 0 40 40" fill="none"><path d="M5 8L18 20L5 32L10 20Z" fill="#3DC763"/><path d="M16 8L29 20L16 32L21 20Z" fill="#3DC763" opacity=".62"/></svg><span><span class="g">tapmad</span> <span class="x">×</span> FIFA 2026</span></div>
+      <span class="stag rev d1">YouTube Strategy</span>
+    </div>
+    <div class="slbl rev d1">08 — YouTube</div>
+    <h2 class="mt rev d2"><span class="tl">YouTube </span><span class="tb tg">Highlights</span></h2>
+    <div class="ytlyt">
+      <div class="ytm revs d3">
+        <div class="ytplay"><svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg></div>
+        <div class="ytmttl"><span class="tl">Exclusive FIFA 2026 </span><span class="tb tg">Content</span></div>
+        <div class="ytmbod">Long-form match highlights and exclusive content crafted for our YouTube audience — quick, crisp, and packed with key moments and goals.</div>
+        <div class="pill" style="width:fit-content;margin-top:auto">Exclusive on tapmad</div>
+      </div>
+      <div class="ytf revs d4">
+        <div class="ytnum">30</div>
+        <div class="ytfttl">Minutes Max Per Match</div>
+        <div class="ytfbod">Up to 30 minutes of clips and highlights per match — comprehensive yet digestible coverage of every game.</div>
+        <div class="pill" style="width:fit-content">Per Game</div>
+      </div>
+      <div class="ytf revs d5">
+        <div style="font-size:42px;line-height:1">🎬</div>
+        <div class="ytfttl">Match Clips &amp; Highlights</div>
+        <div class="ytfbod">Quick, crisp highlights of key moments and goals — curated for maximum impact and retention on YouTube.</div>
+        <div class="pill" style="width:fit-content">Daily Upload</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =====================================================
+     SLIDE 10  BUDGET — green aurora + ribbon
+     ===================================================== -->
+<section class="slide s10" data-s="10">
+  <div class="orb" style="width:780px;height:780px;right:-140px;bottom:-190px;background:radial-gradient(circle,rgba(38,155,75,.6) 0%,transparent 62%);animation:op 7s ease-in-out infinite"></div>
+  <div class="orb" style="width:520px;height:520px;left:-100px;top:-110px;background:radial-gradient(circle,rgba(18,96,46,.5) 0%,transparent 62%);animation:op 9s ease-in-out 2s infinite"></div>
+  <!-- ribbon top-right -->
+  <div class="rib" style="top:-36px;right:108px;opacity:.72">
+    <svg width="172" height="356" viewBox="0 0 172 356" fill="none">
+      <defs><linearGradient id="rb10f" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#3DC763" stop-opacity=".8"/><stop offset="100%" stop-color="#186e2e"/></linearGradient></defs>
+      <path d="M78 336C87 262 107 196 112 134C117 72 102 34 136 8" stroke="#0a3018" stroke-width="56" stroke-linecap="round" fill="none" opacity=".58"/>
+      <path d="M72 336C82 260 102 194 107 132C112 70 97 32 131 6" stroke="url(#rb10f)" stroke-width="42" stroke-linecap="round" fill="none"/>
+    </svg>
+  </div>
+  <div class="cgrid"></div>
+  <div class="si">
+    <div class="sh">
+      <div class="rev d1" style="display:flex;align-items:center;gap:10px;font-family:var(--fb);font-size:15px;font-weight:500;color:rgba(255,255,255,.42);letter-spacing:.04em">
+        <svg width="26" height="26" viewBox="0 0 40 40" fill="none"><path d="M5 8L18 20L5 32L10 20Z" fill="#3DC763"/><path d="M16 8L29 20L16 32L21 20Z" fill="#3DC763" opacity=".62"/><path d="M7 8L11.5 20L7 32Z" fill="#050d07"/></svg>
+        <span style="color:var(--g);font-weight:700">tapmad</span> <span style="color:rgba(255,255,255,.22)">×</span> FIFA 2026
+      </div>
+      <span class="rev d1" style="font-family:var(--fb);font-size:12px;font-weight:500;color:rgba(255,255,255,.25);letter-spacing:.16em;text-transform:uppercase">Campaign Investment</span>
+    </div>
+    <div class="slbl rev d1">09 — Budget</div>
+    <h2 class="mt rev d2"><span class="tl">Budget </span><span class="tb tg">Allocation</span></h2>
+    <div class="bgrid">
+      <div class="bc bc1 revs d3">
+        <div class="bico big">💬</div>
+        <div class="bcat">Social Media</div>
+        <div class="bamt"><span class="bcur">PKR </span><span class="cu" data-t="1500000">1,500,000</span></div>
+        <div class="bdsc">Content creation, creative production, and paid social distribution across all platforms.</div>
+      </div>
+      <div class="bc bc2 revs d4">
+        <div class="bico biy">🎁</div>
+        <div class="bcat">Giveaway Campaigns</div>
+        <div class="bamt"><span class="bcur">PKR </span><span class="cu" data-t="100000">100,000</span></div>
+        <div class="bdsc">Fan engagement giveaways, prizes, and interactive campaign rewards to drive participation.</div>
+      </div>
+      <div class="bc bc3 revs d5">
+        <div class="bico bir">▶️</div>
+        <div class="bcat">YouTube</div>
+        <div class="bamt"><span class="bcur">PKR </span><span class="cu" data-t="300000">300,000</span></div>
+        <div class="bdsc">Video production, editing, and YouTube channel growth for match highlights and exclusive content.</div>
+      </div>
+      <div class="btot rev d6">
+        <div class="btlbl">Total Campaign Investment</div>
+        <div class="btamt">PKR 1,900,000</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+</main>
+</div>
+
+<div class="deck-progress" id="dp"></div>
+<div class="edit-hotzone" id="eh"></div>
+<button class="edit-toggle" id="et">✏️ Edit</button>
+
+<script>
+class Deck {
+  constructor() {
+    this.slides = [...document.querySelectorAll('.slide')];
+    this.cur = 0;
+    this.stage = document.getElementById('stage');
+    this.dp = document.getElementById('dp');
+    this._init();
+  }
+  _init() {
+    this._scale(); window.addEventListener('resize', () => this._scale());
+    this._dots(); this._keys(); this._touch(); this._wheel(); this.go(0);
+  }
+  _scale() {
+    const f = Math.min(innerWidth/1920, innerHeight/1080);
+    const x = (innerWidth - 1920*f)/2, y = (innerHeight - 1080*f)/2;
+    this.stage.style.transform = `translate(${x}px,${y}px) scale(${f})`;
+  }
+  _dots() {
+    this.slides.forEach((_,i) => {
+      const d = document.createElement('div');
+      d.className = 'pd';
+      d.onclick = () => this.go(i);
+      this.dp.appendChild(d);
+    });
+  }
+  go(i) {
+    if (i < 0 || i >= this.slides.length) return;
+    this.slides[this.cur].classList.remove('active','visible');
+    this.cur = i;
+    const s = this.slides[i];
+    s.classList.add('active');
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      s.classList.add('visible');
+      s.querySelectorAll('.cu:not(.done)').forEach(el => {
+        el.classList.add('done');
+        const tgt = parseInt(el.dataset.t);
+        const t0 = performance.now();
+        const run = now => {
+          const p = Math.min((now-t0)/1600, 1);
+          const e = 1 - Math.pow(1-p, 3);
+          el.textContent = Math.round(e*tgt).toLocaleString();
+          if (p < 1) requestAnimationFrame(run);
+        };
+        requestAnimationFrame(run);
+      });
+    }));
+    this.dp.querySelectorAll('.pd').forEach((d,j) => d.classList.toggle('on', j===i));
+  }
+  next() { this.go(this.cur+1); } prev() { this.go(this.cur-1); }
+  _keys() {
+    document.addEventListener('keydown', e => {
+      if (e.target.getAttribute('contenteditable')) return;
+      if (['ArrowRight','ArrowDown',' ','PageDown'].includes(e.key)) { e.preventDefault(); this.next(); }
+      if (['ArrowLeft','ArrowUp','PageUp'].includes(e.key)) { e.preventDefault(); this.prev(); }
+    });
+  }
+  _touch() {
+    let sx, sy;
+    document.addEventListener('touchstart', e => { sx=e.touches[0].clientX; sy=e.touches[0].clientY; },{passive:true});
+    document.addEventListener('touchend', e => {
+      const dx=e.changedTouches[0].clientX-sx, dy=e.changedTouches[0].clientY-sy;
+      if (Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>44) dx<0?this.next():this.prev();
+    },{passive:true});
+  }
+  _wheel() {
+    let last=0;
+    document.addEventListener('wheel', e => {
+      const now=Date.now(); if(now-last<700) return; last=now;
+      e.deltaY>0?this.next():this.prev();
+    },{passive:true});
+  }
+}
+
+class Editor {
+  constructor() {
+    this.on=false; this.btn=document.getElementById('et'); this.hz=document.getElementById('eh');
+    let t=null;
+    const sh=()=>{clearTimeout(t);this.btn.classList.add('show')};
+    const hi=()=>{t=setTimeout(()=>{if(!this.on)this.btn.classList.remove('show')},400)};
+    this.hz.addEventListener('mouseenter',sh); this.hz.addEventListener('mouseleave',hi);
+    this.btn.addEventListener('mouseenter',sh); this.btn.addEventListener('mouseleave',hi);
+    this.btn.onclick=()=>this._flip(); this.hz.onclick=()=>this._flip();
+    document.addEventListener('keydown',e=>{if((e.key==='e'||e.key==='E')&&!e.target.getAttribute('contenteditable'))this._flip()});
+  }
+  _flip() {
+    this.on=!this.on;
+    document.body.classList.toggle('em',this.on);
+    this.btn.textContent=this.on?'💾 Done':'✏️ Edit';
+    this.btn.classList.toggle('on',this.on);
+    const sel='.mc-bod,.mc-ttl,.mint,.mtxt,.vdesc,.ibod,.ittl,.cvttl,.cvbod,.ytmbod,.ytfttl,.ytfbod,.bdsc,.ti,.cvin';
+    document.querySelectorAll(sel).forEach(el=>{el.contentEditable=this.on?'true':'false'});
+  }
+}
+
+const deck = new Deck();
+const ed   = new Editor();
+</script>
+</body>
+</html>
