@@ -3,1352 +3,965 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SportsCRM — Social Media Command Center</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<title>SportsCRM — Command Center</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-:root {
-  --bg-base: #080C14;
-  --bg-card: #0D1117;
-  --bg-elevated: #111827;
-  --bg-hover: #1a2235;
-  --border: rgba(255,255,255,0.06);
-  --border-bright: rgba(255,255,255,0.12);
-  --blue: #3B82F6;
-  --cyan: #06B6D4;
-  --orange: #F97316;
-  --green: #10B981;
-  --amber: #F59E0B;
-  --red: #EF4444;
-  --purple: #8B5CF6;
-  --pink: #EC4899;
-  --text-primary: #F9FAFB;
-  --text-secondary: #9CA3AF;
-  --text-muted: #4B5563;
-  --gradient-blue: linear-gradient(135deg, #3B82F6, #06B6D4);
-  --gradient-orange: linear-gradient(135deg, #F97316, #EF4444);
-  --gradient-purple: linear-gradient(135deg, #8B5CF6, #EC4899);
-  --gradient-green: linear-gradient(135deg, #10B981, #06B6D4);
-  --sidebar-w: 220px;
-  --sidebar-collapsed: 64px;
+:root{
+  --bg:#090D13;--bg-card:#0E1420;--bg-el:#131B28;--bg-hover:#1A2438;
+  --border:rgba(255,255,255,0.055);--border-hi:rgba(255,255,255,0.11);
+  --blue:#3B7EF6;--blue-dim:rgba(59,126,246,0.12);
+  --cyan:#0EA5E9;--cyan-dim:rgba(14,165,233,0.1);
+  --gold:#C9A84C;--gold-dim:rgba(201,168,76,0.12);
+  --green:#22C55E;--green-dim:rgba(34,197,94,0.1);
+  --red:#F05252;--red-dim:rgba(240,82,82,0.1);
+  --amber:#F59E0B;--amber-dim:rgba(245,158,11,0.1);
+  --purple:#8B5CF6;--purple-dim:rgba(139,92,246,0.1);
+  --t1:#EDF2F7;--t2:#8892A4;--t3:#4A5568;--t4:#2D3748;
+  --grad-blue:linear-gradient(135deg,#3B7EF6,#0EA5E9);
+  --grad-gold:linear-gradient(135deg,#C9A84C,#E8C97A);
+  --sidebar:220px;--sidebar-sm:60px;
+  --radius:14px;--radius-sm:9px;
 }
-* { margin:0; padding:0; box-sizing:border-box; }
-body { font-family:'Inter',sans-serif; background:var(--bg-base); color:var(--text-primary); min-height:100vh; display:flex; overflow:hidden; }
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh;display:flex;overflow:hidden;font-size:14px;line-height:1.5;}
 
-/* ── SIDEBAR ── */
-.sidebar {
-  width:var(--sidebar-w); min-height:100vh; background:var(--bg-card);
-  border-right:1px solid var(--border); display:flex; flex-direction:column;
-  transition:width .3s cubic-bezier(.4,0,.2,1); flex-shrink:0; position:relative; z-index:100;
-}
-.sidebar.collapsed { width:var(--sidebar-collapsed); }
-.sidebar-logo {
-  padding:20px 16px; display:flex; align-items:center; gap:12px;
-  border-bottom:1px solid var(--border); min-height:65px;
-}
-.logo-icon {
-  width:36px; height:36px; border-radius:10px; background:var(--gradient-blue);
-  display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:18px;
-}
-.logo-text { font-size:15px; font-weight:700; white-space:nowrap; overflow:hidden;
-  background:var(--gradient-blue); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-.sidebar-section { padding:8px; flex:1; }
-.sidebar-label { font-size:10px; font-weight:600; color:var(--text-muted); text-transform:uppercase;
-  letter-spacing:.08em; padding:8px 8px 4px; white-space:nowrap; overflow:hidden; }
-.nav-item {
-  display:flex; align-items:center; gap:12px; padding:10px; border-radius:10px;
-  cursor:pointer; transition:all .2s; margin-bottom:2px; position:relative; white-space:nowrap;
-}
-.nav-item:hover { background:var(--bg-hover); }
-.nav-item.active { background:rgba(59,130,246,.15); }
-.nav-item.active .nav-icon { color:var(--blue); }
-.nav-item.active .nav-text { color:var(--text-primary); }
-.nav-icon { width:20px; height:20px; flex-shrink:0; color:var(--text-secondary); display:flex; align-items:center; justify-content:center; }
-.nav-text { font-size:13.5px; font-weight:500; color:var(--text-secondary); overflow:hidden; }
-.nav-badge { margin-left:auto; background:var(--red); color:#fff; font-size:10px; font-weight:700;
-  padding:2px 6px; border-radius:20px; flex-shrink:0; }
-.nav-badge.blue { background:var(--blue); }
-.sidebar-footer { padding:12px; border-top:1px solid var(--border); }
-.user-card { display:flex; align-items:center; gap:10px; padding:8px; border-radius:10px; cursor:pointer; }
-.user-card:hover { background:var(--bg-hover); }
-.user-avatar { width:32px; height:32px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; }
-.user-info { overflow:hidden; }
-.user-name { font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.user-role { font-size:11px; color:var(--text-muted); }
-.toggle-btn { position:absolute; top:18px; right:-12px; width:24px; height:24px; background:var(--bg-elevated);
-  border:1px solid var(--border-bright); border-radius:50%; cursor:pointer; display:flex; align-items:center;
-  justify-content:center; font-size:10px; z-index:101; transition:transform .3s; }
-.sidebar.collapsed .toggle-btn { transform:rotate(180deg); }
-.sidebar.collapsed .logo-text,
-.sidebar.collapsed .nav-text,
-.sidebar.collapsed .nav-badge,
-.sidebar.collapsed .sidebar-label,
-.sidebar.collapsed .user-info { display:none; }
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--bg-hover);border-radius:4px;}
 
-/* ── MAIN ── */
-.main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+/* SIDEBAR */
+.sidebar{width:var(--sidebar);min-height:100vh;background:var(--bg-card);border-right:1px solid var(--border);display:flex;flex-direction:column;transition:width .28s ease;flex-shrink:0;position:relative;z-index:100;}
+.sidebar.col{width:var(--sidebar-sm);}
+.s-logo{padding:18px 16px;display:flex;align-items:center;gap:11px;border-bottom:1px solid var(--border);min-height:62px;}
+.logo-mark{width:34px;height:34px;border-radius:9px;background:var(--grad-blue);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.logo-mark svg{width:18px;height:18px;fill:none;stroke:#fff;stroke-width:2;}
+.logo-text{font-size:14px;font-weight:800;letter-spacing:-.3px;white-space:nowrap;background:var(--grad-blue);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.logo-sub{font-size:10px;color:var(--t3);white-space:nowrap;}
+.s-body{padding:10px 8px;flex:1;overflow-y:auto;overflow-x:hidden;}
+.s-label{font-size:9.5px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;padding:10px 8px 5px;white-space:nowrap;}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--radius-sm);cursor:pointer;transition:all .18s;margin-bottom:1px;white-space:nowrap;position:relative;}
+.nav:hover{background:var(--bg-hover);}
+.nav.on{background:var(--blue-dim);}
+.nav.on .ni{color:var(--blue);}
+.nav.on .nt{color:var(--t1);font-weight:600;}
+.ni{width:18px;height:18px;flex-shrink:0;color:var(--t3);display:flex;align-items:center;justify-content:center;}
+.ni svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.nt{font-size:13px;font-weight:500;color:var(--t2);}
+.nb{margin-left:auto;background:var(--red);color:#fff;font-size:9.5px;font-weight:700;padding:2px 6px;border-radius:20px;flex-shrink:0;}
+.nb.b{background:var(--blue);}
+.s-foot{padding:10px 8px;border-top:1px solid var(--border);}
+.u-card{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--radius-sm);cursor:pointer;}
+.u-card:hover{background:var(--bg-hover);}
+.u-info{overflow:hidden;flex:1;}
+.u-name{font-size:12.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.u-role{font-size:10.5px;color:var(--t3);}
+.tog{position:absolute;top:16px;right:-11px;width:22px;height:22px;background:var(--bg-el);border:1px solid var(--border-hi);border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:101;transition:transform .28s;}
+.tog svg{width:10px;height:10px;fill:none;stroke:var(--t2);stroke-width:2;}
+.sidebar.col .tog{transform:rotate(180deg);}
+.sidebar.col .logo-text,.sidebar.col .logo-sub,.sidebar.col .nt,.sidebar.col .nb,.sidebar.col .s-label,.sidebar.col .u-info{display:none;}
 
-/* ── TOPBAR ── */
-.topbar {
-  height:65px; background:var(--bg-card); border-bottom:1px solid var(--border);
-  display:flex; align-items:center; padding:0 24px; gap:16px; flex-shrink:0;
-}
-.topbar-title { font-size:16px; font-weight:700; flex:1; }
-.topbar-title span { color:var(--text-muted); font-weight:400; font-size:13px; margin-left:8px; }
-.role-switcher { position:relative; }
-.role-btn {
-  display:flex; align-items:center; gap:8px; padding:7px 14px; background:var(--bg-elevated);
-  border:1px solid var(--border-bright); border-radius:20px; cursor:pointer; font-size:13px;
-  font-weight:500; transition:all .2s;
-}
-.role-btn:hover { border-color:var(--blue); }
-.role-dot { width:8px; height:8px; border-radius:50%; background:var(--green); }
-.role-dropdown {
-  position:absolute; top:calc(100%+8px); right:0; background:var(--bg-elevated);
-  border:1px solid var(--border-bright); border-radius:12px; padding:8px; width:220px;
-  display:none; z-index:200; box-shadow:0 20px 60px rgba(0,0,0,.5);
-}
-.role-dropdown.open { display:block; }
-.role-option { display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:8px;
-  cursor:pointer; font-size:13px; transition:background .15s; }
-.role-option:hover { background:var(--bg-hover); }
-.role-option.active { background:rgba(59,130,246,.12); color:var(--blue); }
-.notif-btn { position:relative; width:38px; height:38px; background:var(--bg-elevated);
-  border:1px solid var(--border); border-radius:10px; cursor:pointer; display:flex;
-  align-items:center; justify-content:center; font-size:16px; transition:all .2s; }
-.notif-btn:hover { border-color:var(--blue); }
-.notif-badge { position:absolute; top:-4px; right:-4px; width:18px; height:18px;
-  background:var(--red); border-radius:50%; font-size:10px; font-weight:700;
-  display:flex; align-items:center; justify-content:center; border:2px solid var(--bg-card); }
-.notif-panel {
-  position:absolute; top:calc(100%+8px); right:24px; width:360px; background:var(--bg-elevated);
-  border:1px solid var(--border-bright); border-radius:16px; padding:16px;
-  display:none; z-index:200; box-shadow:0 20px 60px rgba(0,0,0,.5);
-}
-.notif-panel.open { display:block; }
-.notif-header { font-size:14px; font-weight:700; margin-bottom:12px; display:flex; justify-content:space-between; }
-.notif-item { display:flex; gap:10px; padding:10px; border-radius:10px; margin-bottom:4px; cursor:pointer; transition:background .15s; }
-.notif-item:hover { background:var(--bg-hover); }
-.notif-dot-wrap { margin-top:4px; }
-.notif-dot { width:8px; height:8px; border-radius:50%; margin-top:2px; }
-.notif-body { flex:1; font-size:12.5px; }
-.notif-title-text { font-weight:600; margin-bottom:2px; }
-.notif-time { color:var(--text-muted); font-size:11px; }
-.clear-btn { font-size:12px; color:var(--blue); cursor:pointer; }
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
 
-/* ── CONTENT ── */
-.content { flex:1; overflow-y:auto; padding:24px; position:relative; }
-.content::-webkit-scrollbar { width:6px; }
-.content::-webkit-scrollbar-track { background:transparent; }
-.content::-webkit-scrollbar-thumb { background:var(--bg-elevated); border-radius:3px; }
+/* TOPBAR */
+.topbar{height:62px;background:var(--bg-card);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:14px;flex-shrink:0;}
+.tb-title{font-size:15px;font-weight:800;flex:1;letter-spacing:-.3px;}
+.tb-sub{font-size:12px;color:var(--t3);font-weight:400;margin-left:8px;}
 
-/* ── PAGES ── */
-.page { display:none; animation:pageIn .3s ease; }
-.page.active { display:block; }
-@keyframes pageIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+/* ROLE SWITCHER */
+.rs{position:relative;}
+.rs-btn{display:flex;align-items:center;gap:8px;padding:7px 14px;background:var(--bg-el);border:1px solid var(--border-hi);border-radius:20px;cursor:pointer;font-size:12.5px;font-weight:600;transition:all .18s;font-family:inherit;}
+.rs-btn:hover{border-color:var(--blue);}
+.rs-dot{width:7px;height:7px;border-radius:50%;background:var(--green);}
+.rs-drop{position:absolute;top:calc(100%+8px);right:0;background:var(--bg-el);border:1px solid var(--border-hi);border-radius:var(--radius);padding:6px;width:210px;display:none;z-index:300;box-shadow:0 24px 60px rgba(0,0,0,.6);}
+.rs-drop.open{display:block;animation:fadeIn .15s ease;}
+.rs-opt{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--radius-sm);cursor:pointer;font-size:12.5px;transition:background .15s;}
+.rs-opt:hover{background:var(--bg-hover);}
+.rs-opt.on{background:var(--blue-dim);color:var(--blue);}
+.rs-opt-info{line-height:1.3;}
+.rs-opt-name{font-weight:600;font-size:12.5px;}
+.rs-opt-sub{font-size:10.5px;color:var(--t3);}
 
-/* ── CARDS ── */
-.card {
-  background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:20px;
-  transition:border-color .2s;
-}
-.card:hover { border-color:var(--border-bright); }
-.card-sm { padding:16px; }
-.glass {
-  background:rgba(255,255,255,0.03); backdrop-filter:blur(16px);
-  border:1px solid rgba(255,255,255,0.08); border-radius:16px;
-}
+/* NOTIF */
+.n-btn{position:relative;width:36px;height:36px;background:var(--bg-el);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .18s;}
+.n-btn:hover{border-color:var(--blue);}
+.n-btn svg{width:16px;height:16px;fill:none;stroke:var(--t2);stroke-width:1.8;}
+.n-badge{position:absolute;top:-4px;right:-4px;width:17px;height:17px;background:var(--red);border-radius:50%;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg-card);}
+.n-panel{position:absolute;top:62px;right:24px;width:340px;background:var(--bg-el);border:1px solid var(--border-hi);border-radius:var(--radius);padding:14px;display:none;z-index:300;box-shadow:0 24px 60px rgba(0,0,0,.6);}
+.n-panel.open{display:block;animation:fadeIn .15s ease;}
+.n-ph{font-size:13px;font-weight:700;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;}
+.n-clear{font-size:11px;color:var(--blue);cursor:pointer;font-weight:500;}
+.n-item{display:flex;gap:10px;padding:9px;border-radius:var(--radius-sm);margin-bottom:3px;cursor:pointer;transition:background .15s;}
+.n-item:hover{background:var(--bg-hover);}
+.n-dot{width:7px;height:7px;border-radius:50%;margin-top:4px;flex-shrink:0;}
+.n-body{flex:1;}
+.n-title{font-size:12.5px;font-weight:600;margin-bottom:2px;}
+.n-desc{font-size:11.5px;color:var(--t2);}
+.n-time{font-size:10.5px;color:var(--t3);margin-top:2px;}
 
-/* ── GRIDS ── */
-.grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
-.grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
-.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
-.grid-2-3 { display:grid; grid-template-columns:2fr 3fr; gap:16px; }
-.grid-3-2 { display:grid; grid-template-columns:3fr 2fr; gap:16px; }
-.mb-16 { margin-bottom:16px; }
-.mb-20 { margin-bottom:20px; }
-.mb-24 { margin-bottom:24px; }
+/* CONTENT */
+.content{flex:1;overflow-y:auto;padding:22px 24px;position:relative;}
+.page{display:none;}
+.page.on{display:block;animation:fadeIn .25s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
 
-/* ── STAT CARDS ── */
-.stat-card { background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:20px; position:relative; overflow:hidden; }
-.stat-card::before { content:''; position:absolute; top:0; right:0; width:80px; height:80px; border-radius:50%; opacity:.08; }
-.stat-card.blue::before { background:var(--blue); transform:translate(20px,-20px); }
-.stat-card.orange::before { background:var(--orange); transform:translate(20px,-20px); }
-.stat-card.green::before { background:var(--green); transform:translate(20px,-20px); }
-.stat-card.purple::before { background:var(--purple); transform:translate(20px,-20px); }
-.stat-label { font-size:12px; color:var(--text-muted); font-weight:500; text-transform:uppercase; letter-spacing:.06em; margin-bottom:8px; }
-.stat-value { font-size:32px; font-weight:800; line-height:1; margin-bottom:8px; }
-.stat-sub { font-size:12px; color:var(--text-secondary); display:flex; align-items:center; gap:6px; }
-.stat-icon { width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px; margin-bottom:12px; }
-.trend-up { color:var(--green); }
-.trend-down { color:var(--red); }
+/* CARDS */
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;transition:border-color .2s;}
+.card:hover{border-color:var(--border-hi);}
+.card-p{padding:16px;}
+.card-accent-blue{border-left:3px solid var(--blue);}
+.card-accent-gold{border-left:3px solid var(--gold);}
+.card-accent-red{border-left:3px solid var(--red);}
 
-/* ── PILLS / BADGES ── */
-.pill { display:inline-flex; align-items:center; gap:4px; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600; }
-.pill.blue { background:rgba(59,130,246,.15); color:var(--blue); }
-.pill.orange { background:rgba(249,115,22,.15); color:var(--orange); }
-.pill.green { background:rgba(16,185,129,.15); color:var(--green); }
-.pill.red { background:rgba(239,68,68,.15); color:var(--red); }
-.pill.purple { background:rgba(139,92,246,.15); color:var(--purple); }
-.pill.amber { background:rgba(245,158,11,.15); color:var(--amber); }
-.pill.grey { background:rgba(156,163,175,.1); color:var(--text-secondary); }
+/* GRIDS */
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.g23{display:grid;grid-template-columns:2fr 3fr;gap:14px;}
+.g32{display:grid;grid-template-columns:3fr 2fr;gap:14px;}
+.g53{display:grid;grid-template-columns:5fr 3fr;gap:14px;}
+.mb12{margin-bottom:12px;}
+.mb16{margin-bottom:16px;}
+.mb20{margin-bottom:20px;}
+.mb24{margin-bottom:24px;}
 
-/* ── BUTTONS ── */
-.btn { display:inline-flex; align-items:center; gap:8px; padding:8px 16px; border-radius:10px;
-  font-size:13px; font-weight:600; cursor:pointer; transition:all .2s; border:none; }
-.btn-primary { background:var(--gradient-blue); color:#fff; }
-.btn-primary:hover { opacity:.85; transform:translateY(-1px); }
-.btn-ghost { background:transparent; color:var(--text-secondary); border:1px solid var(--border-bright); }
-.btn-ghost:hover { background:var(--bg-hover); color:var(--text-primary); }
-.btn-sm { padding:5px 12px; font-size:12px; border-radius:8px; }
-.btn-danger { background:rgba(239,68,68,.15); color:var(--red); border:1px solid rgba(239,68,68,.2); }
+/* STAT CARDS */
+.sc{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;position:relative;overflow:hidden;transition:border-color .2s;}
+.sc:hover{border-color:var(--border-hi);}
+.sc-label{font-size:10.5px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;}
+.sc-val{font-size:30px;font-weight:800;line-height:1;letter-spacing:-.5px;margin-bottom:8px;}
+.sc-sub{font-size:11.5px;color:var(--t2);display:flex;align-items:center;gap:5px;}
+.sc-icon{position:absolute;top:16px;right:16px;width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;}
+.sc-icon svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;}
 
-/* ── TABLE ── */
-.table-wrap { overflow-x:auto; border-radius:12px; }
-table { width:100%; border-collapse:collapse; }
-th { font-size:11px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:.06em; padding:10px 14px; text-align:left; border-bottom:1px solid var(--border); }
-td { padding:12px 14px; font-size:13.5px; border-bottom:1px solid var(--border); vertical-align:middle; }
-tr:last-child td { border-bottom:none; }
-tr:hover td { background:rgba(255,255,255,.02); }
+/* PILLS */
+.pill{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:10.5px;font-weight:700;letter-spacing:.02em;}
+.p-blue{background:var(--blue-dim);color:var(--blue);}
+.p-green{background:var(--green-dim);color:var(--green);}
+.p-red{background:var(--red-dim);color:var(--red);}
+.p-amber{background:var(--amber-dim);color:var(--amber);}
+.p-purple{background:var(--purple-dim);color:var(--purple);}
+.p-gold{background:var(--gold-dim);color:var(--gold);}
+.p-grey{background:rgba(255,255,255,.06);color:var(--t2);}
+.p-cyan{background:var(--cyan-dim);color:var(--cyan);}
 
-/* ── AVATAR ── */
-.avatar { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; flex-shrink:0; }
-.avatar-sm { width:28px; height:28px; font-size:11px; }
-.avatar-lg { width:40px; height:40px; font-size:15px; }
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:7px 15px;border-radius:var(--radius-sm);font-size:12.5px;font-weight:600;cursor:pointer;transition:all .18s;border:none;font-family:inherit;}
+.btn svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;}
+.btn-pri{background:var(--grad-blue);color:#fff;box-shadow:0 4px 14px rgba(59,126,246,.25);}
+.btn-pri:hover{opacity:.88;transform:translateY(-1px);}
+.btn-ghost{background:transparent;color:var(--t2);border:1px solid var(--border-hi);}
+.btn-ghost:hover{background:var(--bg-hover);color:var(--t1);}
+.btn-sm{padding:5px 11px;font-size:11.5px;border-radius:7px;}
+.btn-red{background:var(--red-dim);color:var(--red);border:1px solid rgba(240,82,82,.2);}
 
-/* ── SECTION HEADER ── */
-.section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
-.section-title { font-size:15px; font-weight:700; }
-.section-sub { font-size:12px; color:var(--text-muted); margin-top:2px; }
+/* TABLE */
+.tw{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;}
+th{font-size:10.5px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.07em;padding:9px 14px;text-align:left;border-bottom:1px solid var(--border);}
+td{padding:11px 14px;font-size:13px;border-bottom:1px solid var(--border);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(255,255,255,.015);}
 
-/* ── INBOX ITEMS ── */
-.inbox-item { display:flex; gap:12px; padding:12px; border-radius:12px; cursor:pointer; transition:background .15s; border:1px solid transparent; }
-.inbox-item:hover { background:var(--bg-hover); border-color:var(--border); }
-.inbox-item.urgent { border-color:rgba(239,68,68,.3); background:rgba(239,68,68,.04); }
-@keyframes pulse-border { 0%,100%{border-color:rgba(239,68,68,.3);} 50%{border-color:rgba(239,68,68,.7);} }
-.inbox-item.urgent { animation:pulse-border 2s infinite; }
-.inbox-meta { flex:1; min-width:0; }
-.inbox-subject { font-size:13.5px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.inbox-preview { font-size:12px; color:var(--text-secondary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px; }
-.inbox-time { font-size:11px; color:var(--text-muted); white-space:nowrap; }
+/* AVATAR */
+.av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;letter-spacing:-.3px;}
+.av-sm{width:26px;height:26px;font-size:10px;}
+.av-lg{width:38px;height:38px;font-size:14px;}
 
-/* ── KANBAN ── */
-.kanban { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
-.kanban-col { background:var(--bg-elevated); border-radius:14px; padding:14px; min-height:300px; }
-.kanban-col-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
-.kanban-col-title { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; }
-.kanban-count { width:22px; height:22px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; }
-.task-card { background:var(--bg-card); border:1px solid var(--border); border-radius:12px; padding:14px; margin-bottom:8px; cursor:pointer; transition:all .2s; }
-.task-card:hover { border-color:var(--border-bright); transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,.3); }
-.task-title { font-size:13px; font-weight:600; margin-bottom:6px; }
-.task-preview { font-size:12px; color:var(--text-secondary); line-height:1.5; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; margin-bottom:10px; }
-.task-footer { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+/* SECTION HEADER */
+.sh{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;}
+.sh-title{font-size:14px;font-weight:800;letter-spacing:-.2px;}
+.sh-sub{font-size:11.5px;color:var(--t3);margin-top:2px;}
 
-/* ── PROGRESS ── */
-.progress-bar { height:4px; background:rgba(255,255,255,.08); border-radius:2px; overflow:hidden; }
-.progress-fill { height:100%; border-radius:2px; transition:width 1s ease; }
+/* PROGRESS */
+.prog{height:4px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden;}
+.prog-f{height:100%;border-radius:2px;transition:width 1s ease;}
 
-/* ── MATCH ALERT BANNER ── */
-.match-banner {
-  background:linear-gradient(135deg, rgba(249,115,22,.15), rgba(239,68,68,.1));
-  border:1px solid rgba(249,115,22,.3); border-radius:16px; padding:16px 20px;
-  display:flex; align-items:center; gap:16px; margin-bottom:20px;
-}
-@keyframes pulse-dot { 0%,100%{transform:scale(1);opacity:1;} 50%{transform:scale(1.4);opacity:.7;} }
-.live-dot { width:10px; height:10px; border-radius:50%; background:var(--red); animation:pulse-dot 1.2s infinite; flex-shrink:0; }
-.match-banner-info { flex:1; }
-.match-banner-title { font-size:14px; font-weight:700; margin-bottom:2px; }
-.match-banner-sub { font-size:12px; color:var(--text-secondary); }
-.countdown { font-size:28px; font-weight:800; font-variant-numeric:tabular-nums; background:var(--gradient-orange); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-.countdown-label { font-size:10px; color:var(--text-muted); text-align:center; margin-top:2px; }
+/* DIVIDER */
+.div{height:1px;background:var(--border);margin:14px 0;}
 
-/* ── DESIGN REQUEST CARDS ── */
-.design-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
-.design-card { background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:18px; transition:all .2s; }
-.design-card:hover { border-color:var(--border-bright); transform:translateY(-3px); box-shadow:0 12px 40px rgba(0,0,0,.4); }
-.design-card-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:12px; }
-.design-title { font-size:14px; font-weight:700; margin-bottom:8px; }
-.design-copy { font-size:12.5px; color:var(--text-secondary); line-height:1.6; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
-.design-meta { display:flex; align-items:center; gap:8px; margin:10px 0; font-size:12px; color:var(--text-muted); }
-.tracking-token { font-family:monospace; font-size:10.5px; color:var(--text-muted); background:var(--bg-elevated); padding:3px 8px; border-radius:6px; }
+/* FLEX UTILS */
+.fl{display:flex;}.fla{display:flex;align-items:center;}.flb{display:flex;align-items:center;justify-content:space-between;}
+.gap6{gap:6px;}.gap8{gap:8px;}.gap10{gap:10px;}.gap12{gap:12px;}.gap14{gap:14px;}.gap16{gap:16px;}
+.fc{flex-direction:column;}.f1{flex:1;}
+.t-muted{color:var(--t3);}.t-sec{color:var(--t2);}.t-up{color:var(--green);}.t-dn{color:var(--red);}
+.fw6{font-weight:600;}.fw7{font-weight:700;}.fw8{font-weight:800;}
+.fs11{font-size:11px;}.fs12{font-size:12px;}.fs13{font-size:13px;}.fs15{font-size:15px;}.fs18{font-size:18px;}
+.mono{font-family:'DM Mono',monospace;}
+.ml-auto{margin-left:auto;}
 
-/* ── CALENDAR ── */
-.cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
-.cal-header-cell { text-align:center; font-size:11px; font-weight:600; color:var(--text-muted); padding:8px 4px; }
-.cal-cell { aspect-ratio:1; display:flex; flex-direction:column; align-items:center; justify-content:center; border-radius:10px; cursor:pointer; transition:all .2s; font-size:13px; font-weight:500; position:relative; }
-.cal-cell:hover { background:var(--bg-hover); }
-.cal-cell.today { background:rgba(59,130,246,.15); color:var(--blue); font-weight:700; }
-.cal-cell.selected { background:var(--blue); color:#fff; }
-.cal-cell.other-month { color:var(--text-muted); }
-.cal-cell.has-match::after { content:''; position:absolute; bottom:3px; width:5px; height:5px; border-radius:50%; }
-.cal-cell.match-psl::after { background:var(--blue); }
-.cal-cell.match-football::after { background:var(--green); }
-.cal-cell.match-hbl::after { background:var(--orange); }
-.cal-cell.today.has-match::after { bottom:2px; }
+/* MATCH ALERT BANNER */
+.match-banner{background:linear-gradient(135deg,rgba(240,82,82,.1),rgba(245,158,11,.07));border:1px solid rgba(240,82,82,.22);border-radius:var(--radius);padding:15px 20px;display:flex;align-items:center;gap:16px;margin-bottom:20px;}
+.live-pip{width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0;animation:pulse 1.4s infinite;}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.5);opacity:.6;}}
+.countdown{font-size:26px;font-weight:800;font-variant-numeric:tabular-nums;font-family:'DM Mono',monospace;color:var(--amber);}
+.cd-label{font-size:9.5px;color:var(--t3);text-align:center;margin-top:2px;text-transform:uppercase;letter-spacing:.06em;}
 
-/* ── LEADERBOARD ── */
-.leader-row { display:flex; align-items:center; gap:14px; padding:12px; border-radius:12px; margin-bottom:6px; transition:background .15s; cursor:pointer; }
-.leader-row:hover { background:var(--bg-hover); }
-.rank-num { width:28px; text-align:center; font-size:18px; font-weight:800; flex-shrink:0; }
-.leader-bar-wrap { flex:1; }
-.leader-name { font-size:13.5px; font-weight:600; margin-bottom:4px; }
-.leader-bar { height:6px; background:rgba(255,255,255,.06); border-radius:3px; overflow:hidden; }
-.leader-fill { height:100%; border-radius:3px; transition:width 1.2s ease; }
-.leader-stats { display:flex; gap:12px; font-size:12px; color:var(--text-muted); margin-top:4px; }
-.leader-stat-val { font-weight:600; color:var(--text-primary); }
+/* INBOX */
+.inbox-item{display:flex;gap:12px;padding:11px;border-radius:var(--radius-sm);cursor:pointer;transition:all .18s;border:1px solid transparent;margin-bottom:4px;}
+.inbox-item:hover{background:var(--bg-hover);border-color:var(--border);}
+.inbox-item.urgent{border-color:rgba(240,82,82,.25);background:rgba(240,82,82,.04);}
+.inbox-subject{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.inbox-preview{font-size:11.5px;color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;}
+.inbox-time{font-size:10.5px;color:var(--t3);white-space:nowrap;}
 
-/* ── HEATMAP ── */
-.heatmap-grid { display:grid; grid-template-columns:repeat(26,1fr); gap:3px; }
-.heatmap-cell { aspect-ratio:1; border-radius:3px; }
-.h0 { background:rgba(255,255,255,.04); }
-.h1 { background:rgba(16,185,129,.2); }
-.h2 { background:rgba(16,185,129,.4); }
-.h3 { background:rgba(16,185,129,.65); }
-.h4 { background:#10B981; }
+/* CHART */
+.ch{position:relative;height:220px;}
+.ch-lg{position:relative;height:270px;}
+.ch-sm{position:relative;height:150px;}
 
-/* ── PIPELINE TRACKER ── */
-.pipeline-track { display:flex; align-items:center; gap:0; }
-.pipeline-step { flex:1; display:flex; flex-direction:column; align-items:center; position:relative; }
-.pipeline-step::before { content:''; position:absolute; top:14px; left:50%; width:100%; height:2px; background:rgba(255,255,255,.08); z-index:0; }
-.pipeline-step:last-child::before { display:none; }
-.pipeline-dot { width:28px; height:28px; border-radius:50%; border:2px solid rgba(255,255,255,.1); background:var(--bg-elevated); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; z-index:1; position:relative; }
-.pipeline-dot.done { background:var(--green); border-color:var(--green); }
-.pipeline-dot.active { background:var(--blue); border-color:var(--blue); box-shadow:0 0 12px rgba(59,130,246,.5); }
-.pipeline-label { font-size:10px; color:var(--text-muted); margin-top:6px; text-align:center; white-space:nowrap; }
+/* PIPELINE DOTS */
+.pipe{display:flex;align-items:center;gap:0;}
+.ps{flex:1;display:flex;flex-direction:column;align-items:center;position:relative;}
+.ps::before{content:'';position:absolute;top:13px;left:50%;width:100%;height:1.5px;background:rgba(255,255,255,.07);z-index:0;}
+.ps:last-child::before{display:none;}
+.pd{width:26px;height:26px;border-radius:50%;border:1.5px solid rgba(255,255,255,.1);background:var(--bg-el);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;z-index:1;position:relative;}
+.pd.done{background:var(--green);border-color:var(--green);}
+.pd.act{background:var(--blue);border-color:var(--blue);box-shadow:0 0 10px rgba(59,126,246,.4);}
+.pd svg{width:11px;height:11px;fill:none;stroke:#fff;stroke-width:2.5;}
+.pl{font-size:9.5px;color:var(--t3);margin-top:5px;text-align:center;}
 
-/* ── FAB ── */
-.fab {
-  position:fixed; bottom:28px; right:28px; width:52px; height:52px;
-  background:var(--gradient-blue); border-radius:16px; display:flex; align-items:center;
-  justify-content:center; font-size:24px; cursor:pointer; box-shadow:0 8px 24px rgba(59,130,246,.4);
-  transition:all .2s; z-index:50; animation:fabBounce .6s ease 1s both;
-}
-.fab:hover { transform:scale(1.1) translateY(-2px); box-shadow:0 12px 32px rgba(59,130,246,.5); }
-@keyframes fabBounce { 0%{transform:scale(0);} 60%{transform:scale(1.1);} 100%{transform:scale(1);} }
+/* SERIES CARDS (Executive View) */
+.series-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.series-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);transition:all .2s;overflow:hidden;}
+.series-card:hover{border-color:var(--border-hi);transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,0,0,.35);}
+.sc-header{padding:14px 16px 12px;border-bottom:1px solid var(--border);position:relative;}
+.sc-sport{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--blue);margin-bottom:4px;}
+.sc-name{font-size:14px;font-weight:800;letter-spacing:-.2px;margin-bottom:6px;}
+.sc-dates{font-size:11px;color:var(--t3);font-family:'DM Mono',monospace;}
+.sc-body{padding:14px 16px;}
+.checklist{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+.cl-item{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:7px;background:var(--bg-el);cursor:pointer;transition:background .15s;}
+.cl-item:hover{background:var(--bg-hover);}
+.cl-box{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border-hi);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .18s;}
+.cl-box.checked{background:var(--green);border-color:var(--green);}
+.cl-box.crossed{background:var(--red-dim);border-color:var(--red);}
+.cl-box svg{width:10px;height:10px;fill:none;stroke:#fff;stroke-width:2.5;}
+.cl-label{font-size:12px;font-weight:500;color:var(--t2);flex:1;}
+.cl-box.checked + .cl-label{color:var(--t1);}
+.rights-block{background:var(--bg-el);border-radius:9px;padding:10px 12px;border:1px solid var(--border);}
+.rights-title{font-size:9.5px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
+.rights-row{display:flex;align-items:baseline;gap:6px;margin-bottom:5px;}
+.rights-row:last-child{margin-bottom:0;}
+.rights-key{font-size:10.5px;color:var(--t3);min-width:90px;font-weight:500;}
+.rights-val{font-size:11.5px;color:var(--t1);font-weight:600;}
+.rights-note{font-size:11px;color:var(--t2);line-height:1.5;margin-top:6px;padding-top:6px;border-top:1px solid var(--border);}
 
-/* ── CHART CONTAINERS ── */
-.chart-wrap { position:relative; height:220px; }
-.chart-wrap-lg { position:relative; height:280px; }
-.chart-wrap-sm { position:relative; height:140px; }
+/* DAILY TASK BOARD (Manager View) */
+.exec-row{display:grid;grid-template-columns:180px 1fr 120px;align-items:center;gap:0;border-bottom:1px solid var(--border);min-height:68px;}
+.exec-row:last-child{border-bottom:none;}
+.exec-row:hover{background:rgba(255,255,255,.015);}
+.er-who{padding:12px 16px;display:flex;align-items:center;gap:10px;}
+.er-tasks{padding:10px 16px;display:flex;flex-wrap:wrap;gap:6px;min-height:48px;align-items:center;}
+.er-status{padding:12px 16px;display:flex;align-items:center;justify-content:flex-end;}
+.task-chip{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:7px;background:var(--bg-el);border:1px solid var(--border);font-size:11.5px;font-weight:500;cursor:pointer;transition:border-color .15s;}
+.task-chip:hover{border-color:var(--border-hi);}
+.task-chip .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.task-chip .dl{font-size:10px;color:var(--t3);font-family:'DM Mono',monospace;}
+.avail-bar{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px;}
+.avail-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;text-align:center;transition:all .2s;}
+.avail-card.free{border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.04);}
+.avail-card.busy{border-color:rgba(245,158,11,.25);}
+.avail-card.overloaded{border-color:rgba(240,82,82,.3);background:rgba(240,82,82,.04);}
+.avail-name{font-size:12.5px;font-weight:700;margin-top:8px;margin-bottom:3px;}
+.avail-count{font-size:10.5px;color:var(--t3);}
+.avail-badge{display:inline-block;margin-top:6px;}
 
-/* ── MISC ── */
-.divider { height:1px; background:var(--border); margin:16px 0; }
-.flex { display:flex; }
-.flex-col { display:flex; flex-direction:column; }
-.items-center { align-items:center; }
-.justify-between { justify-content:space-between; }
-.gap-8 { gap:8px; }
-.gap-12 { gap:12px; }
-.gap-16 { gap:16px; }
-.text-sm { font-size:13px; }
-.text-xs { font-size:11.5px; }
-.text-muted { color:var(--text-muted); }
-.text-secondary { color:var(--text-secondary); }
-.font-600 { font-weight:600; }
-.font-700 { font-weight:700; }
-.mt-4 { margin-top:4px; }
-.mt-8 { margin-top:8px; }
-.w-full { width:100%; }
-.sparkline-wrap { height:40px; margin-top:8px; }
+/* LEADERBOARD */
+.lb-row{display:flex;align-items:center;gap:12px;padding:11px;border-radius:var(--radius-sm);margin-bottom:4px;cursor:pointer;transition:background .15s;}
+.lb-row:hover{background:var(--bg-hover);}
+.rank{width:24px;text-align:center;font-size:16px;font-weight:800;flex-shrink:0;color:var(--t3);}
+.lb-bar-wrap{flex:1;}
+.lb-name{font-size:12.5px;font-weight:700;margin-bottom:3px;}
+.lb-bar{height:5px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;}
+.lb-fill{height:100%;border-radius:3px;}
+.lb-stats{display:flex;gap:12px;font-size:11px;color:var(--t3);margin-top:3px;}
+.lb-sv{font-weight:700;color:var(--t1);}
 
-/* ── RESPONSIVE topbar notif ── */
-.topbar-right { display:flex; align-items:center; gap:10px; position:relative; }
+/* HEATMAP */
+.hm-grid{display:grid;grid-template-columns:repeat(26,1fr);gap:3px;}
+.hm-cell{aspect-ratio:1;border-radius:3px;}
+.h0{background:rgba(255,255,255,.04);}.h1{background:rgba(59,126,246,.2);}.h2{background:rgba(59,126,246,.42);}.h3{background:rgba(59,126,246,.65);}.h4{background:#3B7EF6;}
+
+/* CALENDAR */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+.cal-h{text-align:center;font-size:10.5px;font-weight:700;color:var(--t3);padding:7px 4px;text-transform:uppercase;letter-spacing:.06em;}
+.cal-c{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:9px;cursor:pointer;transition:all .18s;font-size:12.5px;font-weight:500;position:relative;}
+.cal-c:hover{background:var(--bg-hover);}
+.cal-c.today{background:var(--blue-dim);color:var(--blue);font-weight:800;}
+.cal-c.sel{background:var(--blue);color:#fff;}
+.cal-c.other{color:var(--t4);}
+.cal-c.hm::after{content:'';position:absolute;bottom:3px;width:5px;height:5px;border-radius:50%;}
+.cal-c.mp::after{background:var(--blue);}
+.cal-c.mf::after{background:var(--green);}
+.cal-c.mh::after{background:var(--gold);}
+
+/* FAB */
+.fab{position:fixed;bottom:24px;right:24px;width:48px;height:48px;background:var(--grad-blue);border-radius:14px;display:none;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 8px 24px rgba(59,126,246,.35);transition:all .18s;z-index:50;}
+.fab:hover{transform:scale(1.08);box-shadow:0 12px 32px rgba(59,126,246,.45);}
+.fab svg{width:22px;height:22px;fill:none;stroke:#fff;stroke-width:2.2;}
+
+/* DESIGN CARDS */
+.dg{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.dc{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;transition:all .2s;}
+.dc:hover{border-color:var(--border-hi);transform:translateY(-2px);box-shadow:0 10px 32px rgba(0,0,0,.35);}
+.dc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;}
+.dc-title{font-size:13.5px;font-weight:800;margin-bottom:7px;letter-spacing:-.2px;}
+.dc-copy{font-size:12px;color:var(--t2);line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.dc-meta{display:flex;align-items:center;gap:8px;margin:9px 0;font-size:11.5px;color:var(--t3);}
+.token{font-family:'DM Mono',monospace;font-size:10px;color:var(--t3);background:var(--bg-el);padding:2px 7px;border-radius:5px;}
 </style>
 </head>
 <body>
 
 <!-- SIDEBAR -->
-<nav class="sidebar" id="sidebar">
-  <div class="toggle-btn" onclick="toggleSidebar()">◀</div>
-  <div class="sidebar-logo">
-    <div class="logo-icon">📡</div>
-    <div class="logo-text">SportsCRM</div>
+<nav class="sidebar" id="sb">
+  <div class="tog" onclick="toggleSB()">
+    <svg viewBox="0 0 10 10"><polyline points="7,2 3,5 7,8"/></svg>
   </div>
-  <div class="sidebar-section">
-    <div class="sidebar-label">Main</div>
-    <div class="nav-item active" onclick="goPage('manager','nav-manager')">
-      <div class="nav-icon">⬛</div><div class="nav-text">Manager View</div>
+  <div class="s-logo">
+    <div class="logo-mark">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M16.3 7.7l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg>
     </div>
-    <div class="nav-item" onclick="goPage('executive','nav-exec')">
-      <div class="nav-icon">👤</div><div class="nav-text">Executive View</div>
+    <div><div class="logo-text">SportsCRM</div><div class="logo-sub">Command Center</div></div>
+  </div>
+  <div class="s-body">
+    <div class="s-label">Dashboards</div>
+    <div class="nav on" id="nav-m" onclick="goPage('manager','nav-m','Manager Dashboard','Overview &amp; Assignments')">
+      <div class="ni"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+      <div class="nt">Manager View</div>
     </div>
-    <div class="nav-item" onclick="goPage('hod','nav-hod')">
-      <div class="nav-icon">📊</div><div class="nav-text">Head of Dept</div>
+    <div class="nav" id="nav-e" onclick="goPage('exec','nav-e','Executive Dashboard','Sarah K. — Series &amp; Tasks')">
+      <div class="ni"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
+      <div class="nt">Executive View</div>
     </div>
-    <div class="nav-item" onclick="goPage('design','nav-design')">
-      <div class="nav-icon">🎨</div><div class="nav-text">Design Queue</div><div class="nav-badge blue">6</div>
+    <div class="nav" id="nav-h" onclick="goPage('hod','nav-h','Head of Department','Analytics &amp; Leaderboard')">
+      <div class="ni"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+      <div class="nt">Head of Dept</div>
     </div>
-    <div class="sidebar-label">Tools</div>
-    <div class="nav-item" onclick="goPage('calendar','nav-cal')">
-      <div class="nav-icon">📅</div><div class="nav-text">Match Calendar</div><div class="nav-badge">2</div>
+    <div class="nav" id="nav-d" onclick="goPage('design','nav-d','Design Queue','Active asset requests')">
+      <div class="ni"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 13h4"/></svg></div>
+      <div class="nt">Design Queue</div><div class="nb b">6</div>
     </div>
-    <div class="nav-item" onclick="goPage('analytics','nav-analytics')">
-      <div class="nav-icon">📈</div><div class="nav-text">Analytics</div>
+    <div class="s-label">Tools</div>
+    <div class="nav" id="nav-c" onclick="goPage('cal','nav-c','Match Calendar','June 2026')">
+      <div class="ni"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+      <div class="nt">Match Calendar</div><div class="nb">2</div>
+    </div>
+    <div class="nav" id="nav-a" onclick="goPage('analytics','nav-a','Analytics','Team performance metrics')">
+      <div class="ni"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+      <div class="nt">Analytics</div>
     </div>
   </div>
-  <div class="sidebar-footer">
-    <div class="user-card">
-      <div class="avatar" style="background:linear-gradient(135deg,#3B82F6,#06B6D4)">M</div>
-      <div class="user-info">
-        <div class="user-name">Hamza N.</div>
-        <div class="user-role">Manager</div>
-      </div>
+  <div class="s-foot">
+    <div class="u-card">
+      <div class="av" style="background:linear-gradient(135deg,#3B7EF6,#0EA5E9)">HN</div>
+      <div class="u-info"><div class="u-name">Hamza N.</div><div class="u-role">Manager</div></div>
     </div>
   </div>
 </nav>
 
 <!-- MAIN -->
 <div class="main">
-  <!-- TOPBAR -->
   <div class="topbar">
-    <div class="topbar-title" id="page-title">Manager Dashboard <span>Overview & Assignments</span></div>
-    <div class="topbar-right">
-      <div class="role-switcher">
-        <div class="role-btn" onclick="toggleRoleDropdown()">
-          <div class="role-dot"></div>
-          <span id="role-label">Manager</span>
-          <span style="color:var(--text-muted);font-size:11px">▾</span>
-        </div>
-        <div class="role-dropdown" id="role-dropdown">
-          <div class="role-option active" onclick="switchRole('Manager','manager')">
-            <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#3B82F6,#06B6D4)">M</div>
-            <div><div style="font-weight:600">Manager</div><div style="font-size:11px;color:var(--text-muted)">Full access</div></div>
-          </div>
-          <div class="role-option" onclick="switchRole('Sarah K.','executive')">
-            <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#F97316,#EF4444)">S</div>
-            <div><div style="font-weight:600">Sarah K.</div><div style="font-size:11px;color:var(--text-muted)">Executive</div></div>
-          </div>
-          <div class="role-option" onclick="switchRole('Head of Dept','hod')">
-            <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#8B5CF6,#EC4899)">H</div>
-            <div><div style="font-weight:600">Head of Dept</div><div style="font-size:11px;color:var(--text-muted)">Analytics view</div></div>
-          </div>
-          <div class="role-option" onclick="switchRole('Design Team','design')">
-            <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#10B981,#06B6D4)">D</div>
-            <div><div style="font-weight:600">Design Team</div><div style="font-size:11px;color:var(--text-muted)">Asset queue</div></div>
-          </div>
+    <div class="tb-title" id="tb-title">Manager Dashboard<span class="tb-sub">Overview &amp; Assignments</span></div>
+    <div style="position:relative;display:flex;align-items:center;gap:10px;">
+      <div class="rs">
+        <button class="rs-btn" onclick="toggleRS()"><div class="rs-dot"></div><span id="rl">Manager</span><svg style="width:10px;height:10px;fill:none;stroke:var(--t3);stroke-width:2" viewBox="0 0 10 10"><polyline points="2,3 5,7 8,3"/></svg></button>
+        <div class="rs-drop" id="rsd">
+          <div class="rs-opt on" onclick="switchRole('Manager','manager')"><div class="av av-sm" style="background:linear-gradient(135deg,#3B7EF6,#0EA5E9)">HN</div><div class="rs-opt-info"><div class="rs-opt-name">Manager</div><div class="rs-opt-sub">Full access</div></div></div>
+          <div class="rs-opt" onclick="switchRole('Sarah K.','exec')"><div class="av av-sm" style="background:linear-gradient(135deg,#F97316,#EF4444)">SK</div><div class="rs-opt-info"><div class="rs-opt-name">Sarah K.</div><div class="rs-opt-sub">Executive</div></div></div>
+          <div class="rs-opt" onclick="switchRole('Head of Dept','hod')"><div class="av av-sm" style="background:linear-gradient(135deg,#8B5CF6,#EC4899)">HD</div><div class="rs-opt-info"><div class="rs-opt-name">Head of Dept</div><div class="rs-opt-sub">Analytics view</div></div></div>
+          <div class="rs-opt" onclick="switchRole('Design Team','design')"><div class="av av-sm" style="background:linear-gradient(135deg,#22C55E,#0EA5E9)">DT</div><div class="rs-opt-info"><div class="rs-opt-name">Design Team</div><div class="rs-opt-sub">Asset queue</div></div></div>
         </div>
       </div>
-      <div class="notif-btn" onclick="toggleNotif()">
-        🔔<div class="notif-badge">5</div>
+      <div class="n-btn" onclick="toggleNP()">
+        <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <div class="n-badge">5</div>
+      </div>
+      <div class="n-panel" id="np">
+        <div class="n-ph">Notifications<span class="n-clear" onclick="document.getElementById('np').classList.remove('open')">Dismiss all</span></div>
+        <div class="n-item"><div class="n-dot" style="background:var(--red)"></div><div class="n-body"><div class="n-title">Match starts in 1 hour</div><div class="n-desc">LQ vs KK — National Stadium, Karachi</div><div class="n-time">Just now</div></div></div>
+        <div class="n-item"><div class="n-dot" style="background:var(--amber)"></div><div class="n-body"><div class="n-title">Content sheet updated</div><div class="n-desc">content@tapmad.com sent a schedule revision</div><div class="n-time">12 min ago</div></div></div>
+        <div class="n-item"><div class="n-dot" style="background:var(--blue)"></div><div class="n-body"><div class="n-title">Design request completed</div><div class="n-desc">PSL Final — Announcement Graphic delivered</div><div class="n-time">34 min ago</div></div></div>
+        <div class="n-item"><div class="n-dot" style="background:var(--green)"></div><div class="n-body"><div class="n-title">Task approved</div><div class="n-desc">HBL Pre-Match copy signed off by manager</div><div class="n-time">1h ago</div></div></div>
+        <div class="n-item"><div class="n-dot" style="background:var(--purple)"></div><div class="n-body"><div class="n-title">New series assigned</div><div class="n-desc">T20 Qualifiers allocated to Ahmed R.</div><div class="n-time">2h ago</div></div></div>
       </div>
     </div>
   </div>
 
-  <!-- NOTIFICATION PANEL -->
-  <div class="notif-panel" id="notif-panel">
-    <div class="notif-header">
-      Notifications <span class="clear-btn" onclick="document.getElementById('notif-panel').classList.remove('open')">Clear all</span>
-    </div>
-    <div class="notif-item">
-      <div class="notif-dot-wrap"><div class="notif-dot" style="background:var(--red)"></div></div>
-      <div class="notif-body"><div class="notif-title-text">🚨 Match starts in 1 hour</div><div style="color:var(--text-secondary);font-size:12px">Lahore Qalandars vs Karachi Kings</div><div class="notif-time">Just now</div></div>
-    </div>
-    <div class="notif-item">
-      <div class="notif-dot-wrap"><div class="notif-dot" style="background:var(--orange)"></div></div>
-      <div class="notif-body"><div class="notif-title-text">📧 New content sheet update</div><div style="color:var(--text-secondary);font-size:12px">content@tapmad.com sent a schedule update</div><div class="notif-time">12 min ago</div></div>
-    </div>
-    <div class="notif-item">
-      <div class="notif-dot-wrap"><div class="notif-dot" style="background:var(--blue)"></div></div>
-      <div class="notif-body"><div class="notif-title-text">🎨 Design request completed</div><div style="color:var(--text-secondary);font-size:12px">PSL Final — Announcement Graphic ready</div><div class="notif-time">34 min ago</div></div>
-    </div>
-    <div class="notif-item">
-      <div class="notif-dot-wrap"><div class="notif-dot" style="background:var(--green)"></div></div>
-      <div class="notif-body"><div class="notif-title-text">✅ Task approved by Manager</div><div style="color:var(--text-secondary);font-size:12px">HBL Pre-Match copy signed off</div><div class="notif-time">1h ago</div></div>
-    </div>
-    <div class="notif-item">
-      <div class="notif-dot-wrap"><div class="notif-dot" style="background:var(--purple)"></div></div>
-      <div class="notif-body"><div class="notif-title-text">📌 New series assigned</div><div style="color:var(--text-secondary);font-size:12px">T20 World Cup Qualifiers → Ahmed R.</div><div class="notif-time">2h ago</div></div>
-    </div>
-  </div>
-
-  <!-- CONTENT -->
   <div class="content">
 
-    <!-- ═══════════════════════════════════════ PAGE: MANAGER ═══════════════════════════════════════ -->
-    <div class="page active" id="page-manager">
+<!-- ══════════════════════ MANAGER PAGE ══════════════════════ -->
+<div class="page on" id="page-manager">
 
-      <!-- Stat Cards -->
-      <div class="grid-4 mb-20">
-        <div class="stat-card blue">
-          <div class="stat-icon" style="background:rgba(59,130,246,.12)">📁</div>
-          <div class="stat-label">Active Series</div>
-          <div class="stat-value" style="color:var(--blue)" data-count="12">0</div>
-          <div class="stat-sub"><span class="trend-up">↑ 3</span> from last month</div>
-        </div>
-        <div class="stat-card orange">
-          <div class="stat-icon" style="background:rgba(249,115,22,.12)">⏳</div>
-          <div class="stat-label">Pending Approvals</div>
-          <div class="stat-value" style="color:var(--orange)" data-count="7">0</div>
-          <div class="stat-sub"><span class="trend-down">↑ 2</span> new today</div>
-        </div>
-        <div class="stat-card" style="border-color:rgba(239,68,68,.25)">
-          <div class="stat-icon" style="background:rgba(239,68,68,.12)">🔴</div>
-          <div class="stat-label">Live Today</div>
-          <div class="stat-value" style="color:var(--red)" data-count="2">0</div>
-          <div class="stat-sub"><span style="display:inline-flex;align-items:center;gap:4px"><span class="live-dot" style="width:7px;height:7px"></span> PSL + HBL</span></div>
-        </div>
-        <div class="stat-card purple">
-          <div class="stat-icon" style="background:rgba(139,92,246,.12)">🎨</div>
-          <div class="stat-label">Design Requests</div>
-          <div class="stat-value" style="color:var(--purple)" data-count="14">0</div>
-          <div class="stat-sub"><span class="trend-down" style="color:var(--amber)">⚠ 4 overdue</span></div>
-        </div>
+  <!-- Stat row -->
+  <div class="g4 mb20">
+    <div class="sc">
+      <div class="sc-icon" style="background:var(--blue-dim);color:var(--blue)"><svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div>
+      <div class="sc-label">Active Series</div>
+      <div class="sc-val" style="color:var(--blue)" data-count="12">0</div>
+      <div class="sc-sub t-up">+3 from last month</div>
+    </div>
+    <div class="sc">
+      <div class="sc-icon" style="background:var(--amber-dim);color:var(--amber)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+      <div class="sc-label">Pending Approvals</div>
+      <div class="sc-val" style="color:var(--amber)" data-count="7">0</div>
+      <div class="sc-sub t-sec">2 new today</div>
+    </div>
+    <div class="sc" style="border-color:rgba(240,82,82,.2)">
+      <div class="sc-icon" style="background:var(--red-dim);color:var(--red)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg></div>
+      <div class="sc-label">Live Today</div>
+      <div class="sc-val" style="color:var(--red)" data-count="2">0</div>
+      <div class="sc-sub"><span class="live-pip" style="display:inline-block;margin-right:5px"></span>PSL + HBL</div>
+    </div>
+    <div class="sc">
+      <div class="sc-icon" style="background:var(--purple-dim);color:var(--purple)"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 13h4"/></svg></div>
+      <div class="sc-label">Design Requests</div>
+      <div class="sc-val" style="color:var(--purple)" data-count="14">0</div>
+      <div class="sc-sub" style="color:var(--amber)">4 overdue</div>
+    </div>
+  </div>
+
+  <!-- ── DAILY AVAILABILITY BOARD ── -->
+  <div class="card mb20">
+    <div class="sh"><div><div class="sh-title">Real-Time Executive Availability</div><div class="sh-sub">Current workload — assign today or tomorrow's tasks</div></div><div class="fla gap8"><span class="fs12 t-muted">June 5, 2026</span><button class="btn btn-ghost btn-sm">+ New Task</button></div></div>
+
+    <!-- Availability Strip -->
+    <div class="avail-bar mb16">
+      <div class="avail-card busy">
+        <div class="av av-lg" style="background:linear-gradient(135deg,#F97316,#EF4444);margin:0 auto">SK</div>
+        <div class="avail-name">Sarah K.</div>
+        <div class="avail-count">4 active tasks</div>
+        <div class="avail-badge"><span class="pill p-amber">Busy</span></div>
+      </div>
+      <div class="avail-card free">
+        <div class="av av-lg" style="background:linear-gradient(135deg,#3B7EF6,#0EA5E9);margin:0 auto">AR</div>
+        <div class="avail-name">Ahmed R.</div>
+        <div class="avail-count">1 active task</div>
+        <div class="avail-badge"><span class="pill p-green">Available</span></div>
+      </div>
+      <div class="avail-card busy">
+        <div class="av av-lg" style="background:linear-gradient(135deg,#8B5CF6,#EC4899);margin:0 auto">ZM</div>
+        <div class="avail-name">Zara M.</div>
+        <div class="avail-count">3 active tasks</div>
+        <div class="avail-badge"><span class="pill p-amber">Busy</span></div>
+      </div>
+      <div class="avail-card free">
+        <div class="av av-lg" style="background:linear-gradient(135deg,#22C55E,#0EA5E9);margin:0 auto">HT</div>
+        <div class="avail-name">Hassan T.</div>
+        <div class="avail-count">0 active tasks</div>
+        <div class="avail-badge"><span class="pill p-green">Free Now</span></div>
+      </div>
+      <div class="avail-card overloaded">
+        <div class="av av-lg" style="background:linear-gradient(135deg,#F59E0B,#F97316);margin:0 auto">NF</div>
+        <div class="avail-name">Nida F.</div>
+        <div class="avail-count">6 active tasks</div>
+        <div class="avail-badge"><span class="pill p-red">Overloaded</span></div>
+      </div>
+    </div>
+
+    <!-- Daily Task Board -->
+    <div style="background:var(--bg-el);border-radius:var(--radius);overflow:hidden;border:1px solid var(--border)">
+      <div style="display:grid;grid-template-columns:180px 1fr 120px;border-bottom:1px solid var(--border);background:var(--bg-hover)">
+        <div style="padding:9px 16px"><span class="fs11 fw7 t-muted" style="text-transform:uppercase;letter-spacing:.07em">Executive</span></div>
+        <div style="padding:9px 16px"><span class="fs11 fw7 t-muted" style="text-transform:uppercase;letter-spacing:.07em">Active Tasks — Today / Tomorrow</span></div>
+        <div style="padding:9px 16px;text-align:right"><span class="fs11 fw7 t-muted" style="text-transform:uppercase;letter-spacing:.07em">Action</span></div>
       </div>
 
-      <!-- Inbox + Assign Panel -->
-      <div class="grid-2-3 mb-20">
-        <!-- Inbox -->
-        <div class="card">
-          <div class="section-header">
-            <div><div class="section-title">📬 Priority Inbox</div><div class="section-sub">Outlook-synced alerts</div></div>
-            <div class="pill red">3 new</div>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:6px">
-            <div class="inbox-item urgent">
-              <div class="avatar" style="background:linear-gradient(135deg,#EF4444,#F97316)">C</div>
-              <div class="inbox-meta">
-                <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px">
-                  <div class="inbox-subject">Master Content Sheet Updated</div>
-                  <div class="pill red" style="font-size:9px;padding:1px 6px">URGENT</div>
-                </div>
-                <div class="inbox-preview">content@tapmad.com — New PSL final week schedule appended. 6 ad-hoc slots added...</div>
-              </div>
-              <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
-                <div class="inbox-time">12m</div>
-                <button class="btn btn-primary btn-sm">Review</button>
-              </div>
-            </div>
-            <div class="inbox-item">
-              <div class="avatar" style="background:linear-gradient(135deg,#F97316,#F59E0B)">C</div>
-              <div class="inbox-meta">
-                <div class="inbox-subject">HBL Matchday Schedule Change</div>
-                <div class="inbox-preview">content@tapmad.com — Venue shifted to Karachi. Graphics need update before 4PM...</div>
-              </div>
-              <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
-                <div class="inbox-time">1h</div>
-                <button class="btn btn-ghost btn-sm">Review</button>
-              </div>
-            </div>
-            <div class="inbox-item">
-              <div class="avatar" style="background:linear-gradient(135deg,#3B82F6,#06B6D4)">C</div>
-              <div class="inbox-meta">
-                <div class="inbox-subject">T20 Qualifier — Content Brief</div>
-                <div class="inbox-preview">content@tapmad.com — Full 8-match series brief uploaded. Assign executive ASAP...</div>
-              </div>
-              <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
-                <div class="inbox-time">3h</div>
-                <button class="btn btn-ghost btn-sm">Review</button>
-              </div>
-            </div>
-            <div class="inbox-item">
-              <div class="avatar" style="background:linear-gradient(135deg,#8B5CF6,#EC4899)">C</div>
-              <div class="inbox-meta">
-                <div class="inbox-subject">Super League — Weekly Recap</div>
-                <div class="inbox-preview">content@tapmad.com — Week 3 performance summary. 14 posts published, 2 pending...</div>
-              </div>
-              <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
-                <div class="inbox-time">5h</div>
-                <button class="btn btn-ghost btn-sm">Review</button>
-              </div>
-            </div>
-            <div class="inbox-item">
-              <div class="avatar" style="background:linear-gradient(135deg,#10B981,#06B6D4)">C</div>
-              <div class="inbox-meta">
-                <div class="inbox-subject">Ad-hoc: Brand Sponsor Post</div>
-                <div class="inbox-preview">content@tapmad.com — Urgent branded content for Pepsi. Must publish by end of day...</div>
-              </div>
-              <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
-                <div class="inbox-time">6h</div>
-                <button class="btn btn-ghost btn-sm">Review</button>
-              </div>
-            </div>
-          </div>
+      <div class="exec-row">
+        <div class="er-who"><div class="av" style="background:linear-gradient(135deg,#F97316,#EF4444)">SK</div><div><div class="fw7 fs12">Sarah K.</div><div class="fs11 t-muted">PSL 2026</div></div></div>
+        <div class="er-tasks">
+          <div class="task-chip"><div class="dot" style="background:var(--red)"></div>LQ vs KK — Live Coverage<span class="dl">Today 7PM</span></div>
+          <div class="task-chip"><div class="dot" style="background:var(--amber)"></div>Pre-Match Stories ×5<span class="dl">Today 5PM</span></div>
+          <div class="task-chip"><div class="dot" style="background:var(--blue)"></div>Post-Match Graphic<span class="dl">Tomorrow</span></div>
+          <div class="task-chip"><div class="dot" style="background:var(--purple)"></div>Hype Reel Edit<span class="dl">Tomorrow</span></div>
         </div>
-
-        <!-- Quick Assign -->
-        <div class="card">
-          <div class="section-header">
-            <div><div class="section-title">⚡ Quick Assign</div><div class="section-sub">Assign series to executives</div></div>
-            <button class="btn btn-primary btn-sm">+ New Series</button>
-          </div>
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Executive</th><th>Current Series</th><th>Status</th><th>Load</th><th></th></tr></thead>
-              <tbody>
-                <tr>
-                  <td><div class="flex items-center gap-8"><div class="avatar avatar-sm" style="background:linear-gradient(135deg,#F97316,#EF4444)">S</div><div><div style="font-size:13px;font-weight:600">Sarah K.</div></div></div></td>
-                  <td><span class="pill blue">PSL 2026</span></td>
-                  <td><span class="pill amber">Busy</span></td>
-                  <td><div style="display:flex;align-items:center;gap:8px"><div class="progress-bar" style="width:80px;flex:none"><div class="progress-fill" style="width:75%;background:var(--amber)"></div></div><span style="font-size:11px;color:var(--text-muted)">75%</span></div></td>
-                  <td><button class="btn btn-ghost btn-sm">+ Assign</button></td>
-                </tr>
-                <tr>
-                  <td><div class="flex items-center gap-8"><div class="avatar avatar-sm" style="background:linear-gradient(135deg,#3B82F6,#06B6D4)">A</div><div><div style="font-size:13px;font-weight:600">Ahmed R.</div></div></div></td>
-                  <td><span class="pill green">T20 Qualifiers</span></td>
-                  <td><span class="pill green">Available</span></td>
-                  <td><div style="display:flex;align-items:center;gap:8px"><div class="progress-bar" style="width:80px;flex:none"><div class="progress-fill" style="width:40%;background:var(--green)"></div></div><span style="font-size:11px;color:var(--text-muted)">40%</span></div></td>
-                  <td><button class="btn btn-primary btn-sm">+ Assign</button></td>
-                </tr>
-                <tr>
-                  <td><div class="flex items-center gap-8"><div class="avatar avatar-sm" style="background:linear-gradient(135deg,#8B5CF6,#EC4899)">Z</div><div><div style="font-size:13px;font-weight:600">Zara M.</div></div></div></td>
-                  <td><span class="pill orange">HBL Cup</span></td>
-                  <td><span class="pill amber">Busy</span></td>
-                  <td><div style="display:flex;align-items:center;gap:8px"><div class="progress-bar" style="width:80px;flex:none"><div class="progress-fill" style="width:60%;background:var(--blue)"></div></div><span style="font-size:11px;color:var(--text-muted)">60%</span></div></td>
-                  <td><button class="btn btn-ghost btn-sm">+ Assign</button></td>
-                </tr>
-                <tr>
-                  <td><div class="flex items-center gap-8"><div class="avatar avatar-sm" style="background:linear-gradient(135deg,#10B981,#06B6D4)">H</div><div><div style="font-size:13px;font-weight:600">Hassan T.</div></div></div></td>
-                  <td><span class="pill grey">—</span></td>
-                  <td><span class="pill green">Available</span></td>
-                  <td><div style="display:flex;align-items:center;gap:8px"><div class="progress-bar" style="width:80px;flex:none"><div class="progress-fill" style="width:20%;background:var(--green)"></div></div><span style="font-size:11px;color:var(--text-muted)">20%</span></div></td>
-                  <td><button class="btn btn-primary btn-sm">+ Assign</button></td>
-                </tr>
-                <tr>
-                  <td><div class="flex items-center gap-8"><div class="avatar avatar-sm" style="background:linear-gradient(135deg,#F59E0B,#F97316)">N</div><div><div style="font-size:13px;font-weight:600">Nida F.</div></div></div></td>
-                  <td><span class="pill purple">Super League</span></td>
-                  <td><span class="pill red">Overloaded</span></td>
-                  <td><div style="display:flex;align-items:center;gap:8px"><div class="progress-bar" style="width:80px;flex:none"><div class="progress-fill" style="width:90%;background:var(--red)"></div></div><span style="font-size:11px;color:var(--text-muted)">90%</span></div></td>
-                  <td><button class="btn btn-ghost btn-sm">+ Assign</button></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <div class="er-status"><button class="btn btn-ghost btn-sm">Assign</button></div>
       </div>
 
-      <!-- Weekly Trend Chart -->
-      <div class="card mb-20">
-        <div class="section-header">
-          <div><div class="section-title">📉 Weekly Task Trend</div><div class="section-sub">This week vs last week</div></div>
-          <div class="flex gap-8">
-            <div style="display:flex;align-items:center;gap:6px;font-size:12px"><div style="width:10px;height:10px;border-radius:2px;background:var(--blue)"></div>This Week</div>
-            <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted)"><div style="width:10px;height:10px;border-radius:2px;background:var(--text-muted)"></div>Last Week</div>
-          </div>
+      <div class="exec-row" style="background:rgba(34,197,94,.03)">
+        <div class="er-who"><div class="av" style="background:linear-gradient(135deg,#3B7EF6,#0EA5E9)">AR</div><div><div class="fw7 fs12">Ahmed R.</div><div class="fs11 t-muted" style="color:var(--green)">Available</div></div></div>
+        <div class="er-tasks">
+          <div class="task-chip"><div class="dot" style="background:var(--green)"></div>T20 Series Announcement<span class="dl">Tomorrow</span></div>
         </div>
-        <div class="chart-wrap"><canvas id="weeklyChart"></canvas></div>
+        <div class="er-status"><button class="btn btn-pri btn-sm">Assign Task</button></div>
       </div>
 
-      <!-- Design Bottleneck Table -->
-      <div class="card">
-        <div class="section-header">
-          <div><div class="section-title">🚧 Design Bottlenecks</div><div class="section-sub">Requests stalled or overdue</div></div>
-          <button class="btn btn-ghost btn-sm">View All</button>
+      <div class="exec-row">
+        <div class="er-who"><div class="av" style="background:linear-gradient(135deg,#8B5CF6,#EC4899)">ZM</div><div><div class="fw7 fs12">Zara M.</div><div class="fs11 t-muted">HBL Cup</div></div></div>
+        <div class="er-tasks">
+          <div class="task-chip"><div class="dot" style="background:var(--amber)"></div>HBL Pre-Match Stories<span class="dl">Today 6PM</span></div>
+          <div class="task-chip"><div class="dot" style="background:var(--blue)"></div>Venue Graphic Update<span class="dl">Today 4PM</span></div>
+          <div class="task-chip"><div class="dot" style="background:var(--purple)"></div>Stat Post — Top Scorers<span class="dl">Tomorrow</span></div>
         </div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Request</th><th>Executive</th><th>Status</th><th>Days Pending</th><th>Priority</th></tr></thead>
-            <tbody>
-              <tr><td><span style="font-weight:600">PSL Final — Hero Graphic</span></td><td><div class="flex items-center gap-8"><div class="avatar avatar-sm" style="background:linear-gradient(135deg,#F97316,#EF4444)">S</div>Sarah K.</div></td><td><span class="pill amber">In Review</span></td><td><span style="color:var(--amber);font-weight:700">4d</span></td><td><span class="pill red">Urgent</span></td></tr>
-              <tr><td><span style="font-weight:600">HBL — Pre-Match Story Set</span></td><td><div class="flex items-center gap-8"><div class="avatar avatar-sm" style="background:linear-gradient(135deg,#8B5CF6,#EC4899)">Z</div>Zara M.</div></td><td><span class="pill blue">In Progress</span></td><td><span style="color:var(--text-secondary)">2d</span></td><td><span class="pill orange">High</span></td></tr>
-              <tr><td><span style="font-weight:600">T20 — Announcement Carousel</span></td><td><div class="flex items-center gap-8"><div class="avatar avatar-sm" style="background:linear-gradient(135deg,#3B82F6,#06B6D4)">A</div>Ahmed R.</div></td><td><span class="pill grey">Submitted</span></td><td><span style="color:var(--text-secondary)">1d</span></td><td><span class="pill amber">Medium</span></td></tr>
-              <tr><td><span style="font-weight:600">Super League — Live Graphics</span></td><td><div class="flex items-center gap-8"><div class="avatar avatar-sm" style="background:linear-gradient(135deg,#F59E0B,#F97316)">N</div>Nida F.</div></td><td><span class="pill red">Revision Req.</span></td><td><span style="color:var(--red);font-weight:700">6d</span></td><td><span class="pill red">Urgent</span></td></tr>
-              <tr><td><span style="font-weight:600">HBL — Post-Match Template</span></td><td><div class="flex items-center gap-8"><div class="avatar avatar-sm" style="background:linear-gradient(135deg,#10B981,#06B6D4)">H</div>Hassan T.</div></td><td><span class="pill green">Completed</span></td><td><span style="color:var(--green)">Done</span></td><td><span class="pill grey">Low</span></td></tr>
-            </tbody>
-          </table>
+        <div class="er-status"><button class="btn btn-ghost btn-sm">Assign</button></div>
+      </div>
+
+      <div class="exec-row" style="background:rgba(34,197,94,.03)">
+        <div class="er-who"><div class="av" style="background:linear-gradient(135deg,#22C55E,#0EA5E9)">HT</div><div><div class="fw7 fs12">Hassan T.</div><div class="fs11 t-muted" style="color:var(--green)">Free Now</div></div></div>
+        <div class="er-tasks">
+          <div class="fs12 t-muted" style="padding:4px">No tasks assigned</div>
+        </div>
+        <div class="er-status"><button class="btn btn-pri btn-sm">Assign Task</button></div>
+      </div>
+
+      <div class="exec-row" style="background:rgba(240,82,82,.03)">
+        <div class="er-who"><div class="av" style="background:linear-gradient(135deg,#F59E0B,#F97316)">NF</div><div><div class="fw7 fs12">Nida F.</div><div class="fs11 t-muted" style="color:var(--red)">Overloaded</div></div></div>
+        <div class="er-tasks">
+          <div class="task-chip"><div class="dot" style="background:var(--red)"></div>Super League Live<span class="dl">Today</span></div>
+          <div class="task-chip"><div class="dot" style="background:var(--red)"></div>Sponsor Post — Pepsi<span class="dl">Today EOD</span></div>
+          <div class="task-chip"><div class="dot" style="background:var(--amber)"></div>Hype Post<span class="dl">Today</span></div>
+          <div class="task-chip"><div class="dot" style="background:var(--amber)"></div>Stat Carousel<span class="dl">Today</span></div>
+          <div class="task-chip"><div class="dot" style="background:var(--blue)"></div>Post-Match Recap<span class="dl">Tomorrow</span></div>
+          <div class="task-chip"><div class="dot" style="background:var(--purple)"></div>Weekly Recap Reel<span class="dl">Tomorrow</span></div>
+        </div>
+        <div class="er-status"><button class="btn btn-ghost btn-sm" style="color:var(--red);border-color:rgba(240,82,82,.3)">Overloaded</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Inbox + Weekly Chart -->
+  <div class="g23 mb20">
+    <div class="card">
+      <div class="sh"><div><div class="sh-title">Priority Inbox</div><div class="sh-sub">Outlook-parsed alerts</div></div><span class="pill p-red">3 new</span></div>
+      <div>
+        <div class="inbox-item urgent">
+          <div class="av" style="background:linear-gradient(135deg,#EF4444,#F97316)">C</div>
+          <div class="f1" style="min-width:0">
+            <div class="fla gap6 mb12" style="margin-bottom:3px"><div class="inbox-subject">Master Content Sheet Updated</div><span class="pill p-red">Urgent</span></div>
+            <div class="inbox-preview">content@tapmad.com — New PSL final week schedule appended. 6 ad-hoc slots added...</div>
+          </div>
+          <div class="fl fc" style="align-items:flex-end;gap:6px;flex-shrink:0"><div class="inbox-time">12m</div><button class="btn btn-pri btn-sm">Review</button></div>
+        </div>
+        <div class="inbox-item">
+          <div class="av" style="background:linear-gradient(135deg,#F97316,#F59E0B)">C</div>
+          <div class="f1" style="min-width:0"><div class="inbox-subject">HBL Matchday Schedule Change</div><div class="inbox-preview">Venue shifted to Karachi. Graphics need update before 4PM...</div></div>
+          <div class="fl fc" style="align-items:flex-end;gap:6px;flex-shrink:0"><div class="inbox-time">1h</div><button class="btn btn-ghost btn-sm">Review</button></div>
+        </div>
+        <div class="inbox-item">
+          <div class="av" style="background:linear-gradient(135deg,#3B7EF6,#0EA5E9)">C</div>
+          <div class="f1" style="min-width:0"><div class="inbox-subject">T20 Qualifier — Content Brief</div><div class="inbox-preview">Full 8-match series brief uploaded. Assign executive ASAP...</div></div>
+          <div class="fl fc" style="align-items:flex-end;gap:6px;flex-shrink:0"><div class="inbox-time">3h</div><button class="btn btn-ghost btn-sm">Review</button></div>
+        </div>
+        <div class="inbox-item">
+          <div class="av" style="background:linear-gradient(135deg,#8B5CF6,#EC4899)">C</div>
+          <div class="f1" style="min-width:0"><div class="inbox-subject">Super League — Weekly Recap</div><div class="inbox-preview">Week 3 summary. 14 posts published, 2 pending approval...</div></div>
+          <div class="fl fc" style="align-items:flex-end;gap:6px;flex-shrink:0"><div class="inbox-time">5h</div><button class="btn btn-ghost btn-sm">Review</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="sh"><div><div class="sh-title">Weekly Task Volume</div><div class="sh-sub">This week vs last week</div></div><div class="fla gap12 fs12"><div class="fla gap6"><div style="width:9px;height:9px;border-radius:2px;background:var(--blue)"></div>This Week</div><div class="fla gap6 t-sec"><div style="width:9px;height:9px;border-radius:2px;background:var(--t4)"></div>Last Week</div></div></div>
+      <div class="ch"><canvas id="wChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Design Bottleneck -->
+  <div class="card">
+    <div class="sh"><div><div class="sh-title">Design Bottlenecks</div><div class="sh-sub">Requests stalled or overdue</div></div><button class="btn btn-ghost btn-sm">View All</button></div>
+    <div class="tw"><table>
+      <thead><tr><th>Request</th><th>Executive</th><th>Status</th><th>Pending</th><th>Priority</th></tr></thead>
+      <tbody>
+        <tr><td class="fw7">PSL Final — Hero Graphic</td><td><div class="fla gap8"><div class="av av-sm" style="background:linear-gradient(135deg,#F97316,#EF4444)">SK</div>Sarah K.</div></td><td><span class="pill p-amber">In Review</span></td><td><span style="color:var(--amber);font-weight:700">4 days</span></td><td><span class="pill p-red">Urgent</span></td></tr>
+        <tr><td class="fw7">HBL — Pre-Match Story Set</td><td><div class="fla gap8"><div class="av av-sm" style="background:linear-gradient(135deg,#8B5CF6,#EC4899)">ZM</div>Zara M.</div></td><td><span class="pill p-blue">In Progress</span></td><td><span class="t-sec">2 days</span></td><td><span class="pill p-amber">High</span></td></tr>
+        <tr><td class="fw7">T20 — Announcement Carousel</td><td><div class="fla gap8"><div class="av av-sm" style="background:linear-gradient(135deg,#3B7EF6,#0EA5E9)">AR</div>Ahmed R.</div></td><td><span class="pill p-grey">Submitted</span></td><td><span class="t-sec">1 day</span></td><td><span class="pill p-amber">Medium</span></td></tr>
+        <tr><td class="fw7">Super League — Live Graphics</td><td><div class="fla gap8"><div class="av av-sm" style="background:linear-gradient(135deg,#F59E0B,#F97316)">NF</div>Nida F.</div></td><td><span class="pill p-red">Revision Req.</span></td><td><span style="color:var(--red);font-weight:700">6 days</span></td><td><span class="pill p-red">Urgent</span></td></tr>
+        <tr><td class="fw7">HBL — Post-Match Template</td><td><div class="fla gap8"><div class="av av-sm" style="background:linear-gradient(135deg,#22C55E,#0EA5E9)">HT</div>Hassan T.</div></td><td><span class="pill p-green">Completed</span></td><td><span style="color:var(--green)">Done</span></td><td><span class="pill p-grey">Low</span></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+</div><!-- /manager page -->
+
+<!-- ══════════════════════ EXECUTIVE PAGE ══════════════════════ -->
+<div class="page" id="page-exec">
+
+  <!-- Match Alert -->
+  <div class="match-banner">
+    <div class="live-pip"></div>
+    <div class="f1"><div class="fw8 fs13" style="margin-bottom:2px">PSL 2026 — Lahore Qalandars vs Karachi Kings</div><div class="fs12 t-sec">National Stadium, Karachi &nbsp;&middot;&nbsp; 7:00 PM PKT &nbsp;&middot;&nbsp; 1h alert sent</div></div>
+    <div style="text-align:center;flex-shrink:0"><div class="countdown" id="cd">01:47:23</div><div class="cd-label">until match starts</div></div>
+    <button class="btn btn-red" style="flex-shrink:0">Go Live</button>
+  </div>
+
+  <!-- Exec Stats -->
+  <div class="g4 mb20">
+    <div class="sc"><div class="sc-label">Tasks This Week</div><div class="sc-val" style="color:var(--blue)" data-count="18">0</div><div class="sc-sub t-up">+4 vs last week</div></div>
+    <div class="sc"><div class="sc-label">Completed</div><div class="sc-val" style="color:var(--green)" data-count="12">0</div><div class="sc-sub t-sec">67% completion rate</div></div>
+    <div class="sc"><div class="sc-label">Pending Design</div><div class="sc-val" style="color:var(--purple)" data-count="3">0</div><div class="sc-sub" style="color:var(--amber)">1 overdue</div></div>
+    <div class="sc"><div class="sc-label">Match Days</div><div class="sc-val" style="color:var(--amber)" data-count="5">0</div><div class="sc-sub t-sec">This month</div></div>
+  </div>
+
+  <!-- Series + filter -->
+  <div class="sh mb16">
+    <div><div class="sh-title">My Series</div><div class="sh-sub">7 active series — click any series to expand checklist</div></div>
+    <div class="fla gap8">
+      <div style="display:flex;background:var(--bg-el);border-radius:20px;padding:3px;gap:2px;border:1px solid var(--border)">
+        <div class="pill p-blue" style="cursor:pointer;padding:4px 14px">All</div>
+        <div class="pill p-grey" style="cursor:pointer;padding:4px 14px">In Progress</div>
+        <div class="pill p-grey" style="cursor:pointer;padding:4px 14px">Completed</div>
+      </div>
+      <button class="btn btn-pri btn-sm">+ Design Request</button>
+    </div>
+  </div>
+
+  <div class="series-grid mb20">
+
+    <!-- Series Card 1 -->
+    <div class="series-card card-accent-blue">
+      <div class="sc-header">
+        <div class="sc-sport">Cricket &nbsp;&middot;&nbsp; PSL</div>
+        <div class="sc-name">PSL 2026 — Final Series</div>
+        <div class="fla gap8 mb12" style="margin-bottom:8px"><span class="pill p-red">Live</span><span class="pill p-blue">Priority</span></div>
+        <div class="sc-dates">01 May 2026 &rarr; 15 Jun 2026</div>
+      </div>
+      <div class="sc-body">
+        <div class="checklist">
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box checked"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><span class="cl-label">Announcement</span></div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box checked"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><span class="cl-label">Pre-Match Content</span></div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"></div><span class="cl-label">Post-Match Content</span></div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box checked"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><span class="cl-label">Stat Posts</span></div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"></div><span class="cl-label">Hype Post</span></div>
+        </div>
+        <div class="rights-block">
+          <div class="rights-title">Broadcast Rights</div>
+          <div class="rights-row"><span class="rights-key">Rights Available</span><span class="rights-val">Pakistan, Bangladesh</span></div>
+          <div class="rights-row"><span class="rights-key">Rights Category</span><span class="rights-val">Clips &amp; Highlights</span></div>
+          <div class="rights-note">Full match clips up to 90 sec. No international feeds. Tapmad watermark required on all clips.</div>
         </div>
       </div>
     </div>
 
-    <!-- ═══════════════════════════════════════ PAGE: EXECUTIVE ═══════════════════════════════════════ -->
-    <div class="page" id="page-executive">
-      <!-- Match Alert Banner -->
-      <div class="match-banner">
-        <div class="live-dot"></div>
-        <div class="match-banner-info">
-          <div class="match-banner-title">🏏 PSL 2026 — Lahore Qalandars vs Karachi Kings</div>
-          <div class="match-banner-sub">National Stadium, Karachi &nbsp;|&nbsp; 7:00 PM PKT &nbsp;|&nbsp; 1h alert sent ✓</div>
-        </div>
-        <div style="text-align:center">
-          <div class="countdown" id="countdown">01:47:23</div>
-          <div class="countdown-label">until match starts</div>
-        </div>
-        <button class="btn btn-danger" style="flex-shrink:0">🔴 Go Live</button>
+    <!-- Series Card 2 -->
+    <div class="series-card card-accent-gold">
+      <div class="sc-header">
+        <div class="sc-sport">Cricket &nbsp;&middot;&nbsp; HBL</div>
+        <div class="sc-name">HBL Champions Cup</div>
+        <div class="fla gap8 mb12" style="margin-bottom:8px"><span class="pill p-amber">Active</span></div>
+        <div class="sc-dates">20 May 2026 &rarr; 10 Jun 2026</div>
       </div>
-
-      <!-- Exec Stats -->
-      <div class="grid-4 mb-20">
-        <div class="stat-card blue">
-          <div class="stat-label">Tasks This Week</div>
-          <div class="stat-value" style="color:var(--blue)" data-count="18">0</div>
-          <div class="stat-sub trend-up">↑ 4 vs last week</div>
+      <div class="sc-body">
+        <div class="checklist">
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box checked"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><span class="cl-label">Announcement</span></div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box checked"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><span class="cl-label">Pre-Match Content</span></div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box checked"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><span class="cl-label">Post-Match Content</span></div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"></div><span class="cl-label">Stat Posts</span></div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box crossed"><svg viewBox="0 0 12 12"><line x1="3" y1="3" x2="9" y2="9"/><line x1="9" y1="3" x2="3" y2="9"/></svg></div><span class="cl-label">Hype Post</span></div>
         </div>
-        <div class="stat-card green">
-          <div class="stat-label">Completed</div>
-          <div class="stat-value" style="color:var(--green)" data-count="12">0</div>
-          <div class="stat-sub">67% completion rate</div>
-        </div>
-        <div class="stat-card purple">
-          <div class="stat-label">Pending Design</div>
-          <div class="stat-value" style="color:var(--purple)" data-count="3">0</div>
-          <div class="stat-sub trend-down">⚠ 1 overdue</div>
-        </div>
-        <div class="stat-card orange">
-          <div class="stat-label">Match Days</div>
-          <div class="stat-value" style="color:var(--orange)" data-count="5">0</div>
-          <div class="stat-sub">This month</div>
-        </div>
-      </div>
-
-      <!-- Kanban -->
-      <div class="mb-20">
-        <div class="section-header mb-16">
-          <div><div class="section-title">📋 My Content Pipeline — PSL 2026</div><div class="section-sub">Drag tasks between phases</div></div>
-          <button class="btn btn-primary btn-sm">+ New Task</button>
-        </div>
-        <div class="kanban">
-          <!-- Announcement -->
-          <div class="kanban-col">
-            <div class="kanban-col-header">
-              <div class="kanban-col-title" style="color:var(--blue)">📢 Announcement</div>
-              <div class="kanban-count" style="background:rgba(59,130,246,.15);color:var(--blue)">2</div>
-            </div>
-            <div class="task-card">
-              <div class="task-title">PSL Final — Hype Post</div>
-              <div class="task-preview">Double header weekend 🔥 The stage is set. Lahore vs Karachi — who takes the crown?</div>
-              <div class="task-footer"><span class="pill blue">Draft</span><span class="pill grey" style="font-size:10px">🎨 Design Req</span><span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Jun 7</span></div>
-            </div>
-            <div class="task-card">
-              <div class="task-title">PSL Qualifier Preview</div>
-              <div class="task-preview">4 teams. 2 spots. The battle for the finals begins this Friday night.</div>
-              <div class="task-footer"><span class="pill green">Approved</span><span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Jun 6</span></div>
-            </div>
-          </div>
-          <!-- Pre-Match -->
-          <div class="kanban-col">
-            <div class="kanban-col-header">
-              <div class="kanban-col-title" style="color:var(--orange)">⚡ Pre-Match</div>
-              <div class="kanban-count" style="background:rgba(249,115,22,.15);color:var(--orange)">3</div>
-            </div>
-            <div class="task-card" style="border-color:rgba(249,115,22,.25)">
-              <div class="task-title">Countdown Story Series</div>
-              <div class="task-preview">5-story countdown series. Stats, head-to-head, player spotlights for LQ vs KK tonight.</div>
-              <div class="task-footer"><span class="pill amber">In Progress</span><span class="pill grey" style="font-size:10px">🎨 Design Req</span><span style="margin-left:auto;font-size:11px;color:var(--orange)">Today</span></div>
-            </div>
-            <div class="task-card">
-              <div class="task-title">Player Stats Carousel</div>
-              <div class="task-preview">Top 5 players to watch — batting averages, recent form, and pitch stats.</div>
-              <div class="task-footer"><span class="pill blue">Draft</span><span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Jun 5</span></div>
-            </div>
-            <div class="task-card">
-              <div class="task-title">Pre-Match Prediction Poll</div>
-              <div class="task-preview">Who wins tonight? Poll goes live 2 hours before match. Lahore or Karachi?</div>
-              <div class="task-footer"><span class="pill green">Approved</span><span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Jun 5</span></div>
-            </div>
-          </div>
-          <!-- Post-Match -->
-          <div class="kanban-col">
-            <div class="kanban-col-header">
-              <div class="kanban-col-title" style="color:var(--purple)">🏆 Post-Match</div>
-              <div class="kanban-count" style="background:rgba(139,92,246,.15);color:var(--purple)">1</div>
-            </div>
-            <div class="task-card">
-              <div class="task-title">Match Result Graphic</div>
-              <div class="task-preview">Result template prepped. Final score, MOTM slot and highlight reel link ready to drop.</div>
-              <div class="task-footer"><span class="pill grey">Pending</span><span class="pill grey" style="font-size:10px">🎨 Design Req</span><span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Post-match</span></div>
-            </div>
-          </div>
-          <!-- Live Coverage -->
-          <div class="kanban-col" style="border:1px solid rgba(239,68,68,.2)">
-            <div class="kanban-col-header">
-              <div class="kanban-col-title" style="color:var(--red)">🔴 Live Coverage</div>
-              <div class="kanban-count" style="background:rgba(239,68,68,.15);color:var(--red)">1</div>
-            </div>
-            <div class="task-card" style="border-color:rgba(239,68,68,.3);background:rgba(239,68,68,.04)">
-              <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px"><div class="live-dot" style="width:7px;height:7px"></div><span style="font-size:11px;font-weight:600;color:var(--red)">LIVE TONIGHT</span></div>
-              <div class="task-title">LQ vs KK Live Updates</div>
-              <div class="task-preview">External agency on ground. Real-time score updates, wicket alerts, and boundary clips.</div>
-              <div class="task-footer"><span class="pill red">Live</span><span style="margin-left:auto;font-size:11px;color:var(--red)">7:00 PM</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Design Pipeline -->
-      <div class="card mb-20">
-        <div class="section-header">
-          <div><div class="section-title">🎨 My Design Pipeline</div><div class="section-sub">3 active requests</div></div>
-          <div></div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:20px">
-          <div>
-            <div class="flex justify-between mb-16" style="margin-bottom:8px"><span style="font-size:13px;font-weight:600">PSL Final — Hero Graphic</span><span class="pill amber">In Review</span></div>
-            <div class="pipeline-track">
-              <div class="pipeline-step"><div class="pipeline-dot done">✓</div><div class="pipeline-label">Submitted</div></div>
-              <div class="pipeline-step"><div class="pipeline-dot active">2</div><div class="pipeline-label">In Review</div></div>
-              <div class="pipeline-step"><div class="pipeline-dot">3</div><div class="pipeline-label">In Progress</div></div>
-              <div class="pipeline-step"><div class="pipeline-dot">4</div><div class="pipeline-label">Revision</div></div>
-              <div class="pipeline-step"><div class="pipeline-dot">5</div><div class="pipeline-label">Done</div></div>
-            </div>
-          </div>
-          <div class="divider" style="margin:0"></div>
-          <div>
-            <div class="flex justify-between mb-16" style="margin-bottom:8px"><span style="font-size:13px;font-weight:600">Countdown Story Series — 5 Slides</span><span class="pill blue">In Progress</span></div>
-            <div class="pipeline-track">
-              <div class="pipeline-step"><div class="pipeline-dot done">✓</div><div class="pipeline-label">Submitted</div></div>
-              <div class="pipeline-step"><div class="pipeline-dot done">✓</div><div class="pipeline-label">In Review</div></div>
-              <div class="pipeline-step"><div class="pipeline-dot active">3</div><div class="pipeline-label">In Progress</div></div>
-              <div class="pipeline-step"><div class="pipeline-dot">4</div><div class="pipeline-label">Revision</div></div>
-              <div class="pipeline-step"><div class="pipeline-dot">5</div><div class="pipeline-label">Done</div></div>
-            </div>
-          </div>
-          <div class="divider" style="margin:0"></div>
-          <div>
-            <div class="flex justify-between mb-16" style="margin-bottom:8px"><span style="font-size:13px;font-weight:600">Post-Match Result Template</span><span class="pill grey">Submitted</span></div>
-            <div class="pipeline-track">
-              <div class="pipeline-step"><div class="pipeline-dot active">1</div><div class="pipeline-label">Submitted</div></div>
-              <div class="pipeline-step"><div class="pipeline-dot">2</div><div class="pipeline-label">In Review</div></div>
-              <div class="pipeline-step"><div class="pipeline-dot">3</div><div class="pipeline-label">In Progress</div></div>
-              <div class="pipeline-step"><div class="pipeline-dot">4</div><div class="pipeline-label">Revision</div></div>
-              <div class="pipeline-step"><div class="pipeline-dot">5</div><div class="pipeline-label">Done</div></div>
-            </div>
-          </div>
+        <div class="rights-block">
+          <div class="rights-title">Broadcast Rights</div>
+          <div class="rights-row"><span class="rights-key">Rights Available</span><span class="rights-val">Pakistan only</span></div>
+          <div class="rights-row"><span class="rights-key">Rights Category</span><span class="rights-val">Highlights only</span></div>
+          <div class="rights-note">No live clips. Post-match highlights only — max 3 min. Geo-lock to PK.</div>
         </div>
       </div>
     </div>
 
-    <!-- ═══════════════════════════════════════ PAGE: HOD ═══════════════════════════════════════ -->
-    <div class="page" id="page-hod">
-      <!-- KPI Hero Row -->
-      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:20px">
-        <div class="stat-card blue" style="text-align:center">
-          <div class="stat-label" style="text-align:center">Total Posts</div>
-          <div class="stat-value" style="color:var(--blue);text-align:center" data-count="247">0</div>
-          <div class="stat-sub" style="justify-content:center">Published</div>
-        </div>
-        <div class="stat-card green" style="text-align:center">
-          <div class="stat-label" style="text-align:center">Avg Turnaround</div>
-          <div class="stat-value" style="color:var(--green);font-size:26px;text-align:center">4.2h</div>
-          <div class="stat-sub" style="justify-content:center trend-up">↓ 0.3h faster</div>
-        </div>
-        <div class="stat-card" style="text-align:center">
-          <div class="stat-label" style="text-align:center">Efficiency</div>
-          <div class="stat-value" style="color:var(--cyan);text-align:center">87%</div>
-          <div class="stat-sub" style="justify-content:center;color:var(--green)">↑ 5% MoM</div>
-        </div>
-        <div class="stat-card purple" style="text-align:center">
-          <div class="stat-label" style="text-align:center">MoM Growth</div>
-          <div class="stat-value" style="color:var(--purple);text-align:center">+23%</div>
-          <div class="stat-sub" style="justify-content:center">Tasks completed</div>
-        </div>
-        <div class="stat-card orange" style="text-align:center">
-          <div class="stat-label" style="text-align:center">Live Matches</div>
-          <div class="stat-value" style="color:var(--orange);text-align:center" data-count="34">0</div>
-          <div class="stat-sub" style="justify-content:center">Covered</div>
-        </div>
+    <!-- Series Card 3 -->
+    <div class="series-card" style="border-left:3px solid var(--green)">
+      <div class="sc-header">
+        <div class="sc-sport">Football &nbsp;&middot;&nbsp; Super League</div>
+        <div class="sc-name">Super League Football S3</div>
+        <div class="fla gap8 mb12" style="margin-bottom:8px"><span class="pill p-amber">Active</span></div>
+        <div class="sc-dates">15 Apr 2026 &rarr; 30 Jun 2026</div>
       </div>
-
-      <div class="grid-2 mb-20">
-        <!-- Leaderboard -->
-        <div class="card">
-          <div class="section-header">
-            <div><div class="section-title">🏆 Executive Leaderboard</div><div class="section-sub">June 2026 performance</div></div>
-            <div class="pill blue">Month View</div>
-          </div>
-          <div id="leaderboard">
-            <div class="leader-row">
-              <div class="rank-num">🥇</div>
-              <div class="avatar" style="background:linear-gradient(135deg,#F97316,#EF4444)">S</div>
-              <div class="leader-bar-wrap">
-                <div class="leader-name">Sarah K.</div>
-                <div class="leader-bar"><div class="leader-fill" style="width:95%;background:var(--gradient-blue)"></div></div>
-                <div class="leader-stats"><span><span class="leader-stat-val">47</span> tasks</span><span><span class="leader-stat-val" style="color:var(--green)">94%</span> on-time</span><span><span class="leader-stat-val">8</span> matches</span></div>
-              </div>
-              <div style="font-size:11px;color:var(--green)">↑</div>
-            </div>
-            <div class="leader-row">
-              <div class="rank-num">🥈</div>
-              <div class="avatar" style="background:linear-gradient(135deg,#3B82F6,#06B6D4)">A</div>
-              <div class="leader-bar-wrap">
-                <div class="leader-name">Ahmed R.</div>
-                <div class="leader-bar"><div class="leader-fill" style="width:80%;background:var(--gradient-blue)"></div></div>
-                <div class="leader-stats"><span><span class="leader-stat-val">39</span> tasks</span><span><span class="leader-stat-val" style="color:var(--green)">88%</span> on-time</span><span><span class="leader-stat-val">6</span> matches</span></div>
-              </div>
-              <div style="font-size:11px;color:var(--green)">↑</div>
-            </div>
-            <div class="leader-row">
-              <div class="rank-num">🥉</div>
-              <div class="avatar" style="background:linear-gradient(135deg,#8B5CF6,#EC4899)">Z</div>
-              <div class="leader-bar-wrap">
-                <div class="leader-name">Zara M.</div>
-                <div class="leader-bar"><div class="leader-fill" style="width:65%;background:var(--gradient-purple)"></div></div>
-                <div class="leader-stats"><span><span class="leader-stat-val">31</span> tasks</span><span><span class="leader-stat-val" style="color:var(--amber)">79%</span> on-time</span><span><span class="leader-stat-val">5</span> matches</span></div>
-              </div>
-              <div style="font-size:11px;color:var(--text-muted)">→</div>
-            </div>
-            <div class="leader-row">
-              <div class="rank-num" style="font-size:14px;font-weight:700;color:var(--text-muted)">4</div>
-              <div class="avatar" style="background:linear-gradient(135deg,#10B981,#06B6D4)">H</div>
-              <div class="leader-bar-wrap">
-                <div class="leader-name">Hassan T.</div>
-                <div class="leader-bar"><div class="leader-fill" style="width:50%;background:var(--gradient-green)"></div></div>
-                <div class="leader-stats"><span><span class="leader-stat-val">24</span> tasks</span><span><span class="leader-stat-val" style="color:var(--amber)">75%</span> on-time</span><span><span class="leader-stat-val">4</span> matches</span></div>
-              </div>
-              <div style="font-size:11px;color:var(--red)">↓</div>
-            </div>
-            <div class="leader-row">
-              <div class="rank-num" style="font-size:14px;font-weight:700;color:var(--text-muted)">5</div>
-              <div class="avatar" style="background:linear-gradient(135deg,#F59E0B,#F97316)">N</div>
-              <div class="leader-bar-wrap">
-                <div class="leader-name">Nida F.</div>
-                <div class="leader-bar"><div class="leader-fill" style="width:40%;background:linear-gradient(90deg,#F59E0B,#F97316)"></div></div>
-                <div class="leader-stats"><span><span class="leader-stat-val">19</span> tasks</span><span><span class="leader-stat-val" style="color:var(--red)">68%</span> on-time</span><span><span class="leader-stat-val">3</span> matches</span></div>
-              </div>
-              <div style="font-size:11px;color:var(--red)">↓</div>
-            </div>
-          </div>
+      <div class="sc-body">
+        <div class="checklist">
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box checked"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><span class="cl-label">Announcement</span></div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"></div><span class="cl-label">Pre-Match Content</span></div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"></div><span class="cl-label">Post-Match Content</span></div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box checked"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><span class="cl-label">Stat Posts</span></div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"></div><span class="cl-label">Hype Post</span></div>
         </div>
-
-        <!-- MoM Chart -->
-        <div class="card">
-          <div class="section-header">
-            <div><div class="section-title">📊 MoM Task Completion</div><div class="section-sub">Last 6 months</div></div>
-            <div class="pill green">+23% growth</div>
-          </div>
-          <div class="chart-wrap-lg"><canvas id="momChart"></canvas></div>
-        </div>
-      </div>
-
-      <!-- Heatmap -->
-      <div class="card mb-20">
-        <div class="section-header">
-          <div><div class="section-title">📅 Publishing Activity Heatmap</div><div class="section-sub">Posts per day — Jan to Jun 2026</div></div>
-          <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-muted)">Less <div style="display:flex;gap:3px;margin:0 4px"><div style="width:12px;height:12px;border-radius:2px" class="h0"></div><div style="width:12px;height:12px;border-radius:2px" class="h1"></div><div style="width:12px;height:12px;border-radius:2px" class="h2"></div><div style="width:12px;height:12px;border-radius:2px" class="h3"></div><div style="width:12px;height:12px;border-radius:2px" class="h4"></div></div> More</div>
-        </div>
-        <div id="heatmap" class="heatmap-grid"></div>
-      </div>
-
-      <!-- Bottleneck Alerts -->
-      <div class="grid-3">
-        <div class="card" style="border-color:rgba(239,68,68,.25)">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div style="font-size:20px">🚨</div><div><div style="font-weight:700;font-size:13px;color:var(--red)">Design Backlog Critical</div><div style="font-size:11px;color:var(--text-muted)">4 requests overdue</div></div></div>
-          <div style="font-size:12.5px;color:var(--text-secondary);line-height:1.6">Design team capacity exceeded. 4 requests past deadline. Reassignment recommended.</div>
-          <button class="btn btn-danger btn-sm" style="margin-top:10px">Escalate</button>
-        </div>
-        <div class="card" style="border-color:rgba(245,158,11,.25)">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div style="font-size:20px">⚠️</div><div><div style="font-weight:700;font-size:13px;color:var(--amber)">Nida F. Overloaded</div><div style="font-size:11px;color:var(--text-muted)">90% capacity</div></div></div>
-          <div style="font-size:12.5px;color:var(--text-secondary);line-height:1.6">Nida is managing 3 series simultaneously. Risk of quality drop. Consider reassigning Super League.</div>
-          <button class="btn btn-ghost btn-sm" style="margin-top:10px;border-color:rgba(245,158,11,.3);color:var(--amber)">Review Load</button>
-        </div>
-        <div class="card" style="border-color:rgba(139,92,246,.25)">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div style="font-size:20px">📈</div><div><div style="font-weight:700;font-size:13px;color:var(--purple)">Strong MoM Growth</div><div style="font-size:11px;color:var(--text-muted)">+23% this month</div></div></div>
-          <div style="font-size:12.5px;color:var(--text-secondary);line-height:1.6">Team output up 23% from May. Sarah K. and Ahmed R. driving the uplift. On track for Q2 target.</div>
-          <button class="btn btn-ghost btn-sm" style="margin-top:10px;border-color:rgba(139,92,246,.3);color:var(--purple)">Full Report</button>
+        <div class="rights-block">
+          <div class="rights-title">Broadcast Rights</div>
+          <div class="rights-row"><span class="rights-key">Rights Available</span><span class="rights-val">Pakistan, UAE</span></div>
+          <div class="rights-row"><span class="rights-key">Rights Category</span><span class="rights-val">Clips only</span></div>
+          <div class="rights-note">Goal clips and match previews only. No full-length highlights.</div>
         </div>
       </div>
     </div>
 
-    <!-- ═══════════════════════════════════════ PAGE: DESIGN QUEUE ═══════════════════════════════════════ -->
-    <div class="page" id="page-design">
-      <div class="section-header mb-20">
-        <div><div class="section-title">🎨 Design Request Queue</div><div class="section-sub">6 active requests — sorted by priority</div></div>
-        <div class="flex gap-8">
-          <div style="display:flex;background:var(--bg-elevated);border-radius:10px;padding:4px;gap:4px">
-            <div class="pill blue" style="cursor:pointer;padding:4px 14px">All (6)</div>
-            <div class="pill grey" style="cursor:pointer;padding:4px 14px">Urgent (2)</div>
-            <div class="pill grey" style="cursor:pointer;padding:4px 14px">In Progress (2)</div>
-            <div class="pill grey" style="cursor:pointer;padding:4px 14px">Done (1)</div>
-          </div>
-        </div>
+    <!-- Series Card 4 -->
+    <div class="series-card" style="border-left:3px solid var(--purple)">
+      <div class="sc-header">
+        <div class="sc-sport">Cricket &nbsp;&middot;&nbsp; ICC</div>
+        <div class="sc-name">T20 World Cup Qualifiers</div>
+        <div class="fla gap8 mb12" style="margin-bottom:8px"><span class="pill p-blue">Upcoming</span></div>
+        <div class="sc-dates">10 Jun 2026 &rarr; 25 Jun 2026</div>
       </div>
-      <div class="design-grid">
-        <!-- Card 1 -->
-        <div class="design-card" style="border-color:rgba(239,68,68,.3)">
-          <div class="design-card-top"><div style="display:flex;gap:6px"><span class="pill red">URGENT</span><span class="pill grey">Graphic</span></div><span style="font-size:18px">🖼️</span></div>
-          <div class="design-title">PSL Final — Hero Banner Graphic</div>
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><div class="avatar avatar-sm" style="background:linear-gradient(135deg,#F97316,#EF4444)">S</div><span style="font-size:12px;color:var(--text-secondary)">Sarah K. &nbsp;·&nbsp; <span style="color:var(--text-primary)">PSL 2026</span></span></div>
-          <div class="design-copy">"Double header weekend 🔥 The stage is set. Lahore vs Karachi — one team lifts the trophy tonight."</div>
-          <div class="design-meta"><span>📌 3 Pinterest refs</span><span>·</span><span style="color:var(--red);font-weight:600">Due: Today</span></div>
-          <div class="progress-bar mb-16" style="margin-bottom:10px"><div class="progress-fill" style="width:40%;background:var(--amber)"></div></div>
-          <div class="flex justify-between items-center">
-            <div class="tracking-token">#DR-8f3a2c</div>
-            <button class="btn btn-primary btn-sm">View Brief</button>
-          </div>
+      <div class="sc-body">
+        <div class="checklist">
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"></div><span class="cl-label">Announcement</span></div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"></div><span class="cl-label">Pre-Match Content</span></div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"></div><span class="cl-label">Post-Match Content</span></div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"></div><span class="cl-label">Stat Posts</span></div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"></div><span class="cl-label">Hype Post</span></div>
         </div>
-        <!-- Card 2 -->
-        <div class="design-card" style="border-color:rgba(239,68,68,.3)">
-          <div class="design-card-top"><div style="display:flex;gap:6px"><span class="pill red">URGENT</span><span class="pill grey">Story ×5</span></div><span style="font-size:18px">📱</span></div>
-          <div class="design-title">Countdown Story Series — LQ vs KK</div>
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><div class="avatar avatar-sm" style="background:linear-gradient(135deg,#F97316,#EF4444)">S</div><span style="font-size:12px;color:var(--text-secondary)">Sarah K. &nbsp;·&nbsp; <span style="color:var(--text-primary)">PSL 2026</span></span></div>
-          <div class="design-copy">5-slide story countdown. Slide 1: squad announcement, Slide 2: head-to-head stats, Slides 3-5: key players.</div>
-          <div class="design-meta"><span>📌 5 Pinterest refs</span><span>·</span><span style="color:var(--orange);font-weight:600">Due: 5:00 PM</span></div>
-          <div class="progress-bar mb-16" style="margin-bottom:10px"><div class="progress-fill" style="width:65%;background:var(--blue)"></div></div>
-          <div class="flex justify-between items-center">
-            <div class="tracking-token">#DR-2d91fe</div>
-            <button class="btn btn-primary btn-sm">View Brief</button>
-          </div>
-        </div>
-        <!-- Card 3 -->
-        <div class="design-card">
-          <div class="design-card-top"><div style="display:flex;gap:6px"><span class="pill orange">HIGH</span><span class="pill grey">Carousel</span></div><span style="font-size:18px">🎠</span></div>
-          <div class="design-title">T20 Qualifiers — Series Announcement</div>
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><div class="avatar avatar-sm" style="background:linear-gradient(135deg,#3B82F6,#06B6D4)">A</div><span style="font-size:12px;color:var(--text-secondary)">Ahmed R. &nbsp;·&nbsp; <span style="color:var(--text-primary)">T20 Qualifiers</span></span></div>
-          <div class="design-copy">8-match series kicks off June 10. Carousel: 6 slides covering fixtures, venues, and squad lists for all 4 teams.</div>
-          <div class="design-meta"><span>📌 2 Pinterest refs</span><span>·</span><span style="color:var(--text-muted)">Due: Jun 8</span></div>
-          <div class="progress-bar mb-16" style="margin-bottom:10px"><div class="progress-fill" style="width:15%;background:var(--purple)"></div></div>
-          <div class="flex justify-between items-center">
-            <div class="tracking-token">#DR-7c44ab</div>
-            <button class="btn btn-ghost btn-sm">View Brief</button>
-          </div>
-        </div>
-        <!-- Card 4 -->
-        <div class="design-card">
-          <div class="design-card-top"><div style="display:flex;gap:6px"><span class="pill orange">HIGH</span><span class="pill grey">Graphic ×3</span></div><span style="font-size:18px">🖼️</span></div>
-          <div class="design-title">HBL Cup — Pre-Match Story Set</div>
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><div class="avatar avatar-sm" style="background:linear-gradient(135deg,#8B5CF6,#EC4899)">Z</div><span style="font-size:12px;color:var(--text-secondary)">Zara M. &nbsp;·&nbsp; <span style="color:var(--text-primary)">HBL Cup</span></span></div>
-          <div class="design-copy">3-part pre-match story: team lineup graphic, venue spotlight, and "Match Preview" static graphic for feed.</div>
-          <div class="design-meta"><span>📌 4 Pinterest refs</span><span>·</span><span style="color:var(--text-muted)">Due: Jun 7</span></div>
-          <div class="progress-bar mb-16" style="margin-bottom:10px"><div class="progress-fill" style="width:50%;background:var(--blue)"></div></div>
-          <div class="flex justify-between items-center">
-            <div class="tracking-token">#DR-3e19bc</div>
-            <button class="btn btn-ghost btn-sm">View Brief</button>
-          </div>
-        </div>
-        <!-- Card 5 -->
-        <div class="design-card" style="border-color:rgba(239,68,68,.2)">
-          <div class="design-card-top"><div style="display:flex;gap:6px"><span class="pill red">REVISION</span><span class="pill grey">Video Template</span></div><span style="font-size:18px">🎬</span></div>
-          <div class="design-title">Super League — Live Score Lower Third</div>
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><div class="avatar avatar-sm" style="background:linear-gradient(135deg,#F59E0B,#F97316)">N</div><span style="font-size:12px;color:var(--text-secondary)">Nida F. &nbsp;·&nbsp; <span style="color:var(--text-primary)">Super League</span></span></div>
-          <div class="design-copy">Live score overlay template for Reels/Stories. Brand fonts wrong in first version — needs Inter Bold and orange accent #F97316.</div>
-          <div class="design-meta"><span>📌 1 Pinterest ref</span><span>·</span><span style="color:var(--red);font-weight:600">6 days overdue</span></div>
-          <div class="progress-bar mb-16" style="margin-bottom:10px"><div class="progress-fill" style="width:80%;background:var(--red)"></div></div>
-          <div class="flex justify-between items-center">
-            <div class="tracking-token">#DR-9a55d1</div>
-            <button class="btn btn-danger btn-sm">View Revision</button>
-          </div>
-        </div>
-        <!-- Card 6 -->
-        <div class="design-card" style="opacity:.7">
-          <div class="design-card-top"><div style="display:flex;gap:6px"><span class="pill green">DONE</span><span class="pill grey">Graphic</span></div><span style="font-size:18px">✅</span></div>
-          <div class="design-title">HBL — Post-Match Result Template</div>
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><div class="avatar avatar-sm" style="background:linear-gradient(135deg,#10B981,#06B6D4)">H</div><span style="font-size:12px;color:var(--text-secondary)">Hassan T. &nbsp;·&nbsp; <span style="color:var(--text-primary)">HBL Cup</span></span></div>
-          <div class="design-copy">Post-match result card with final score, MOTM highlight and share CTA. Completed ahead of schedule.</div>
-          <div class="design-meta"><span>📌 2 Pinterest refs</span><span>·</span><span style="color:var(--green);font-weight:600">Completed Jun 4</span></div>
-          <div class="progress-bar mb-16" style="margin-bottom:10px"><div class="progress-fill" style="width:100%;background:var(--green)"></div></div>
-          <div class="flex justify-between items-center">
-            <div class="tracking-token">#DR-1b77ef</div>
-            <button class="btn btn-ghost btn-sm">View Assets</button>
-          </div>
+        <div class="rights-block">
+          <div class="rights-title">Broadcast Rights</div>
+          <div class="rights-row"><span class="rights-key">Rights Available</span><span class="rights-val">Pending confirmation</span></div>
+          <div class="rights-row"><span class="rights-key">Rights Category</span><span class="rights-val">TBD</span></div>
+          <div class="rights-note">Manager to update once ICC licensing confirmed. Do not post clips until rights granted.</div>
         </div>
       </div>
     </div>
 
-    <!-- ═══════════════════════════════════════ PAGE: CALENDAR ═══════════════════════════════════════ -->
-    <div class="page" id="page-calendar">
-      <div class="grid-3-2">
-        <div class="card">
-          <div class="flex justify-between items-center mb-20" style="margin-bottom:20px">
-            <button class="btn btn-ghost btn-sm">◀</button>
-            <div class="section-title" style="font-size:18px">June 2026</div>
-            <button class="btn btn-ghost btn-sm">▶</button>
-          </div>
-          <div class="cal-grid mb-16" style="margin-bottom:12px">
-            <div class="cal-header-cell">Sun</div><div class="cal-header-cell">Mon</div><div class="cal-header-cell">Tue</div><div class="cal-header-cell">Wed</div><div class="cal-header-cell">Thu</div><div class="cal-header-cell">Fri</div><div class="cal-header-cell">Sat</div>
-            <div class="cal-cell other-month">25</div><div class="cal-cell other-month">26</div><div class="cal-cell other-month">27</div><div class="cal-cell other-month">28</div><div class="cal-cell other-month">29</div><div class="cal-cell other-month">30</div><div class="cal-cell other-month">31</div>
-            <div class="cal-cell">1</div><div class="cal-cell has-match match-psl">2</div><div class="cal-cell">3</div><div class="cal-cell has-match match-hbl">4</div><div class="cal-cell today has-match match-psl selected" onclick="selectDay(this,'today-detail')">5</div><div class="cal-cell">6</div><div class="cal-cell has-match match-football">7</div>
-            <div class="cal-cell">8</div><div class="cal-cell has-match match-psl">9</div><div class="cal-cell">10</div><div class="cal-cell has-match match-hbl">11</div><div class="cal-cell">12</div><div class="cal-cell has-match match-psl">13</div><div class="cal-cell has-match match-football">14</div>
-            <div class="cal-cell">15</div><div class="cal-cell">16</div><div class="cal-cell has-match match-hbl">17</div><div class="cal-cell">18</div><div class="cal-cell has-match match-psl">19</div><div class="cal-cell">20</div><div class="cal-cell has-match match-football">21</div>
-            <div class="cal-cell">22</div><div class="cal-cell has-match match-psl">23</div><div class="cal-cell">24</div><div class="cal-cell has-match match-hbl">25</div><div class="cal-cell">26</div><div class="cal-cell has-match match-psl">27</div><div class="cal-cell has-match match-football">28</div>
-            <div class="cal-cell has-match match-psl">29</div><div class="cal-cell">30</div><div class="cal-cell other-month">1</div><div class="cal-cell other-month">2</div><div class="cal-cell other-month">3</div><div class="cal-cell other-month">4</div><div class="cal-cell other-month">5</div>
-          </div>
-          <div style="display:flex;gap:16px;font-size:12px;color:var(--text-secondary)">
-            <div style="display:flex;align-items:center;gap:6px"><div style="width:8px;height:8px;border-radius:50%;background:var(--blue)"></div>PSL Cricket</div>
-            <div style="display:flex;align-items:center;gap:6px"><div style="width:8px;height:8px;border-radius:50%;background:var(--green)"></div>Football</div>
-            <div style="display:flex;align-items:center;gap:6px"><div style="width:8px;height:8px;border-radius:50%;background:var(--orange)"></div>HBL</div>
-          </div>
+    <!-- Series Card 5 -->
+    <div class="series-card" style="border-left:3px solid var(--cyan)">
+      <div class="sc-header">
+        <div class="sc-sport">Cricket &nbsp;&middot;&nbsp; Women's</div>
+        <div class="sc-name">Women's T20 Challenge</div>
+        <div class="fla gap8 mb12" style="margin-bottom:8px"><span class="pill p-cyan">Active</span></div>
+        <div class="sc-dates">01 Jun 2026 &rarr; 20 Jun 2026</div>
+      </div>
+      <div class="sc-body">
+        <div class="checklist">
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box checked"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><span class="cl-label">Announcement</span></div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box checked"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><span class="cl-label">Pre-Match Content</span></div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"></div><span class="cl-label">Post-Match Content</span></div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"></div><span class="cl-label">Stat Posts</span></div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box checked"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><span class="cl-label">Hype Post</span></div>
         </div>
-
-        <!-- Day Detail -->
-        <div class="card" id="today-detail">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
-            <div style="width:40px;height:40px;border-radius:12px;background:rgba(59,130,246,.15);display:flex;align-items:center;justify-content:center;font-size:20px">🏏</div>
-            <div><div style="font-weight:700;font-size:15px">June 5, 2026</div><div style="font-size:12px;color:var(--text-muted)">Today · Match Day</div></div>
-            <div style="margin-left:auto"><div class="live-dot"></div></div>
-          </div>
-
-          <div class="card card-sm mb-16" style="background:var(--bg-elevated);margin-bottom:12px">
-            <div style="font-weight:700;margin-bottom:8px">🏏 LQ vs KK — PSL 2026 Final</div>
-            <div style="font-size:12.5px;color:var(--text-secondary);display:flex;flex-direction:column;gap:4px">
-              <div>📍 National Stadium, Karachi</div>
-              <div>🕖 7:00 PM PKT (Match Start)</div>
-              <div>📡 Live on tapmad.com</div>
-            </div>
-          </div>
-
-          <div style="margin-bottom:12px">
-            <div style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Assigned Executive</div>
-            <div style="display:flex;align-items:center;gap:10px"><div class="avatar" style="background:linear-gradient(135deg,#F97316,#EF4444)">S</div><div><div style="font-weight:600;font-size:13px">Sarah K.</div><div style="font-size:11px;color:var(--text-muted)">Lead Executive</div></div></div>
-          </div>
-
-          <div style="margin-bottom:12px">
-            <div style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Match Alerts</div>
-            <div style="display:flex;flex-direction:column;gap:6px">
-              <div style="display:flex;align-items:center;gap:8px;font-size:13px"><span style="color:var(--green)">✅</span> 2h alert sent — 5:00 PM</div>
-              <div style="display:flex;align-items:center;gap:8px;font-size:13px"><span style="color:var(--green)">✅</span> 1h alert sent — 6:00 PM</div>
-              <div style="display:flex;align-items:center;gap:8px;font-size:13px"><span style="color:var(--amber)">⏳</span> Match start alert — 7:00 PM</div>
-            </div>
-          </div>
-
-          <div style="margin-bottom:12px">
-            <div style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Content Phases</div>
-            <div style="display:flex;flex-direction:column;gap:6px">
-              <div style="display:flex;align-items:center;justify-content:space-between;font-size:13px"><span>📢 Announcement</span><span class="pill green">Done</span></div>
-              <div style="display:flex;align-items:center;justify-content:space-between;font-size:13px"><span>⚡ Pre-Match</span><span class="pill amber">In Progress</span></div>
-              <div style="display:flex;align-items:center;justify-content:space-between;font-size:13px"><span>🏆 Post-Match</span><span class="pill grey">Pending</span></div>
-              <div style="display:flex;align-items:center;justify-content:space-between;font-size:13px"><span>🔴 Live Coverage</span><span class="pill red">Scheduled</span></div>
-            </div>
-          </div>
-
-          <div>
-            <div style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Publishing Status</div>
-            <span class="pill amber">Scheduled in Sociality</span>
-          </div>
+        <div class="rights-block">
+          <div class="rights-title">Broadcast Rights</div>
+          <div class="rights-row"><span class="rights-key">Rights Available</span><span class="rights-val">Pakistan</span></div>
+          <div class="rights-row"><span class="rights-key">Rights Category</span><span class="rights-val">Highlights &amp; Clips</span></div>
+          <div class="rights-note">Full highlights permitted. Social-first format encouraged.</div>
         </div>
       </div>
     </div>
 
-    <!-- ═══════════════════════════════════════ PAGE: ANALYTICS ═══════════════════════════════════════ -->
-    <div class="page" id="page-analytics">
-      <div class="flex justify-between items-center mb-20">
-        <div><div style="font-size:20px;font-weight:800">Analytics Overview</div><div style="font-size:13px;color:var(--text-muted)">May 6 — June 5, 2026</div></div>
-        <div style="display:flex;gap:8px">
-          <div class="pill blue" style="cursor:pointer;padding:6px 16px">30D</div>
-          <div class="pill grey" style="cursor:pointer;padding:6px 16px">7D</div>
-          <div class="pill grey" style="cursor:pointer;padding:6px 16px">90D</div>
-        </div>
+    <!-- Series Card 6 -->
+    <div class="series-card" style="border-left:3px solid var(--amber)">
+      <div class="sc-header">
+        <div class="sc-sport">Football &nbsp;&middot;&nbsp; AFC</div>
+        <div class="sc-name">AFC Cup — Group Stage</div>
+        <div class="fla gap8 mb12" style="margin-bottom:8px"><span class="pill p-amber">Active</span></div>
+        <div class="sc-dates">25 May 2026 &rarr; 18 Jun 2026</div>
       </div>
-
-      <!-- Volume Trend -->
-      <div class="card mb-20">
-        <div class="section-header"><div><div class="section-title">📈 Publishing Volume — 30 Days</div><div class="section-sub">Posts published per day across all platforms</div></div><div class="pill green">↑ 23% vs prior period</div></div>
-        <div class="chart-wrap-lg"><canvas id="volumeChart"></canvas></div>
-      </div>
-
-      <div class="grid-2 mb-20">
-        <!-- Funnel -->
-        <div class="card">
-          <div class="section-header"><div class="section-title">🔽 Publishing Funnel</div></div>
-          <div style="display:flex;flex-direction:column;gap:10px" id="funnel">
-            <div><div class="flex justify-between" style="margin-bottom:4px"><span style="font-size:13px">Drafting</span><span style="font-weight:700">89</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;background:var(--blue)"></div></div></div>
-            <div><div class="flex justify-between" style="margin-bottom:4px"><span style="font-size:13px">Content Approved</span><span style="font-weight:700">72</span></div><div class="progress-bar"><div class="progress-fill" style="width:81%;background:var(--cyan)"></div></div></div>
-            <div><div class="flex justify-between" style="margin-bottom:4px"><span style="font-size:13px">Scheduled in Sociality</span><span style="font-weight:700">58</span></div><div class="progress-bar"><div class="progress-fill" style="width:65%;background:var(--purple)"></div></div></div>
-            <div><div class="flex justify-between" style="margin-bottom:4px"><span style="font-size:13px">Uploaded to Meta</span><span style="font-weight:700">41</span></div><div class="progress-bar"><div class="progress-fill" style="width:46%;background:var(--orange)"></div></div></div>
-            <div><div class="flex justify-between" style="margin-bottom:4px"><span style="font-size:13px">Published</span><span style="font-weight:700">247</span></div><div class="progress-bar"><div class="progress-fill" style="width:93%;background:var(--green)"></div></div></div>
-          </div>
+      <div class="sc-body">
+        <div class="checklist">
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box checked"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><span class="cl-label">Announcement</span></div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"></div><span class="cl-label">Pre-Match Content</span></div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box crossed"><svg viewBox="0 0 12 12"><line x1="3" y1="3" x2="9" y2="9"/><line x1="9" y1="3" x2="3" y2="9"/></svg></div><span class="cl-label">Post-Match Content</span></div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"></div><span class="cl-label">Stat Posts</span></div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"></div><span class="cl-label">Hype Post</span></div>
         </div>
-
-        <!-- Platform Doughnut -->
-        <div class="card">
-          <div class="section-header"><div class="section-title">📱 Platform Split</div></div>
-          <div style="position:relative;height:200px"><canvas id="platformChart"></canvas></div>
-          <div style="display:flex;justify-content:center;gap:20px;margin-top:12px;font-size:12px">
-            <div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:10px;border-radius:2px;background:#3B82F6"></div>Sociality</div>
-            <div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:10px;border-radius:2px;background:#F97316"></div>Meta Business</div>
-          </div>
+        <div class="rights-block">
+          <div class="rights-title">Broadcast Rights</div>
+          <div class="rights-row"><span class="rights-key">Rights Available</span><span class="rights-val">Pakistan, Bangladesh, UAE</span></div>
+          <div class="rights-row"><span class="rights-key">Rights Category</span><span class="rights-val">Clips only</span></div>
+          <div class="rights-note">Maximum 60-second clips. No slow-motion replays. AFC watermark must remain visible.</div>
         </div>
-      </div>
-
-      <!-- Exec Comparison -->
-      <div class="card">
-        <div class="section-header"><div><div class="section-title">👥 Executive Output Comparison</div><div class="section-sub">Task types per executive — June 2026</div></div></div>
-        <div class="chart-wrap"><canvas id="execChart"></canvas></div>
       </div>
     </div>
+
+  </div><!-- /series-grid -->
+</div><!-- /exec page -->
+
+<!-- ══════════════════════ HOD PAGE ══════════════════════ -->
+<div class="page" id="page-hod">
+  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:20px">
+    <div class="sc" style="text-align:center"><div class="sc-label" style="text-align:center">Total Posts</div><div class="sc-val" style="color:var(--blue);text-align:center" data-count="247">0</div><div class="sc-sub" style="justify-content:center">Published</div></div>
+    <div class="sc" style="text-align:center"><div class="sc-label" style="text-align:center">Avg Turnaround</div><div class="sc-val" style="color:var(--green);font-size:26px;text-align:center">4.2h</div><div class="sc-sub t-up" style="justify-content:center">0.3h faster</div></div>
+    <div class="sc" style="text-align:center"><div class="sc-label" style="text-align:center">Efficiency</div><div class="sc-val" style="color:var(--cyan);text-align:center">87%</div><div class="sc-sub" style="justify-content:center;color:var(--green)">+5% MoM</div></div>
+    <div class="sc" style="text-align:center"><div class="sc-label" style="text-align:center">MoM Growth</div><div class="sc-val" style="color:var(--purple);text-align:center">+23%</div><div class="sc-sub" style="justify-content:center">Tasks completed</div></div>
+    <div class="sc" style="text-align:center"><div class="sc-label" style="text-align:center">Live Matches</div><div class="sc-val" style="color:var(--amber);text-align:center" data-count="34">0</div><div class="sc-sub" style="justify-content:center">Covered</div></div>
+  </div>
+  <div class="g2 mb20">
+    <div class="card">
+      <div class="sh"><div><div class="sh-title">Executive Leaderboard</div><div class="sh-sub">June 2026 performance ranking</div></div><span class="pill p-blue">Monthly</span></div>
+      <div class="lb-row"><div class="rank" style="color:var(--gold)">#1</div><div class="av" style="background:linear-gradient(135deg,#F97316,#EF4444)">SK</div><div class="lb-bar-wrap"><div class="lb-name">Sarah K.</div><div class="lb-bar"><div class="lb-fill" style="width:95%;background:var(--grad-blue)"></div></div><div class="lb-stats"><span><span class="lb-sv">47</span> tasks</span><span><span class="lb-sv" style="color:var(--green)">94%</span> on-time</span><span><span class="lb-sv">8</span> matches</span></div></div><span class="fs11 t-up">+</span></div>
+      <div class="lb-row"><div class="rank" style="color:var(--t2)">#2</div><div class="av" style="background:linear-gradient(135deg,#3B7EF6,#0EA5E9)">AR</div><div class="lb-bar-wrap"><div class="lb-name">Ahmed R.</div><div class="lb-bar"><div class="lb-fill" style="width:80%;background:var(--grad-blue)"></div></div><div class="lb-stats"><span><span class="lb-sv">39</span> tasks</span><span><span class="lb-sv" style="color:var(--green)">88%</span> on-time</span><span><span class="lb-sv">6</span> matches</span></div></div><span class="fs11 t-up">+</span></div>
+      <div class="lb-row"><div class="rank" style="color:var(--amber)">#3</div><div class="av" style="background:linear-gradient(135deg,#8B5CF6,#EC4899)">ZM</div><div class="lb-bar-wrap"><div class="lb-name">Zara M.</div><div class="lb-bar"><div class="lb-fill" style="width:65%;background:linear-gradient(90deg,#8B5CF6,#EC4899)"></div></div><div class="lb-stats"><span><span class="lb-sv">31</span> tasks</span><span><span class="lb-sv" style="color:var(--amber)">79%</span> on-time</span><span><span class="lb-sv">5</span> matches</span></div></div><span class="fs11 t-sec">-</span></div>
+      <div class="lb-row"><div class="rank" style="color:var(--t3)">#4</div><div class="av" style="background:linear-gradient(135deg,#22C55E,#0EA5E9)">HT</div><div class="lb-bar-wrap"><div class="lb-name">Hassan T.</div><div class="lb-bar"><div class="lb-fill" style="width:50%;background:linear-gradient(90deg,#22C55E,#0EA5E9)"></div></div><div class="lb-stats"><span><span class="lb-sv">24</span> tasks</span><span><span class="lb-sv" style="color:var(--amber)">75%</span> on-time</span><span><span class="lb-sv">4</span> matches</span></div></div><span class="fs11 t-dn">-</span></div>
+      <div class="lb-row"><div class="rank" style="color:var(--t3)">#5</div><div class="av" style="background:linear-gradient(135deg,#F59E0B,#F97316)">NF</div><div class="lb-bar-wrap"><div class="lb-name">Nida F.</div><div class="lb-bar"><div class="lb-fill" style="width:38%;background:linear-gradient(90deg,#F59E0B,#F97316)"></div></div><div class="lb-stats"><span><span class="lb-sv">19</span> tasks</span><span><span class="lb-sv" style="color:var(--red)">68%</span> on-time</span><span><span class="lb-sv">3</span> matches</span></div></div><span class="fs11 t-dn">-</span></div>
+    </div>
+    <div class="card"><div class="sh"><div><div class="sh-title">MoM Task Completion</div><div class="sh-sub">Last 6 months</div></div><span class="pill p-green">+23%</span></div><div class="ch-lg"><canvas id="momChart"></canvas></div></div>
+  </div>
+  <div class="card mb20">
+    <div class="sh"><div><div class="sh-title">Publishing Activity</div><div class="sh-sub">Posts per day — Jan to Jun 2026</div></div><div class="fla gap6 fs11 t-sec">Less <div class="fla gap3" style="gap:3px;margin:0 5px"><div style="width:11px;height:11px;border-radius:2px" class="h0"></div><div style="width:11px;height:11px;border-radius:2px" class="h1"></div><div style="width:11px;height:11px;border-radius:2px" class="h2"></div><div style="width:11px;height:11px;border-radius:2px" class="h3"></div><div style="width:11px;height:11px;border-radius:2px" class="h4"></div></div> More</div></div>
+    <div id="hm" class="hm-grid"></div>
+  </div>
+  <div class="g3">
+    <div class="card" style="border-color:rgba(240,82,82,.2)"><div class="flb mb12"><div class="fw8 fs12" style="color:var(--red)">Design Backlog Critical</div><span class="pill p-red">Action Required</span></div><div class="fs12 t-sec" style="line-height:1.7">4 design requests past deadline. Design team capacity exceeded. Immediate reassignment recommended.</div><button class="btn btn-red btn-sm" style="margin-top:10px">Escalate</button></div>
+    <div class="card" style="border-color:rgba(245,158,11,.2)"><div class="flb mb12"><div class="fw8 fs12" style="color:var(--amber)">Nida F. Overloaded</div><span class="pill p-amber">90% Capacity</span></div><div class="fs12 t-sec" style="line-height:1.7">Managing 3 series simultaneously. Quality risk detected. Consider redistributing Super League tasks.</div><button class="btn btn-ghost btn-sm" style="margin-top:10px;border-color:rgba(245,158,11,.3);color:var(--amber)">Review Load</button></div>
+    <div class="card" style="border-color:rgba(139,92,246,.2)"><div class="flb mb12"><div class="fw8 fs12" style="color:var(--purple)">Strong MoM Growth</div><span class="pill p-purple">+23%</span></div><div class="fs12 t-sec" style="line-height:1.7">Team output up 23% from May. Sarah K. and Ahmed R. leading the uplift. On track for Q2 target.</div><button class="btn btn-ghost btn-sm" style="margin-top:10px;border-color:rgba(139,92,246,.3);color:var(--purple)">Full Report</button></div>
+  </div>
+</div>
+
+<!-- ══════════════════════ DESIGN PAGE ══════════════════════ -->
+<div class="page" id="page-design">
+  <div class="sh mb20">
+    <div><div class="sh-title">Design Request Queue</div><div class="sh-sub">6 active requests — sorted by priority</div></div>
+    <div class="fla gap8">
+      <div style="display:flex;background:var(--bg-el);border-radius:20px;padding:3px;gap:2px;border:1px solid var(--border)">
+        <div class="pill p-blue" style="cursor:pointer;padding:4px 14px">All (6)</div>
+        <div class="pill p-grey" style="cursor:pointer;padding:4px 14px">Urgent (2)</div>
+        <div class="pill p-grey" style="cursor:pointer;padding:4px 14px">In Progress (2)</div>
+        <div class="pill p-grey" style="cursor:pointer;padding:4px 14px">Done (1)</div>
+      </div>
+    </div>
+  </div>
+  <div class="dg">
+    <div class="dc" style="border-color:rgba(240,82,82,.25)"><div class="dc-top"><div class="fla gap6"><span class="pill p-red">Urgent</span><span class="pill p-grey">Graphic</span></div></div><div class="dc-title">PSL Final — Hero Banner Graphic</div><div class="fla gap8 mb12"><div class="av av-sm" style="background:linear-gradient(135deg,#F97316,#EF4444)">SK</div><span class="fs12 t-sec">Sarah K. &nbsp;&middot;&nbsp; PSL 2026</span></div><div class="dc-copy">"The stage is set. Lahore vs Karachi — one team lifts the trophy tonight."</div><div class="dc-meta"><span>3 Pinterest refs</span><span>&middot;</span><span style="color:var(--red);font-weight:700">Due today</span></div><div class="prog mb12"><div class="prog-f" style="width:40%;background:var(--amber)"></div></div><div class="flb"><div class="token">#DR-8f3a2c</div><button class="btn btn-pri btn-sm">View Brief</button></div></div>
+    <div class="dc" style="border-color:rgba(240,82,82,.25)"><div class="dc-top"><div class="fla gap6"><span class="pill p-red">Urgent</span><span class="pill p-grey">Story x5</span></div></div><div class="dc-title">Countdown Story Series — LQ vs KK</div><div class="fla gap8 mb12"><div class="av av-sm" style="background:linear-gradient(135deg,#F97316,#EF4444)">SK</div><span class="fs12 t-sec">Sarah K. &nbsp;&middot;&nbsp; PSL 2026</span></div><div class="dc-copy">5-slide countdown. Squad announcement, head-to-head stats, key player spotlights.</div><div class="dc-meta"><span>5 Pinterest refs</span><span>&middot;</span><span style="color:var(--amber);font-weight:700">Due 5:00 PM</span></div><div class="prog mb12"><div class="prog-f" style="width:65%;background:var(--blue)"></div></div><div class="flb"><div class="token">#DR-2d91fe</div><button class="btn btn-pri btn-sm">View Brief</button></div></div>
+    <div class="dc"><div class="dc-top"><div class="fla gap6"><span class="pill p-amber">High</span><span class="pill p-grey">Carousel</span></div></div><div class="dc-title">T20 Qualifiers — Series Announcement</div><div class="fla gap8 mb12"><div class="av av-sm" style="background:linear-gradient(135deg,#3B7EF6,#0EA5E9)">AR</div><span class="fs12 t-sec">Ahmed R. &nbsp;&middot;&nbsp; T20 Qualifiers</span></div><div class="dc-copy">8-match series carousel: 6 slides covering fixtures, venues, and squad lists for all 4 teams.</div><div class="dc-meta"><span>2 Pinterest refs</span><span>&middot;</span><span class="t-muted">Due Jun 8</span></div><div class="prog mb12"><div class="prog-f" style="width:15%;background:var(--purple)"></div></div><div class="flb"><div class="token">#DR-7c44ab</div><button class="btn btn-ghost btn-sm">View Brief</button></div></div>
+    <div class="dc"><div class="dc-top"><div class="fla gap6"><span class="pill p-amber">High</span><span class="pill p-grey">Graphic x3</span></div></div><div class="dc-title">HBL Cup — Pre-Match Story Set</div><div class="fla gap8 mb12"><div class="av av-sm" style="background:linear-gradient(135deg,#8B5CF6,#EC4899)">ZM</div><span class="fs12 t-sec">Zara M. &nbsp;&middot;&nbsp; HBL Cup</span></div><div class="dc-copy">3-part pre-match story: team lineup, venue spotlight, and match preview static for feed.</div><div class="dc-meta"><span>4 Pinterest refs</span><span>&middot;</span><span class="t-muted">Due Jun 7</span></div><div class="prog mb12"><div class="prog-f" style="width:50%;background:var(--blue)"></div></div><div class="flb"><div class="token">#DR-3e19bc</div><button class="btn btn-ghost btn-sm">View Brief</button></div></div>
+    <div class="dc" style="border-color:rgba(240,82,82,.2)"><div class="dc-top"><div class="fla gap6"><span class="pill p-red">Revision</span><span class="pill p-grey">Video Template</span></div></div><div class="dc-title">Super League — Live Score Lower Third</div><div class="fla gap8 mb12"><div class="av av-sm" style="background:linear-gradient(135deg,#F59E0B,#F97316)">NF</div><span class="fs12 t-sec">Nida F. &nbsp;&middot;&nbsp; Super League</span></div><div class="dc-copy">Live score overlay for Reels. Brand fonts incorrect — needs Plus Jakarta Sans Bold, orange #F97316.</div><div class="dc-meta"><span>1 Pinterest ref</span><span>&middot;</span><span style="color:var(--red);font-weight:700">6 days overdue</span></div><div class="prog mb12"><div class="prog-f" style="width:80%;background:var(--red)"></div></div><div class="flb"><div class="token">#DR-9a55d1</div><button class="btn btn-red btn-sm">View Revision</button></div></div>
+    <div class="dc" style="opacity:.65"><div class="dc-top"><div class="fla gap6"><span class="pill p-green">Done</span><span class="pill p-grey">Graphic</span></div></div><div class="dc-title">HBL — Post-Match Result Template</div><div class="fla gap8 mb12"><div class="av av-sm" style="background:linear-gradient(135deg,#22C55E,#0EA5E9)">HT</div><span class="fs12 t-sec">Hassan T. &nbsp;&middot;&nbsp; HBL Cup</span></div><div class="dc-copy">Post-match result card with final score, MOTM highlight and share CTA. Delivered ahead of schedule.</div><div class="dc-meta"><span>2 Pinterest refs</span><span>&middot;</span><span style="color:var(--green);font-weight:700">Completed Jun 4</span></div><div class="prog mb12"><div class="prog-f" style="width:100%;background:var(--green)"></div></div><div class="flb"><div class="token">#DR-1b77ef</div><button class="btn btn-ghost btn-sm">View Assets</button></div></div>
+  </div>
+</div>
+
+<!-- ══════════════════════ CALENDAR PAGE ══════════════════════ -->
+<div class="page" id="page-cal">
+  <div class="g32">
+    <div class="card">
+      <div class="fla gap12 mb20" style="justify-content:space-between"><button class="btn btn-ghost btn-sm">Prev</button><div class="fw8 fs15">June 2026</div><button class="btn btn-ghost btn-sm">Next</button></div>
+      <div class="cal-grid mb16">
+        <div class="cal-h">Sun</div><div class="cal-h">Mon</div><div class="cal-h">Tue</div><div class="cal-h">Wed</div><div class="cal-h">Thu</div><div class="cal-h">Fri</div><div class="cal-h">Sat</div>
+        <div class="cal-c other">25</div><div class="cal-c other">26</div><div class="cal-c other">27</div><div class="cal-c other">28</div><div class="cal-c other">29</div><div class="cal-c other">30</div><div class="cal-c other">31</div>
+        <div class="cal-c">1</div><div class="cal-c hm mp">2</div><div class="cal-c">3</div><div class="cal-c hm mh">4</div><div class="cal-c today hm mp sel">5</div><div class="cal-c">6</div><div class="cal-c hm mf">7</div>
+        <div class="cal-c">8</div><div class="cal-c hm mp">9</div><div class="cal-c">10</div><div class="cal-c hm mh">11</div><div class="cal-c">12</div><div class="cal-c hm mp">13</div><div class="cal-c hm mf">14</div>
+        <div class="cal-c">15</div><div class="cal-c">16</div><div class="cal-c hm mh">17</div><div class="cal-c">18</div><div class="cal-c hm mp">19</div><div class="cal-c">20</div><div class="cal-c hm mf">21</div>
+        <div class="cal-c">22</div><div class="cal-c hm mp">23</div><div class="cal-c">24</div><div class="cal-c hm mh">25</div><div class="cal-c">26</div><div class="cal-c hm mp">27</div><div class="cal-c hm mf">28</div>
+        <div class="cal-c hm mp">29</div><div class="cal-c">30</div><div class="cal-c other">1</div><div class="cal-c other">2</div><div class="cal-c other">3</div><div class="cal-c other">4</div><div class="cal-c other">5</div>
+      </div>
+      <div class="fla gap16 fs12 t-sec">
+        <div class="fla gap6"><div style="width:8px;height:8px;border-radius:50%;background:var(--blue)"></div>PSL Cricket</div>
+        <div class="fla gap6"><div style="width:8px;height:8px;border-radius:50%;background:var(--green)"></div>Football</div>
+        <div class="fla gap6"><div style="width:8px;height:8px;border-radius:50%;background:var(--gold)"></div>HBL</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="fla gap10 mb16"><div style="width:38px;height:38px;border-radius:10px;background:var(--blue-dim);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg style="width:18px;height:18px;fill:none;stroke:var(--blue);stroke-width:1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div><div class="fw8 fs14">June 5, 2026 &nbsp;<span style="font-size:11px;font-weight:600;color:var(--red);background:var(--red-dim);padding:2px 8px;border-radius:4px">Today</span></div><div class="fs12 t-muted">Match Day</div></div></div>
+      <div class="card card-p mb12" style="background:var(--bg-el)"><div class="fw7 mb12" style="margin-bottom:7px">PSL 2026 — LQ vs KK</div><div class="fl fc gap6 fs12 t-sec"><div>National Stadium, Karachi</div><div>7:00 PM PKT &nbsp;&middot;&nbsp; Live on tapmad.com</div></div></div>
+      <div class="mb12"><div class="fs11 fw7 t-muted" style="text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Assigned Executive</div><div class="fla gap10"><div class="av" style="background:linear-gradient(135deg,#F97316,#EF4444)">SK</div><div><div class="fw7 fs13">Sarah K.</div><div class="fs11 t-muted">Lead Executive</div></div></div></div>
+      <div class="mb12"><div class="fs11 fw7 t-muted" style="text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Alert Status</div><div class="fl fc gap6 fs13"><div class="fla gap8"><svg style="width:14px;height:14px;fill:none;stroke:var(--green);stroke-width:2.5" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg>2h alert sent — 5:00 PM</div><div class="fla gap8"><svg style="width:14px;height:14px;fill:none;stroke:var(--green);stroke-width:2.5" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg>1h alert sent — 6:00 PM</div><div class="fla gap8"><svg style="width:14px;height:14px;fill:none;stroke:var(--amber);stroke-width:2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="t-sec">Match start alert — 7:00 PM</span></div></div></div>
+      <div class="mb12"><div class="fs11 fw7 t-muted" style="text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Content Phases</div><div class="fl fc gap7"><div class="flb fs13"><span>Announcement</span><span class="pill p-green">Done</span></div><div class="flb fs13"><span>Pre-Match</span><span class="pill p-amber">In Progress</span></div><div class="flb fs13"><span>Post-Match</span><span class="pill p-grey">Pending</span></div><div class="flb fs13"><span>Live Coverage</span><span class="pill p-red">Scheduled</span></div></div></div>
+      <div><div class="fs11 fw7 t-muted" style="text-transform:uppercase;letter-spacing:.07em;margin-bottom:7px">Publishing Status</div><span class="pill p-amber">Scheduled in Sociality</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ ANALYTICS PAGE ══════════════════════ -->
+<div class="page" id="page-analytics">
+  <div class="flb mb20"><div><div class="fw8 fs18" style="letter-spacing:-.4px">Analytics Overview</div><div class="fs12 t-muted">May 6 — June 5, 2026</div></div><div class="fla gap6"><div class="pill p-blue" style="cursor:pointer;padding:5px 14px">30D</div><div class="pill p-grey" style="cursor:pointer;padding:5px 14px">7D</div><div class="pill p-grey" style="cursor:pointer;padding:5px 14px">90D</div></div></div>
+  <div class="card mb20"><div class="sh"><div><div class="sh-title">Publishing Volume — 30 Days</div><div class="sh-sub">Posts published per day</div></div><span class="pill p-green">+23% vs prior period</span></div><div class="ch-lg"><canvas id="vChart"></canvas></div></div>
+  <div class="g2 mb20">
+    <div class="card"><div class="sh"><div class="sh-title">Publishing Funnel</div></div><div class="fl fc gap10"><div><div class="flb mb12" style="margin-bottom:4px"><span class="fs13">Drafting</span><span class="fw7">89</span></div><div class="prog"><div class="prog-f" style="width:100%;background:var(--blue)"></div></div></div><div><div class="flb mb12" style="margin-bottom:4px"><span class="fs13">Content Approved</span><span class="fw7">72</span></div><div class="prog"><div class="prog-f" style="width:81%;background:var(--cyan)"></div></div></div><div><div class="flb mb12" style="margin-bottom:4px"><span class="fs13">Scheduled in Sociality</span><span class="fw7">58</span></div><div class="prog"><div class="prog-f" style="width:65%;background:var(--purple)"></div></div></div><div><div class="flb mb12" style="margin-bottom:4px"><span class="fs13">Uploaded to Meta</span><span class="fw7">41</span></div><div class="prog"><div class="prog-f" style="width:46%;background:var(--amber)"></div></div></div><div><div class="flb mb12" style="margin-bottom:4px"><span class="fs13">Published</span><span class="fw7">247</span></div><div class="prog"><div class="prog-f" style="width:93%;background:var(--green)"></div></div></div></div></div>
+    <div class="card"><div class="sh"><div class="sh-title">Platform Split</div></div><div style="position:relative;height:190px"><canvas id="pChart"></canvas></div><div class="fla gap16 fs12" style="justify-content:center;margin-top:12px"><div class="fla gap6"><div style="width:9px;height:9px;border-radius:2px;background:var(--blue)"></div>Sociality</div><div class="fla gap6"><div style="width:9px;height:9px;border-radius:2px;background:var(--amber)"></div>Meta Business</div></div></div>
+  </div>
+  <div class="card"><div class="sh"><div><div class="sh-title">Executive Output Comparison</div><div class="sh-sub">Task types per executive — June 2026</div></div></div><div class="ch"><canvas id="eChart"></canvas></div></div>
+</div>
 
   </div><!-- /content -->
 </div><!-- /main -->
 
 <!-- FAB -->
-<div class="fab" id="fab" title="Create Design Request" onclick="goPage('design','nav-design')">+</div>
+<div class="fab" id="fab" onclick="goPage('design','nav-d','Design Queue','Active asset requests')">
+  <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+</div>
 
 <script>
-// ── PAGE ROUTING ──
-const pages = {
-  manager: { title:'Manager Dashboard', sub:'Overview & Assignments' },
-  executive: { title:'Executive Dashboard', sub:'Sarah K. — PSL 2026' },
-  hod: { title:'Head of Department', sub:'Analytics & Leaderboard' },
-  design: { title:'Design Queue', sub:'Active requests for design team' },
-  calendar: { title:'Match Calendar', sub:'June 2026' },
-  analytics: { title:'Analytics', sub:'Team performance metrics' }
-};
-
-function goPage(id, navId) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('page-' + id).classList.add('active');
-  if(navId) document.getElementById(navId)?.classList.add('active');
-  const p = pages[id];
-  document.getElementById('page-title').innerHTML = p.title + (p.sub ? ` <span>${p.sub}</span>` : '');
-  document.getElementById('role-dropdown').classList.remove('open');
-  document.getElementById('notif-panel').classList.remove('open');
-  if(id === 'analytics') setTimeout(initAnalyticsCharts, 100);
-  if(id === 'hod') setTimeout(initHodCharts, 100);
+// PAGE ROUTING
+function goPage(id,navId,title,sub){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.nav').forEach(n=>n.classList.remove('on'));
+  document.getElementById('page-'+id).classList.add('on');
+  if(navId) document.getElementById(navId)?.classList.add('on');
+  document.getElementById('tb-title').innerHTML=title+'<span class="tb-sub">'+sub+'</span>';
+  document.getElementById('rsd').classList.remove('open');
+  document.getElementById('np').classList.remove('open');
+  document.getElementById('fab').style.display=id==='exec'?'flex':'none';
+  if(id==='analytics') setTimeout(initAnalytics,80);
+  if(id==='hod'){setTimeout(initHod,80);}
   animateCounters();
 }
-
-// give each nav-item an id
-document.querySelectorAll('.nav-item')[0].id = 'nav-manager';
-document.querySelectorAll('.nav-item')[1].id = 'nav-exec';
-document.querySelectorAll('.nav-item')[2].id = 'nav-hod';
-document.querySelectorAll('.nav-item')[3].id = 'nav-design';
-document.querySelectorAll('.nav-item')[4].id = 'nav-cal';
-document.querySelectorAll('.nav-item')[5].id = 'nav-analytics';
-
-function toggleSidebar() {
-  document.getElementById('sidebar').classList.toggle('collapsed');
-}
-
-function toggleRoleDropdown() {
-  document.getElementById('role-dropdown').classList.toggle('open');
-  document.getElementById('notif-panel').classList.remove('open');
-}
-
-function toggleNotif() {
-  document.getElementById('notif-panel').classList.toggle('open');
-  document.getElementById('role-dropdown').classList.remove('open');
-}
-
-document.addEventListener('click', e => {
-  if(!e.target.closest('.role-switcher')) document.getElementById('role-dropdown').classList.remove('open');
-  if(!e.target.closest('.notif-btn') && !e.target.closest('.notif-panel')) document.getElementById('notif-panel').classList.remove('open');
+function toggleSB(){document.getElementById('sb').classList.toggle('col');}
+function toggleRS(){document.getElementById('rsd').classList.toggle('open');document.getElementById('np').classList.remove('open');}
+function toggleNP(){document.getElementById('np').classList.toggle('open');document.getElementById('rsd').classList.remove('open');}
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.rs'))document.getElementById('rsd').classList.remove('open');
+  if(!e.target.closest('.n-btn')&&!e.target.closest('.n-panel'))document.getElementById('np').classList.remove('open');
 });
-
-function switchRole(label, page) {
-  document.getElementById('role-label').textContent = label;
-  document.querySelectorAll('.role-option').forEach(o => o.classList.remove('active'));
-  event.currentTarget.classList.add('active');
-  goPage(page);
-  document.getElementById('role-dropdown').classList.remove('open');
+function switchRole(label,page){
+  document.getElementById('rl').textContent=label;
+  document.querySelectorAll('.rs-opt').forEach(o=>o.classList.remove('on'));
+  event.currentTarget.classList.add('on');
+  const map={manager:['nav-m','Manager Dashboard','Overview &amp; Assignments'],exec:['nav-e','Executive Dashboard','Sarah K. — Series &amp; Tasks'],hod:['nav-h','Head of Department','Analytics &amp; Leaderboard'],design:['nav-d','Design Queue','Active asset requests']};
+  const [nav,t,s]=map[page];
+  goPage(page,nav,t,s);
 }
 
-// ── COUNTDOWN TIMER ──
-function startCountdown() {
-  const now = new Date();
-  const match = new Date(now); match.setHours(19,0,0,0);
-  function tick() {
-    const diff = match - new Date();
-    if(diff <= 0) { document.getElementById('countdown').textContent = '🔴 LIVE'; return; }
-    const h = String(Math.floor(diff/3600000)).padStart(2,'0');
-    const m = String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
-    const s = String(Math.floor((diff%60000)/1000)).padStart(2,'0');
-    document.getElementById('countdown').textContent = `${h}:${m}:${s}`;
-    setTimeout(tick, 1000);
-  }
-  tick();
-}
-startCountdown();
+// COUNTDOWN
+function startCD(){
+  const now=new Date();const m=new Date(now);m.setHours(19,0,0,0);
+  function tick(){
+    const d=m-new Date();
+    if(d<=0){const el=document.getElementById('cd');if(el)el.textContent='LIVE NOW';return;}
+    const h=String(Math.floor(d/3600000)).padStart(2,'0');
+    const mm=String(Math.floor((d%3600000)/60000)).padStart(2,'0');
+    const s=String(Math.floor((d%60000)/1000)).padStart(2,'0');
+    const el=document.getElementById('cd');if(el)el.textContent=`${h}:${mm}:${s}`;
+    setTimeout(tick,1000);
+  }tick();
+}startCD();
 
-// ── COUNT-UP ANIMATION ──
-function animateCounters() {
-  document.querySelectorAll('[data-count]').forEach(el => {
-    const target = parseInt(el.dataset.count);
-    let cur = 0; const step = Math.ceil(target/30);
-    const t = setInterval(() => {
-      cur = Math.min(cur+step, target);
-      el.textContent = cur;
-      if(cur >= target) clearInterval(t);
-    }, 40);
+// COUNTER ANIMATION
+function animateCounters(){
+  document.querySelectorAll('[data-count]').forEach(el=>{
+    const t=parseInt(el.dataset.count);let c=0;const step=Math.ceil(t/25);
+    const iv=setInterval(()=>{c=Math.min(c+step,t);el.textContent=c;if(c>=t)clearInterval(iv);},35);
   });
-}
-animateCounters();
+}animateCounters();
 
-// ── HEATMAP ──
-function buildHeatmap() {
-  const hm = document.getElementById('heatmap');
-  if(!hm) return;
-  const w = [0,1,2,3,4];
-  for(let i=0;i<26*7;i++) {
-    const d = document.createElement('div');
-    d.className = 'heatmap-cell h' + w[Math.floor(Math.random()*w.length)];
-    if(Math.random()<.15) d.className = 'heatmap-cell h4';
-    if(Math.random()<.3) d.className = 'heatmap-cell h0';
-    hm.appendChild(d);
-  }
-}
-buildHeatmap();
+// HEATMAP
+function buildHM(){
+  const hm=document.getElementById('hm');if(!hm)return;
+  const w=[0,1,2,3,4];
+  for(let i=0;i<26*7;i++){const d=document.createElement('div');const r=Math.random();d.className='hm-cell '+(r<.28?'h0':r<.5?'h1':r<.7?'h2':r<.87?'h3':'h4');hm.appendChild(d);}
+}buildHM();
 
-// ── WEEKLY CHART ──
-const wCtx = document.getElementById('weeklyChart')?.getContext('2d');
-if(wCtx) {
-  new Chart(wCtx, {
-    type:'line',
-    data:{
-      labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
-      datasets:[
-        { label:'This Week', data:[8,12,7,15,11,9,14], borderColor:'#3B82F6', backgroundColor:'rgba(59,130,246,.08)', tension:.4, fill:true, pointBackgroundColor:'#3B82F6', pointRadius:4 },
-        { label:'Last Week', data:[6,9,8,10,7,11,8], borderColor:'#4B5563', backgroundColor:'rgba(75,85,99,.05)', borderDash:[5,5], tension:.4, fill:true, pointBackgroundColor:'#4B5563', pointRadius:3 }
-      ]
-    },
-    options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } }, scales:{ x:{ grid:{ color:'rgba(255,255,255,.04)' }, ticks:{ color:'#6B7280' } }, y:{ grid:{ color:'rgba(255,255,255,.04)' }, ticks:{ color:'#6B7280' } } } }
-  });
-}
-
-let hodChartsInit = false;
-function initHodCharts() {
-  if(hodChartsInit) return; hodChartsInit = true;
-  const mCtx = document.getElementById('momChart')?.getContext('2d');
-  if(mCtx) {
-    new Chart(mCtx, {
-      type:'bar',
-      data:{
-        labels:['Jan','Feb','Mar','Apr','May','Jun'],
-        datasets:[{ label:'Tasks Completed', data:[98,112,127,145,164,201], backgroundColor: ctx => { const g=ctx.chart.ctx.createLinearGradient(0,0,0,280); g.addColorStop(0,'rgba(59,130,246,.8)'); g.addColorStop(1,'rgba(6,182,212,.3)'); return g; }, borderRadius:8, borderSkipped:false }]
-      },
-      options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } }, scales:{ x:{ grid:{ display:false }, ticks:{ color:'#6B7280' } }, y:{ grid:{ color:'rgba(255,255,255,.04)' }, ticks:{ color:'#6B7280' } } } }
-    });
+// CHECKLIST TOGGLE
+function toggleCheck(item){
+  const box=item.querySelector('.cl-box');
+  if(box.classList.contains('checked')){
+    box.classList.remove('checked');box.classList.add('crossed');
+    box.innerHTML='<svg viewBox="0 0 12 12"><line x1="3" y1="3" x2="9" y2="9"/><line x1="9" y1="3" x2="3" y2="9"/></svg>';
+    const svg=box.querySelector('svg');svg.style.cssText='width:10px;height:10px;fill:none;stroke:var(--red);stroke-width:2.5';
+  } else if(box.classList.contains('crossed')){
+    box.classList.remove('crossed');box.innerHTML='';
+  } else {
+    box.classList.add('checked');
+    box.innerHTML='<svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg>';
+    const svg=box.querySelector('svg');svg.style.cssText='width:10px;height:10px;fill:none;stroke:#fff;stroke-width:2.5';
   }
 }
 
-let analyticsChartsInit = false;
-function initAnalyticsCharts() {
-  if(analyticsChartsInit) return; analyticsChartsInit = true;
-  // Volume
-  const vCtx = document.getElementById('volumeChart')?.getContext('2d');
-  if(vCtx) {
-    const labels = Array.from({length:30},(_,i)=>{ const d=new Date(); d.setDate(d.getDate()-29+i); return d.toLocaleDateString('en',{month:'short',day:'numeric'}); });
-    const data = [5,8,6,12,9,7,14,11,8,15,10,13,7,16,12,9,18,14,11,20,15,12,22,17,14,25,19,16,28,22];
-    new Chart(vCtx, {
-      type:'line',
-      data:{ labels, datasets:[{ data, borderColor:'#06B6D4', backgroundColor: ctx=>{ const g=ctx.chart.ctx.createLinearGradient(0,0,0,280); g.addColorStop(0,'rgba(6,182,212,.25)'); g.addColorStop(1,'rgba(6,182,212,.0)'); return g; }, fill:true, tension:.4, pointRadius:3, pointBackgroundColor:'#06B6D4' }] },
-      options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ x:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#6B7280',maxTicksLimit:8}}, y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#6B7280'}} } }
-    });
-  }
-  // Platform doughnut
-  const pCtx = document.getElementById('platformChart')?.getContext('2d');
-  if(pCtx) {
-    new Chart(pCtx, { type:'doughnut', data:{ labels:['Sociality','Meta Business'], datasets:[{ data:[148,99], backgroundColor:['#3B82F6','#F97316'], borderWidth:0, hoverOffset:6 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label: c => ` ${c.label}: ${c.raw} posts` } } }, cutout:'72%' } });
-  }
-  // Exec comparison
-  const eCtx = document.getElementById('execChart')?.getContext('2d');
-  if(eCtx) {
-    new Chart(eCtx, {
-      type:'bar',
-      data:{
-        labels:['Sarah K.','Ahmed R.','Zara M.','Hassan T.','Nida F.'],
-        datasets:[
-          { label:'Announcement', data:[12,9,8,6,5], backgroundColor:'rgba(59,130,246,.7)', borderRadius:4 },
-          { label:'Pre-Match', data:[10,8,7,5,4], backgroundColor:'rgba(249,115,22,.7)', borderRadius:4 },
-          { label:'Post-Match', data:[8,7,5,4,4], backgroundColor:'rgba(139,92,246,.7)', borderRadius:4 },
-          { label:'Live', data:[7,5,6,4,3], backgroundColor:'rgba(239,68,68,.7)', borderRadius:4 },
-          { label:'Ad-hoc', data:[10,10,5,5,3], backgroundColor:'rgba(16,185,129,.7)', borderRadius:4 }
-        ]
-      },
-      options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ labels:{ color:'#9CA3AF', boxWidth:12 } } }, scales:{ x:{ stacked:true, grid:{display:false}, ticks:{color:'#6B7280'} }, y:{ stacked:true, grid:{color:'rgba(255,255,255,.04)'}, ticks:{color:'#6B7280'} } } }
-    });
-  }
-}
+// WEEKLY CHART
+const wc=document.getElementById('wChart')?.getContext('2d');
+if(wc){new Chart(wc,{type:'line',data:{labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],datasets:[{label:'This Week',data:[8,12,7,15,11,9,14],borderColor:'#3B7EF6',backgroundColor:'rgba(59,126,246,.08)',tension:.4,fill:true,pointBackgroundColor:'#3B7EF6',pointRadius:4,pointHoverRadius:6},{label:'Last Week',data:[6,9,8,10,7,11,8],borderColor:'#2D3748',borderDash:[5,5],tension:.4,fill:false,pointBackgroundColor:'#2D3748',pointRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#4A5568',font:{family:'Plus Jakarta Sans',size:11}}},y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#4A5568',font:{family:'Plus Jakarta Sans',size:11}}}}}})}
 
-function selectDay(el) {
-  document.querySelectorAll('.cal-cell').forEach(c => { if(!c.classList.contains('today')) c.classList.remove('selected'); });
-  el.classList.add('selected');
+let hodI=false,anaI=false;
+function initHod(){
+  if(hodI)return;hodI=true;
+  const mc=document.getElementById('momChart')?.getContext('2d');
+  if(mc){new Chart(mc,{type:'bar',data:{labels:['Jan','Feb','Mar','Apr','May','Jun'],datasets:[{label:'Tasks',data:[98,112,127,145,164,201],backgroundColor:ctx=>{const g=ctx.chart.ctx.createLinearGradient(0,0,0,270);g.addColorStop(0,'rgba(59,126,246,.85)');g.addColorStop(1,'rgba(14,165,233,.3)');return g;},borderRadius:7,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:'#4A5568',font:{family:'Plus Jakarta Sans',size:11}}},y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#4A5568',font:{family:'Plus Jakarta Sans',size:11}}}}}})}
 }
-
-// Show fab only on executive page
-document.querySelectorAll('.nav-item').forEach((n,i) => {
-  n.addEventListener('click', () => {
-    document.getElementById('fab').style.display = i===1 ? 'flex' : 'none';
-  });
-});
-document.getElementById('fab').style.display = 'none';
+function initAnalytics(){
+  if(anaI)return;anaI=true;
+  const vc=document.getElementById('vChart')?.getContext('2d');
+  if(vc){const labels=Array.from({length:30},(_,i)=>{const d=new Date();d.setDate(d.getDate()-29+i);return d.toLocaleDateString('en',{month:'short',day:'numeric'});});new Chart(vc,{type:'line',data:{labels,datasets:[{data:[5,8,6,12,9,7,14,11,8,15,10,13,7,16,12,9,18,14,11,20,15,12,22,17,14,25,19,16,28,22],borderColor:'#0EA5E9',backgroundColor:ctx=>{const g=ctx.chart.ctx.createLinearGradient(0,0,0,270);g.addColorStop(0,'rgba(14,165,233,.22)');g.addColorStop(1,'rgba(14,165,233,0)');return g;},fill:true,tension:.4,pointRadius:3,pointBackgroundColor:'#0EA5E9'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#4A5568',maxTicksLimit:8,font:{family:'Plus Jakarta Sans',size:11}}},y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#4A5568',font:{family:'Plus Jakarta Sans',size:11}}}}}})}
+  const pc=document.getElementById('pChart')?.getContext('2d');
+  if(pc){new Chart(pc,{type:'doughnut',data:{labels:['Sociality','Meta Business'],datasets:[{data:[148,99],backgroundColor:['#3B7EF6','#F59E0B'],borderWidth:0,hoverOffset:5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},cutout:'73%'}})}
+  const ec=document.getElementById('eChart')?.getContext('2d');
+  if(ec){new Chart(ec,{type:'bar',data:{labels:['Sarah K.','Ahmed R.','Zara M.','Hassan T.','Nida F.'],datasets:[{label:'Announcement',data:[12,9,8,6,5],backgroundColor:'rgba(59,126,246,.75)',borderRadius:4},{label:'Pre-Match',data:[10,8,7,5,4],backgroundColor:'rgba(245,158,11,.75)',borderRadius:4},{label:'Post-Match',data:[8,7,5,4,4],backgroundColor:'rgba(139,92,246,.75)',borderRadius:4},{label:'Live',data:[7,5,6,4,3],backgroundColor:'rgba(240,82,82,.75)',borderRadius:4},{label:'Ad-hoc',data:[10,10,5,5,3],backgroundColor:'rgba(34,197,94,.75)',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#8892A4',boxWidth:11,font:{family:'Plus Jakarta Sans',size:11}}}},scales:{x:{stacked:true,grid:{display:false},ticks:{color:'#4A5568',font:{family:'Plus Jakarta Sans',size:11}}},y:{stacked:true,grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#4A5568',font:{family:'Plus Jakarta Sans',size:11}}}}}})}
+}
 </script>
 </body>
 </html>
